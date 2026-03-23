@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Facial Recognition Enrollment | Hybrid QR + GPS Attendance
+  </title>
+  <!-- Brand Typography: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <!-- Font Awesome 6 -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+   <!-- Theme CSS (global) -->
+   <link href="style.css" rel="stylesheet"/>
+   <!-- Page-specific CSS -->
+   <link href="enrollment_page.css" rel="stylesheet"/>
+  </link>
+ </head>
+ <body class="d-flex flex-column min-vh-100">
+  <!-- Common Public (Login/Enrollment) Header -->
+  <!-- Icons used: fa-shield-alt (brand mark optional). -->
+  <!-- Interactive elements: Brand link only. -->
+  <style>
+   :root { --primary:#00FFFF; --secondary:#008080; }
+    .navbar-public { background-color: var(--secondary); }
+    .brand-title { color: #fff; font-weight: 600; }
+  </style>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-public">
+   <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+     <img alt="Institution Logo" class="me-2" onerror="this.onerror=null;this.src='https://picsum.photos/seed/unilogo/40/40'" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:32px;width:auto;border-radius:4px;"/>
+     <span class="brand-title">
+      Hybrid QR + GPS Attendance
+     </span>
+    </a>
+   </div>
+  </nav>
+  <main class="flex-grow-1">
+   <div class="container-max container py-4">
+    <!-- Breadcrumb (subtle) -->
+    <nav aria-label="breadcrumb" class="breadcrumb mb-3">
+     <ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item">
+       <a href="./login_page.html">
+        Login
+       </a>
+      </li>
+      <li aria-current="page" class="breadcrumb-item active">
+       Facial Enrollment
+      </li>
+     </ol>
+    </nav>
+    <!-- Page Header -->
+    <div class="page-header">
+     <div class="d-flex align-items-center gap-2">
+      <i aria-hidden="true" class="fa-solid fa-user-shield text-info">
+      </i>
+      <h1 class="page-title mb-0">
+       Facial Recognition Enrollment
+      </h1>
+     </div>
+     <div class="text-muted small">
+      Mandatory one-time setup for secure attendance
+     </div>
+    </div>
+    <!-- System Feedback / Notification Area -->
+    <div aria-live="polite" class="mb-3" id="alertArea" role="region">
+    </div>
+    <!-- Enrollment Wizard -->
+    <section class="enroll-wizard" id="enrollmentWizard">
+     <!-- Stepper / Progress -->
+     <div class="wizard-steps app-card mb-3 p-3">
+      <div aria-label="Enrollment Steps" class="stepper" role="navigation">
+       <div aria-current="step" class="step" data-step="1">
+        <div class="icon">
+         <i class="fa-solid fa-circle-info">
+         </i>
+        </div>
+        <div class="label">
+         Welcome
+        </div>
+       </div>
+       <div class="step" data-step="2">
+        <div class="icon">
+         <i class="fa-solid fa-camera">
+         </i>
+        </div>
+        <div class="label">
+         Permission
+        </div>
+       </div>
+       <div class="step" data-step="3">
+        <div class="icon">
+         <i class="fa-solid fa-face-smile">
+         </i>
+        </div>
+        <div class="label">
+         Capture
+        </div>
+       </div>
+       <div class="step" data-step="4">
+        <div class="icon">
+         <i class="fa-solid fa-circle-check">
+         </i>
+        </div>
+        <div class="label">
+         Confirm
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="row justify-content-center">
+      <div class="col-12 col-lg-8">
+       <div class="card shadow-1">
+        <div class="card-body">
+         <!-- Welcome & Instructions Step -->
+         <div class="wizard-step" data-step="1" id="step-1">
+          <div class="text-center mb-3">
+           <h2 class="mb-2">
+            Welcome,
+            <span id="studentName">
+             Student
+            </span>
+            !
+           </h2>
+           <p class="text-muted mb-0">
+            Set up facial recognition to prevent proxy attendance and speed up check-ins.
+           </p>
+          </div>
+          <div class="row g-4 align-items-start">
+           <div class="col-md-6">
+            <div class="p-3 bg-info-soft rounded h-100">
+             <h5 class="widget-title mb-2">
+              <i class="fa-solid fa-lightbulb text-info me-2">
+              </i>
+              Tips for a great capture
+             </h5>
+             <ul class="mb-0">
+              <li>
+               Use a well-lit area with your face clearly visible.
+              </li>
+              <li>
+               Remove hats, sunglasses, and heavy face coverings.
+              </li>
+              <li>
+               Center your face and look directly at the camera.
+              </li>
+              <li>
+               Hold still for a moment when asked to capture.
+              </li>
+              <li>
+               Ensure only your face is in the frame.
+              </li>
+             </ul>
+            </div>
+           </div>
+           <div class="col-md-6">
+            <div class="p-3 bg-surface rounded h-100 border">
+             <h6 class="mb-2">
+              What we do
+             </h6>
+             <p class="mb-3">
+              We securely create a biometric template of your face to verify identity at attendance checkpoints. We do not store raw video frames.
+             </p>
+             <button class="btn btn-primary w-100" id="btnStart">
+              <i class="fa-solid fa-play me-2">
+              </i>
+              Get Started
+             </button>
+            </div>
+           </div>
+          </div>
+         </div>
+         <!-- Camera Permission Step -->
+         <div class="wizard-step d-none" data-step="2" id="step-2">
+          <div class="text-center mb-3">
+           <h2 class="mb-2">
+            Camera Permission
+           </h2>
+           <p class="text-muted">
+            We need access to your camera to securely enroll you.
+           </p>
+          </div>
+          <div class="d-grid gap-3 col-md-8 mx-auto">
+           <button class="btn btn-info" id="btnAllowCamera">
+            <i class="fa-solid fa-unlock me-2">
+            </i>
+            Allow Camera Access
+           </button>
+           <div class="alert alert-warning d-none" id="permissionDenied" role="alert">
+            Camera access is required to continue. Please enable camera permissions in your browser settings and try again.
+           </div>
+           <div class="text-center text-muted small">
+            <i class="fa-solid fa-shield-halved me-1">
+            </i>
+            We only use the camera to create your biometric template and ensure security.
+           </div>
+          </div>
+         </div>
+         <!-- Facial Data Capture Step -->
+         <div class="wizard-step d-none" data-step="3" id="step-3">
+          <div class="mb-3 text-center">
+           <h2 class="mb-1">
+            Position Your Face
+           </h2>
+           <p class="text-muted mb-0">
+            Align your face within the guide. When ready, click Capture.
+           </p>
+          </div>
+          <div class="camera-wrapper mb-3">
+           <div class="camera-frame">
+            <video autoplay="" id="cameraFeed" muted="" playsinline="">
+            </video>
+            <div aria-hidden="true" class="face-overlay">
+            </div>
+            <div class="capture-hint" id="captureHint">
+             <i class="fa-regular fa-face-smile me-2">
+             </i>
+             <span id="feedbackText">
+              Hold still and center your face…
+             </span>
+            </div>
+            <div class="skeleton camera-skeleton" id="cameraLoading">
+            </div>
+           </div>
+          </div>
+          <div class="d-flex justify-content-center gap-2">
+           <button class="btn btn-primary" id="btnCapture">
+            <i class="fa-solid fa-circle-dot me-2">
+            </i>
+            Capture
+           </button>
+           <button class="btn btn-light d-none" id="btnRetry">
+            <i class="fa-solid fa-rotate-right me-2">
+            </i>
+            Retry
+           </button>
+          </div>
+         </div>
+         <!-- Confirmation Step -->
+         <div class="wizard-step d-none" data-step="4" id="step-4">
+          <div class="text-center py-4">
+           <div class="display-4 text-success mb-3">
+            <i class="fa-regular fa-circle-check">
+            </i>
+           </div>
+           <h2 class="mb-2">
+            Enrollment Successful!
+           </h2>
+           <p class="text-muted">
+            Your facial data has been securely saved. You can now proceed to your dashboard.
+           </p>
+           <a class="btn btn-success" href="./student_dashboard.html" id="btnGoDashboard">
+            <i class="fa-solid fa-arrow-right-to-bracket me-2">
+            </i>
+            Go to Dashboard
+           </a>
+          </div>
+         </div>
+        </div>
+       </div>
+       <!-- Diagnostics / Logs (collapsible) -->
+       <div aria-disabled="true" class="card mt-4" id="diagnosticsCard">
+        <div class="card-header d-flex align-items-center justify-content-between">
+         <div class="d-flex align-items-center gap-2">
+          <i class="fa-solid fa-terminal text-muted">
+          </i>
+          <span class="widget-title">
+           Enrollment Diagnostics
+          </span>
+          <span class="badge-soft info ms-2">
+           <i class="fa-solid fa-lock me-1">
+           </i>
+           Read-only
+          </span>
+         </div>
+         <button aria-controls="diagCollapse" aria-expanded="false" class="btn btn-sm btn-light" data-bs-target="#diagCollapse" data-bs-toggle="collapse" type="button">
+          <i class="fa-solid fa-chevron-down me-1">
+          </i>
+          Toggle
+         </button>
+        </div>
+        <div class="collapse" id="diagCollapse">
+         <div class="card-body">
+          <div class="row g-2 mb-3">
+           <div class="col-md-4">
+            <div class="input-group">
+             <span class="input-group-text">
+              <i class="fa-solid fa-filter">
+              </i>
+             </span>
+             <select class="form-select" id="filterType">
+              <option value="all">
+               All Events
+              </option>
+              <option value="info">
+               Info
+              </option>
+              <option value="success">
+               Success
+              </option>
+              <option value="warning">
+               Warning
+              </option>
+              <option value="error">
+               Error
+              </option>
+             </select>
+            </div>
+           </div>
+           <div class="col-md-5">
+            <div class="input-group">
+             <span class="input-group-text">
+              <i class="fa-solid fa-magnifying-glass">
+              </i>
+             </span>
+             <input class="form-control" id="searchBox" placeholder="Search details…" type="text"/>
+            </div>
+           </div>
+           <div class="col-md-3 text-md-end">
+            <div class="input-group">
+             <label class="input-group-text" for="rowsPerPage">
+              Rows
+             </label>
+             <select class="form-select" id="rowsPerPage">
+              <option>
+               5
+              </option>
+              <option selected="">
+               6
+              </option>
+              <option>
+               10
+              </option>
+             </select>
+            </div>
+           </div>
+          </div>
+          <div class="table-responsive">
+           <table class="table table-theme table-hover-reveal" id="diagTable">
+            <thead>
+             <tr>
+              <th class="sortable" data-sort="timestamp">
+               Timestamp
+               <i class="fa-solid fa-sort ms-1">
+               </i>
+              </th>
+              <th class="sortable" data-sort="type">
+               Type
+               <i class="fa-solid fa-sort ms-1">
+               </i>
+              </th>
+              <th class="sortable" data-sort="event">
+               Event
+               <i class="fa-solid fa-sort ms-1">
+               </i>
+              </th>
+              <th>
+               Details
+              </th>
+              <th>
+               Status
+              </th>
+             </tr>
+            </thead>
+            <tbody>
+            </tbody>
+           </table>
+          </div>
+          <div class="d-flex align-items-center justify-content-between mt-2">
+           <small class="text-muted" id="paginationInfo">
+            Showing 1–6 of 6
+           </small>
+           <div class="btn-group">
+            <button class="btn btn-sm btn-light" disabled="" id="prevPage">
+             <i class="fa-solid fa-chevron-left">
+             </i>
+            </button>
+            <button class="btn btn-sm btn-light" disabled="" id="nextPage">
+             <i class="fa-solid fa-chevron-right">
+             </i>
+            </button>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="card-footer small text-muted">
+         Diagnostics are enabled after enrollment completes.
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+   </div>
+  </main>
+  <!-- Common Public (Login/Enrollment) Footer -->
+  <footer class="mt-auto py-3" style="background-color:#f8f9fa;border-top:1px solid #e9ecef;">
+   <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+    <div class="d-flex align-items-center gap-2">
+     <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/unilogo2/20/20'" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:20px;width:auto;border-radius:3px;"/>
+     <small class="text-muted">
+      © 2025 Your University
+     </small>
+    </div>
+    <ul class="nav">
+     <li class="nav-item">
+      <a class="nav-link px-2" href="#" style="color:#6c757d;">
+       Terms
+      </a>
+     </li>
+     <li class="nav-item">
+      <a class="nav-link px-2" href="#" style="color:#6c757d;">
+       Privacy
+      </a>
+     </li>
+    </ul>
+   </div>
+  </footer>
+  <!-- JS: Bootstrap Bundle, SweetAlert2, Chart.js (for diagnostics), App Script -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js">
+  </script>
+  <script>
+   // Global State
+let currentStep = 1;
+let mediaStream = null;
+let isCameraReady = false;
+let captureInProgress = false;
+
+// Mock Diagnostics Data
+const diagRows = [{
+    timestamp: '2025-01-12 09:15:03',
+    type: 'info',
+    event: 'PageLoad',
+    details: 'Enrollment page loaded',
+    status: 'OK'
+}, {
+    timestamp: '2025-01-12 09:15:06',
+    type: 'info',
+    event: 'StudentPrefill',
+    details: 'Loaded name from session',
+    status: 'OK'
+}, {
+    timestamp: '2025-01-12 09:16:12',
+    type: 'warning',
+    event: 'AmbientLight',
+    details: 'Low light detected',
+    status: 'Check'
+}, {
+    timestamp: '2025-01-12 09:16:20',
+    type: 'info',
+    event: 'PermissionPrompt',
+    details: 'Requested camera permission',
+    status: 'Prompted'
+}, {
+    timestamp: '2025-01-12 09:16:25',
+    type: 'success',
+    event: 'CameraReady',
+    details: 'Camera stream active',
+    status: 'Ready'
+}, {
+    timestamp: '2025-01-12 09:16:48',
+    type: 'success',
+    event: 'Capture',
+    details: 'Frame captured successfully',
+    status: 'Uploaded'
+}];
+
+// Helpers
+function setStudentName() {
+    const url = new URL(window.location.href);
+    const nameParam = url.searchParams.get('name');
+    const name = nameParam || sessionStorage.getItem('studentName') || 'Student';
+    document.getElementById('studentName').textContent = name;
+}
+
+function showAlert(type, message) {
+    const iconMap = {
+        success: 'check-circle',
+        info: 'circle-info',
+        warning: 'triangle-exclamation',
+        danger: 'circle-xmark',
+        error: 'circle-xmark'
+    };
+    const alertArea = document.getElementById('alertArea');
+    alertArea.innerHTML = `
+        <div class="alert alert-${type === 'error' ? 'danger' : type} d-flex align-items-center" role="alert">
+          <i class="fa-solid fa-${iconMap[type] || 'circle-info'} me-2"></i>
+          <div>${message}</div>
+        </div>`;
+}
+
+function clearAlert() {
+    document.getElementById('alertArea').innerHTML = '';
+}
+
+function goToStep(step) {
+    currentStep = step;
+    document.querySelectorAll('.wizard-step').forEach(s => s.classList.add('d-none'));
+    const active = document.querySelector(`#step-${step}`);
+    if (active) active.classList.remove('d-none');
+
+    // Update stepper UI
+    document.querySelectorAll('.stepper .step').forEach(el => {
+        const s = Number(el.getAttribute('data-step'));
+        el.classList.toggle('active', s === step);
+        el.classList.toggle('completed', s < step);
+        el.setAttribute('aria-current', s === step ? 'step' : 'false');
+    });
+
+    // Enable diagnostics after completion
+    const diag = document.getElementById('diagnosticsCard');
+    if (step === 4) {
+        diag.removeAttribute('aria-disabled');
+        diag.classList.remove('disabled');
+    }
+}
+
+async function requestCamera() {
+    try {
+        clearAlert();
+        // Show loading skeleton
+        document.getElementById('cameraLoading').style.display = 'block';
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: 'user'
+            },
+            audio: false
+        });
+        const video = document.getElementById('cameraFeed');
+        video.srcObject = mediaStream;
+        isCameraReady = true;
+        showAlert('success', 'Camera access granted. Preparing capture…');
+        Swal.fire({
+            icon: 'success',
+            title: 'Camera Ready',
+            text: 'Align your face and click Capture.',
+            timer: 1600,
+            showConfirmButton: false
+        });
+        goToStep(3);
+        // Hide skeleton once video plays
+        video.onloadeddata = () => {
+            document.getElementById('cameraLoading').style.display = 'none';
+        };
+    } catch (err) {
+        console.error(err);
+        isCameraReady = false;
+        document.getElementById('permissionDenied').classList.remove('d-none');
+        showAlert('warning', 'Camera access denied. Please enable permissions and try again.');
+        Swal.fire({
+            icon: 'error',
+            title: 'Permission Denied',
+            text: 'Please allow camera access in your browser settings.'
+        });
+    }
+}
+
+function stopCamera() {
+    if (mediaStream) {
+        mediaStream.getTracks().forEach(t => t.stop());
+        mediaStream = null;
+        isCameraReady = false;
+    }
+}
+
+async function captureFrameAndSubmit() {
+    if (!isCameraReady || captureInProgress) return;
+    captureInProgress = true;
+    const video = document.getElementById('cameraFeed');
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Simulate feedback updates
+    const fb = document.getElementById('feedbackText');
+    fb.textContent = 'Analyzing capture quality…';
+
+    // Simulated upload to backend
+    showAlert('info', 'Uploading biometric template securely…');
+    document.getElementById('btnCapture').disabled = true;
+
+    // Fake latency & random success
+    await new Promise(res => setTimeout(res, 1400));
+    const success = true; // deterministic success for demo
+
+    if (success) {
+        fb.textContent = 'Capture successful!';
+        showAlert('success', 'Enrollment complete. Redirect when ready.');
+        stopCamera();
+        Swal.fire({
+            icon: 'success',
+            title: 'Enrollment Successful',
+            text: 'Your biometric template has been stored securely.',
+            confirmButtonText: 'Continue'
+        });
+        goToStep(4);
+    } else {
+        fb.textContent = 'Please try again: more light needed.';
+        document.getElementById('btnRetry').classList.remove('d-none');
+        showAlert('warning', 'Capture failed. Adjust lighting and retry.');
+    }
+
+    document.getElementById('btnCapture').disabled = false;
+    captureInProgress = false;
+}
+
+// Diagnostics Table Logic
+let currentSort = {
+    key: 'timestamp',
+    dir: 'desc'
+};
+let currentPage = 1;
+let rowsPerPage = 6;
+
+function filterAndSearchData() {
+    const type = document.getElementById('filterType').value;
+    const q = document.getElementById('searchBox').value.toLowerCase();
+    return diagRows.filter(r => (type === 'all' || r.type === type) && (
+        r.event.toLowerCase().includes(q) || r.details.toLowerCase().includes(q) || r.status.toLowerCase().includes(q)
+    ));
+}
+
+function sortData(data) {
+    const {
+        key,
+        dir
+    } = currentSort;
+    return data.slice().sort((a, b) => {
+        const va = a[key];
+        const vb = b[key];
+        if (va < vb) return dir === 'asc' ? -1 : 1;
+        if (va > vb) return dir === 'asc' ? 1 : -1;
+        return 0;
+    });
+}
+
+function renderTable() {
+    const tbody = document.querySelector('#diagTable tbody');
+    let data = filterAndSearchData();
+    data = sortData(data);
+    const total = data.length;
+    const totalPages = Math.max(1, Math.ceil(total / rowsPerPage));
+    currentPage = Math.min(currentPage, totalPages);
+    const start = (currentPage - 1) * rowsPerPage;
+    const pageData = data.slice(start, start + rowsPerPage);
+
+    tbody.innerHTML = pageData.map(r => `
+        <tr>
+          <td><code class="text-muted">${r.timestamp}</code></td>
+          <td><span class="badge-soft ${r.type}">${r.type}</span></td>
+          <td>${r.event}</td>
+          <td>${r.details}</td>
+          <td>
+            <span class="status-dot ${r.type === 'success' ? 'success' : r.type === 'warning' ? 'warning' : r.type === 'error' ? 'error' : 'info'}"></span>
+            <span class="ms-1">${r.status}</span>
+          </td>
+        </tr>
+      `).join('');
+
+    // Pagination info
+    const info = document.getElementById('paginationInfo');
+    const showingStart = total === 0 ? 0 : start + 1;
+    const showingEnd = Math.min(start + rowsPerPage, total);
+    info.textContent = `Showing ${showingStart}–${showingEnd} of ${total}`;
+
+    document.getElementById('prevPage').disabled = currentPage <= 1;
+    document.getElementById('nextPage').disabled = currentPage >= totalPages;
+}
+
+function initSorting() {
+    document.querySelectorAll('#diagTable th.sortable').forEach(th => {
+        th.addEventListener('click', () => {
+            const key = th.getAttribute('data-sort');
+            if (currentSort.key === key) {
+                currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.key = key;
+                currentSort.dir = 'asc';
+            }
+            renderTable();
+        });
+    });
+}
+
+// Simple Chart in Diagnostics (optional)
+function renderDiagChart() {
+    const chartContainer = document.createElement('div');
+    chartContainer.className = 'mt-3';
+    chartContainer.innerHTML = `
+        <canvas id="lightChart" height="80" aria-label="Lighting score chart" role="img"></canvas>
+      `;
+    const collapseBody = document.querySelector('#diagCollapse .card-body');
+    collapseBody.appendChild(chartContainer);
+
+    const ctx = document.getElementById('lightChart');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['T-50s', 'T-40s', 'T-30s', 'T-20s', 'T-10s', 'Now'],
+            datasets: [{
+                label: 'Lighting Score',
+                data: [52, 55, 58, 62, 65, 70],
+                borderColor: '#0099D2',
+                backgroundColor: 'rgba(0,153,210,0.12)',
+                tension: 0.3,
+                fill: true,
+                pointRadius: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            },
+            scales: {
+                y: {
+                    min: 0,
+                    max: 100,
+                    ticks: {
+                        stepSize: 20
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Events
+document.addEventListener('DOMContentLoaded', () => {
+    // Apply Poppins to body for this page
+    document.body.style.fontFamily = "'Poppins', var(--font-sans)";
+
+    setStudentName();
+    goToStep(1);
+
+    document.getElementById('btnStart').addEventListener('click', () => {
+        goToStep(2);
+    });
+
+    document.getElementById('btnAllowCamera').addEventListener('click', () => {
+        requestCamera();
+    });
+
+    document.getElementById('btnCapture').addEventListener('click', () => {
+        captureFrameAndSubmit();
+    });
+
+    document.getElementById('btnRetry').addEventListener('click', () => {
+        clearAlert();
+        document.getElementById('btnRetry').classList.add('d-none');
+        document.getElementById('feedbackText').textContent = 'Hold still and center your face…';
+    });
+
+    window.addEventListener('beforeunload', stopCamera);
+
+    // Diagnostics init
+    initSorting();
+    renderTable();
+    document.getElementById('filterType').addEventListener('change', () => {
+        currentPage = 1;
+        renderTable();
+    });
+    document.getElementById('searchBox').addEventListener('input', () => {
+        currentPage = 1;
+        renderTable();
+    });
+    document.getElementById('rowsPerPage').addEventListener('change', (e) => {
+        rowsPerPage = Number(e.target.value);
+        currentPage = 1;
+        renderTable();
+    });
+    document.getElementById('prevPage').addEventListener('click', () => {
+        currentPage = Math.max(1, currentPage - 1);
+        renderTable();
+    });
+    document.getElementById('nextPage').addEventListener('click', () => {
+        currentPage = currentPage + 1;
+        renderTable();
+    });
+
+    // Render chart when diagnostics opens first time
+    const diagCollapse = document.getElementById('diagCollapse');
+    diagCollapse.addEventListener('shown.bs.collapse', () => {
+        if (!document.getElementById('lightChart')) {
+            renderDiagChart();
+        }
+    });
+});
+  </script>
+ </body>
+</html>

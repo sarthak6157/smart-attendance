@@ -1,0 +1,66 @@
+/* audit_log.css - Page-specific styles for Audit Log */
+/* Use Poppins brand typography on this page */
+body.audit-log-page {
+    font-family: "Poppins", var(--font-sans), sans-serif
+    }
+/* Ensure main content fills remaining space next to fixed sidebar */
+@media (min-width: 768px) {
+    .audit-log-page .main-panel {
+        padding-top: 16px
+        }
+    }
+/* Responsive fix: when sidebar is hidden on small screens, remove left margins from header/footer/main */
+@media (max-width: 767.98px) {
+    .navbar-admin {
+        margin-left: 0 !important
+        }
+    footer {
+        margin-left: 0 !important
+        }
+    .main-panel {
+        margin-left: 0 !important
+        }
+    }
+/* Suggestion dropdown adjustments */
+#actorSuggestions, #targetSuggestions {
+    border-radius: var(--radius-1)
+    }
+#actorSuggestions .list-group-item, #targetSuggestions .list-group-item {
+    cursor: pointer
+    }
+#actorSuggestions .list-group-item:hover, #targetSuggestions .list-group-item:hover {
+    background: var(--neutral-soft)
+    }
+/* Table card tweaks */
+.table-card .card-body {
+    min-height: 260px
+    }
+.table-card thead th {
+    user-select: none
+    }
+/* Applied filter chips spacing */
+#appliedChips .tag {
+    background: var(--neutral-soft)
+    }
+/* System alert spacing */
+#systemAlert {
+    border-color: var(--info-600)
+    }
+/* Small spacing improvements for metric card */
+.metric-card canvas {
+    width: 100% !important;
+    height: 140px !important
+    }
+/* Loading overlay appearance is handled inline for z-index; additional smoothing */
+#loadingOverlay {
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px)
+    }
+/* Pagination alignment tweaks on small */
+@media (max-width: 575.98px) {
+    .table-card .card-footer {
+        flex-direction: column !important;
+        gap: 8px;
+        align-items: flex-start !important
+        }
+    }

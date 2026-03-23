@@ -1,0 +1,82 @@
+/* import_page.css - Page-specific styles for Bulk Import wizard */
+/* Use Poppins as primary font on this page while preserving theme fallback */
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/* Layout offsets to accommodate fixed-width sidebar pattern from common components */
+.main-content {
+    margin-left: 260px;
+    padding: var(--space-4)
+    }
+@media (min-width: 992px) {
+    .main-content {
+        padding: var(--space-6)
+        }
+    }
+/* Adjust header/footer margins on small screens when sidebar is hidden */
+@media (max-width: 767.98px) {
+    .navbar-admin {
+        margin-left: 0 !important
+        }
+    footer {
+        margin-left: 0 !important
+        }
+    .main-content {
+        margin-left: 0
+        }
+    }
+/* Wizard step indicator */
+.step-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    color: var(--text-muted);
+    background: var(--surface-0);
+    font-weight: 700
+    }
+.step-indicator span {
+    line-height: 1
+    }
+.step-indicator.active {
+    border-color: var(--color-primary);
+    color: var(--text-strong);
+    box-shadow: var(--shadow-1)
+    }
+/* Dropzone styling */
+.border-dashed {
+    border: 2px dashed var(--border-color)
+    }
+.dropzone-area {
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease
+    }
+.dropzone-area.drag-active {
+    background: var(--info-soft);
+    border-color: var(--color-info)
+    }
+/* Table enhancements */
+#errorsTable td:first-child {
+    font-weight: 700;
+    color: var(--text-strong)
+    }
+/* Chart container fit */
+#resultChart {
+    width: 120px !important;
+    height: 120px !important
+    }
+/* Buttons spacing on mobile */
+@media (max-width: 575.98px) {
+    #step3 .d-flex.gap-2 > .btn {
+        flex: 1 1 auto
+        }
+    }
+/* Make code-like columns list readable */
+#requiredColumnsList code {
+    background: var(--neutral-soft);
+    padding: 2px 6px;
+    border-radius: 6px
+    }

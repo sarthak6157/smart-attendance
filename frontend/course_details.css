@@ -1,0 +1,68 @@
+/* course_details.css - page-specific styles (avoid duplication with style.css) */
+/* Use Poppins brand typography */
+body {
+    font-family: "Poppins", var(--font-sans), system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif
+    }
+/* Layout adjustments when sidebar is present */
+nav.navbar-admin {
+    margin-left: 0;
+    transition: margin-left 0.2s ease
+    }
+.with-sidebar nav.navbar-admin {
+    margin-left: 260px
+    }
+#footerBar {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    margin-left: 0;
+    transition: margin-left 0.2s ease
+    }
+.with-sidebar #footerBar {
+    margin-left: 260px
+    }
+/* Main content spacing */
+.main-content {
+    padding: 16px
+    }
+@media (min-width: 992px) {
+    .main-content {
+        padding: 24px
+        }
+    }
+/* KPI grid fine-tuning */
+.metric-card {
+    min-height: 112px
+    }
+#trendCard {
+    min-height: 112px
+    }
+#trendCard .card-body {
+    height: 180px
+    }
+/* Table column visibility controlled via JS for role; ensure baseline */
+#attendanceTable .student-only, #attendanceTable .staff-only {
+    vertical-align: middle
+    }
+/* Sortable headers indicator hover */
+#attendanceTable th.sortable {
+    cursor: pointer
+    }
+#attendanceTable th.sortable:hover i {
+    color: var(--color-info)
+    }
+/* Role badge spacing */
+#roleBadge {
+    align-self: center
+    }
+/* Toolbar compact spacing */
+.card-header .input-group .form-control {
+    min-width: 110px
+    }
+/* Alerts spacing harmony */
+#systemAlert {
+    border: 1px solid var(--border-color)
+    }
+/* Accessibility focus ring override for this page */
+:focus-visible {
+    outline: none
+    }

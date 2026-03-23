@@ -1,0 +1,65 @@
+/* session_page.css - page specific styles for Active Session */
+/* Typography override to include Poppins with fallback */
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/* Layout adjustments to coexist with the fixed faculty sidebar/header/footer */
+.with-sidebar .main-panel {
+    margin-left: 260px
+    }
+/* Responsive corrections: remove sidebar margins on small screens */
+@media (max-width: 767.98px) {
+    .navbar-faculty {
+        margin-left: 0 !important
+        }
+    .faculty-footer {
+        margin-left: 0 !important
+        }
+    .with-sidebar .main-panel {
+        margin-left: 0 !important
+        }
+    }
+/* QR container */
+.qr-container {
+    width: 320px;
+    height: 320px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--surface-0);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-1)
+    }
+@media (max-width: 575.98px) {
+    .qr-container {
+        width: 260px;
+        height: 260px
+        }
+    }
+/* Session Controls Bar */
+.session-controls-bar {
+    position: sticky;
+    bottom: 0;
+    border: 1px solid var(--border-color);
+    background: var(--surface-0);
+    box-shadow: var(--shadow-1);
+    border-radius: var(--radius-2)
+    }
+/* Status dot size */
+#liveDot {
+    font-size: 10px
+    }
+/* Table tweaks */
+#rosterTable thead th {
+    position: sticky;
+    top: 0;
+    background: var(--surface-muted);
+    z-index: 1
+    }
+#rosterTable tbody tr:hover {
+    background: rgba(0, 0, 0, 0.02)
+    }
+/* Make option pills clickable with pointer */
+.view-switcher .option {
+    cursor: pointer
+    }

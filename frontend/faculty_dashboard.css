@@ -1,0 +1,132 @@
+/* Faculty Dashboard - Page specific styles (faculty_dashboard.css) */
+/* Typography override to Poppins */
+body {
+    font-family: "Poppins", var(--font-sans), system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif
+    }
+/* Ensure main layout accounts for fixed-width sidebar on desktop */
+.main-content {
+    min-height: 100vh;
+    background: transparent
+    }
+/* Sidebar / Header palette as provided in common components */
+:root {
+    --primary: #0FF;
+    --secondary: #008080
+    }
+.sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background-color: var(--secondary);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1030
+    }
+.sidebar .brand {
+    background: rgba(0, 0, 0, 0.15)
+    }
+.sidebar .brand img {
+    height: 36px;
+    border-radius: 4px
+    }
+.sidebar .profile {
+    background: rgba(0, 0, 0, 0.1)
+    }
+.sidebar .nav-link {
+    color: #e6ffff;
+    border-radius: 0.35rem;
+    margin: 4px 8px
+    }
+.sidebar .nav-link:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+    color: #fff
+    }
+.sidebar .nav-link.active {
+    background-color: rgba(0, 255, 255, 0.25);
+    color: #fff;
+    box-shadow: inset 3px 0 0 var(--primary)
+    }
+.navbar-faculty {
+    background-color: var(--secondary)
+    }
+.navbar-faculty .nav-link, .navbar-faculty .navbar-brand {
+    color: #fff
+    }
+.navbar-faculty .btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.12)
+    }
+/* Card / KPI tweaks */
+.kpi-card {
+    cursor: pointer
+    }
+.kpi-card:hover {
+    box-shadow: var(--shadow-2);
+    transform: translatey(-1px)
+    }
+/* Schedule */
+.schedule-card .card-body {
+    padding: 16px
+    }
+.schedule-card .btn[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed
+    }
+/* Chart container height responsive */
+#attendanceChart {
+    min-height: 260px
+    }
+/* Responsive adjustments when sidebar is hidden on small screens */
+@media (max-width: 767.98px) {
+    .sidebar {
+        display: none
+        }
+    .navbar-faculty {
+        margin-left: 0 !important
+        }
+    footer {
+        margin-left: 0 !important
+        }
+    .main-content {
+        margin-left: 0 !important
+        }
+    }
+/* Desktop spacing with sidebar visible */
+@media (min-width: 768px) {
+    .navbar-faculty {
+        margin-left: 260px !important
+        }
+    footer {
+        margin-left: 260px !important
+        }
+    .main-content {
+        margin-left: 260px !important
+        }
+    }
+/* Utilities for subtle badges (leveraging Bootstrap 5 coloring) */
+.bg-success-subtle {
+    background: var(--success-soft) !important
+    }
+.bg-warning-subtle {
+    background: var(--warning-soft) !important
+    }
+.bg-info-subtle {
+    background: var(--info-soft) !important
+    }
+.bg-danger-subtle {
+    background: var(--error-soft) !important
+    }
+/* List group hover affordance */
+#alertsList .list-group-item {
+    border-radius: var(--radius-1);
+    margin-bottom: 8px
+    }
+#alertsList .list-group-item:hover {
+    background: var(--neutral-soft)
+    }
+/* View switcher active state sync */
+.view-switcher .option {
+    user-select: none
+    }
+.view-switcher .option:focus {
+    outline: none
+    }

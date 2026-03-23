@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html class="view-table audit-log-page" lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Audit Log - Admin Console
+  </title>
+  <!-- Brand Typography: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 -->
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet"/>
+  <!-- Font Awesome 6 -->
+  <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" referrerpolicy="no-referrer" rel="stylesheet">
+   <!-- SweetAlert2 -->
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+   </script>
+   <!-- Chart.js for small trends visualization -->
+   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js">
+   </script>
+   <!-- Flatpickr for Date Range Picker -->
+   <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet"/>
+   <script src="https://cdn.jsdelivr.net/npm/flatpickr">
+   </script>
+   <!-- Global Theme Styles -->
+   <link href="style.css" rel="stylesheet"/>
+   <!-- Page-specific CSS -->
+   <link href="audit_log.css" rel="stylesheet"/>
+   <!-- Common Components Styles (provided) -->
+   <style>
+    :root { --primary:#00FFFF; --secondary:#008080; }
+    .sidebar { width: 260px; min-height: 100vh; background-color: var(--secondary); position: fixed; top: 0; left: 0; z-index: 1030; }
+    .sidebar .brand { background: rgba(0,0,0,0.15); }
+    .sidebar .brand img { height: 36px; border-radius: 4px; }
+    .sidebar .profile { background: rgba(0,0,0,0.10); }
+    .sidebar .nav-link { color: #e6ffff; border-radius: .35rem; margin: 4px 8px; }
+    .sidebar .nav-link:hover { background-color: rgba(0,0,0,0.15); color: #fff; }
+    .sidebar .nav-link.active { background-color: rgba(0, 255, 255, 0.25); color: #fff; box-shadow: inset 3px 0 0 var(--primary); }
+    .sidebar .submenu .nav-link { padding-left: 2rem; }
+    @media (max-width: 767.98px){ .sidebar { display: none; } }
+   </style>
+   <style>
+    :root { --primary:#00FFFF; --secondary:#008080; }
+    .navbar-admin { background-color: var(--secondary); }
+    .navbar-admin .nav-link, .navbar-admin .navbar-brand { color:#fff; }
+    .navbar-admin .btn-outline-light:hover { background-color: rgba(255,255,255,0.12); }
+   </style>
+  </link>
+ </head>
+ <body>
+  <!-- Sidebar (Admin Only) -->
+  <aside class="sidebar d-none d-md-flex flex-column" id="sidebar">
+   <div class="brand d-flex align-items-center gap-2 p-3">
+    <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/adminlogo/40/40';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg"/>
+    <span class="text-white fw-semibold">
+     Attendance Admin
+    </span>
+   </div>
+   <div class="profile d-flex align-items-center gap-2 p-3">
+    <div class="rounded-circle bg-light text-dark d-flex align-items-center justify-content-center" style="width:36px;height:36px;font-weight:600;">
+     AD
+    </div>
+    <div class="text-white small">
+     <div class="fw-semibold">
+      Admin Doe
+     </div>
+     <div class="opacity:0.85">
+      Administrator
+     </div>
+    </div>
+   </div>
+   <nav class="nav flex-column mt-2">
+    <a class="nav-link" href="./admin_dashboard.html">
+     <i class="fa fa-gauge fa-fw me-2">
+     </i>
+     Dashboard
+    </a>
+    <a aria-controls="dataMgmt" aria-expanded="true" class="nav-link" data-bs-toggle="collapse" href="#dataMgmt" role="button">
+     <i class="fa fa-database fa-fw me-2">
+     </i>
+     Data Management
+    </a>
+    <div class="collapse show" id="dataMgmt">
+     <div class="submenu nav flex-column">
+      <a class="nav-link" href="./management_page.html#users">
+       <i class="fa fa-users fa-fw me-2">
+       </i>
+       Users
+      </a>
+      <a class="nav-link" href="./management_page.html#courses">
+       <i class="fa fa-book fa-fw me-2">
+       </i>
+       Courses
+      </a>
+      <a class="nav-link" href="./locations_page.html">
+       <i class="fa fa-location-dot fa-fw me-2">
+       </i>
+       Locations
+      </a>
+      <a class="nav-link" href="./management_page.html#timetable">
+       <i class="fa fa-calendar-days fa-fw me-2">
+       </i>
+       Timetables
+      </a>
+      <a class="nav-link" href="./import_page.html">
+       <i class="fa fa-file-import fa-fw me-2">
+       </i>
+       Bulk Import
+      </a>
+     </div>
+    </div>
+    <a class="nav-link" href="./reports_page.html">
+     <i class="fa fa-file-lines fa-fw me-2">
+     </i>
+     Reports
+    </a>
+    <a class="nav-link" href="./settings_page.html">
+     <i class="fa fa-gear fa-fw me-2">
+     </i>
+     Settings
+    </a>
+    <a class="nav-link" href="./audit_log.html">
+     <i class="fa fa-clipboard-list fa-fw me-2">
+     </i>
+     Audit Log
+    </a>
+    <a class="nav-link" href="./admin_dashboard.html#hotspots">
+     <i class="fa fa-bolt fa-fw me-2">
+     </i>
+     Hotspots
+    </a>
+   </nav>
+  </aside>
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-admin" style="margin-left:260px;">
+   <div class="container-fluid">
+    <button aria-label="Toggle sidebar" class="btn btn-outline-light d-md-none me-2" id="sidebarToggle">
+     <i class="fa fa-bars">
+     </i>
+    </button>
+    <a class="navbar-brand d-flex align-items-center" href="./admin_dashboard.html">
+     <img alt="Logo" class="me-2" onerror="this.onerror=null;this.src='https://picsum.photos/seed/adminbrand/56/28';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:28px;border-radius:4px;">
+      <span>
+       Admin Console
+      </span>
+     </img>
+    </a>
+    <form class="d-none d-lg-flex ms-3" role="search" style="width:420px;">
+     <input aria-label="Search" class="form-control form-control-sm me-2" placeholder="Search users, courses, locations" type="search"/>
+     <button class="btn btn-sm btn-outline-light" type="submit">
+      <i class="fa fa-search">
+      </i>
+     </button>
+    </form>
+    <div class="ms-auto d-flex align-items-center gap-2">
+     <a class="btn btn-sm btn-outline-light" href="./management_page.html#users">
+      <i class="fa fa-plus me-1">
+      </i>
+      Add User
+     </a>
+     <button aria-label="Notifications" class="btn btn-sm btn-outline-light" id="btnNotifications">
+      <i class="fa fa-bell">
+      </i>
+     </button>
+     <button aria-label="Messages" class="btn btn-sm btn-outline-light">
+      <i class="fa fa-envelope">
+      </i>
+     </button>
+     <div class="dropdown">
+      <button aria-expanded="false" class="btn btn-sm btn-outline-light dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa fa-user-shield me-1">
+       </i>
+       Admin Doe
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li>
+        <h6 class="dropdown-header">
+         Signed in as Admin
+        </h6>
+       </li>
+       <li>
+        <a class="dropdown-item" href="./settings_page.html">
+         System Settings
+        </a>
+       </li>
+       <li>
+        <hr class="dropdown-divider"/>
+       </li>
+       <li>
+        <a class="dropdown-item" href="./login_page.html">
+         Logout
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <!-- Main Content -->
+  <main class="main-panel container-fluid" style="margin-left:260px;">
+   <!-- Breadcrumbs -->
+   <nav aria-label="breadcrumb" class="breadcrumb">
+    <ol class="breadcrumb mb-2">
+     <li class="breadcrumb-item">
+      <a href="./admin_dashboard.html">
+       Dashboard
+      </a>
+     </li>
+     <li aria-current="page" class="breadcrumb-item active">
+      Audit Log
+     </li>
+    </ol>
+   </nav>
+   <!-- Page Header -->
+   <div class="page-header">
+    <div class="d-flex align-items-center gap-2">
+     <h1 class="page-title mb-0">
+      Audit Log
+     </h1>
+     <span class="badge-soft info" data-bs-title="Review and trace critical system actions." data-bs-toggle="tooltip">
+      Info
+     </span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+     <button class="btn btn-light btn-sm" id="btnExport">
+      <i class="fa-solid fa-file-export me-1">
+      </i>
+      Export CSV
+     </button>
+     <button class="btn btn-info btn-sm" id="btnRefresh">
+      <i class="fa-solid fa-rotate me-1">
+      </i>
+      Refresh
+     </button>
+    </div>
+   </div>
+   <!-- System Feedback Area -->
+   <div class="alert alert-info d-none" id="systemAlert" role="alert">
+    Filters updated. Showing latest results.
+   </div>
+   <!-- Filter Bar & Mini Chart Row -->
+   <div class="row g-3 mb-3">
+    <div class="col-12 col-xl-9">
+     <div class="card app-card">
+      <div class="card-header">
+       <div class="title d-flex align-items-center gap-2">
+        <i class="fa-solid fa-filter">
+        </i>
+        <span class="widget-title">
+         Filters
+        </span>
+       </div>
+       <div>
+        <button class="btn btn-light btn-sm" id="btnResetFilters">
+         <i class="fa-solid fa-rotate-left me-1">
+         </i>
+         Reset
+        </button>
+        <button class="btn btn-primary btn-sm" disabled="" id="btnApplyFilters">
+         <i class="fa-solid fa-check me-1">
+         </i>
+         Apply
+        </button>
+       </div>
+      </div>
+      <div class="card-body">
+       <form class="row gy-3 gx-3 align-items-end" id="filterForm">
+        <!-- Date Range -->
+        <div class="col-12 col-md-4">
+         <label class="form-label" for="dateRange">
+          Date Range
+         </label>
+         <input aria-describedby="dateHelp" class="form-control" id="dateRange" placeholder="Select date range" type="text"/>
+         <div class="form-text" id="dateHelp">
+          Start date cannot be after end date.
+         </div>
+        </div>
+        <!-- Actor Search -->
+        <div class="col-12 col-md-4 position-relative">
+         <label class="form-label" for="actorSearch">
+          Actor (User)
+         </label>
+         <input autocomplete="off" class="form-control" id="actorSearch" placeholder="Search by Faculty Name/ID" type="text"/>
+         <div class="list-group position-absolute w-100 d-none shadow-sm" id="actorSuggestions" style="z-index: 1060; max-height: 220px; overflow:auto;">
+         </div>
+        </div>
+        <!-- Target Search -->
+        <div class="col-12 col-md-4 position-relative">
+         <label class="form-label" for="targetSearch">
+          Target (e.g., Student)
+         </label>
+         <input autocomplete="off" class="form-control" id="targetSearch" placeholder="Search by Student Name/ID" type="text"/>
+         <div class="list-group position-absolute w-100 d-none shadow-sm" id="targetSuggestions" style="z-index: 1060; max-height: 220px; overflow:auto;">
+         </div>
+        </div>
+        <!-- Action Type -->
+        <div class="col-12 col-md-4">
+         <label class="form-label" for="actionType">
+          Action Type
+         </label>
+         <select class="form-select" id="actionType">
+          <option value="">
+           All
+          </option>
+          <option value="Manual Override">
+           Manual Override
+          </option>
+          <option value="User Created">
+           User Created
+          </option>
+          <option value="Rule Changed">
+           Rule Changed
+          </option>
+         </select>
+        </div>
+        <!-- Applied Filters Chips -->
+        <div class="col-12">
+         <div class="d-flex flex-wrap gap-2" id="appliedChips">
+         </div>
+        </div>
+       </form>
+      </div>
+     </div>
+    </div>
+    <!-- Mini Chart Card -->
+    <div class="col-12 col-xl-3">
+     <div class="card metric-card h-100">
+      <div class="d-flex align-items-center justify-content-between">
+       <div class="metric-title">
+        Overrides (14 days)
+       </div>
+       <span class="badge-soft primary">
+        <i class="fa-solid fa-chart-line">
+        </i>
+        Trend
+       </span>
+      </div>
+      <div class="mt-2">
+       <canvas aria-label="Overrides trend chart" height="140" id="trendChart" role="img">
+       </canvas>
+      </div>
+     </div>
+    </div>
+   </div>
+   <!-- Audit Log Table -->
+   <div class="card app-card table-card">
+    <div class="card-header">
+     <div class="title d-flex align-items-center gap-2">
+      <i class="fa-solid fa-clipboard-list">
+      </i>
+      <span class="widget-title">
+       Audit Log Entries
+      </span>
+     </div>
+     <div class="d-flex align-items-center gap-2">
+      <div aria-label="View switcher" class="view-switcher d-none d-md-inline-flex">
+       <div class="option active">
+        <i class="fa-solid fa-table">
+        </i>
+       </div>
+       <div class="option">
+        <i class="fa-solid fa-grip">
+        </i>
+       </div>
+      </div>
+      <button class="btn btn-light btn-sm" data-bs-title="Clear sorting" data-bs-toggle="tooltip" id="btnClearSort">
+       <i class="fa-solid fa-arrow-rotate-left">
+       </i>
+      </button>
+     </div>
+    </div>
+    <div class="card-body p-0 position-relative">
+     <!-- Loading Overlay -->
+     <div class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-flex align-items-center justify-content-center d-none" id="loadingOverlay" style="z-index: 10;">
+      <div class="text-center">
+       <div aria-hidden="true" class="spinner-border text-info" role="status">
+       </div>
+       <div class="mt-2 small text-muted">
+        Fetching logs...
+       </div>
+      </div>
+     </div>
+     <div class="table-responsive">
+      <table aria-describedby="auditLogInfo" class="table table-hover table-theme mb-0">
+       <thead>
+        <tr>
+         <th id="thTimestamp" scope="col" style="min-width:180px; cursor:pointer;">
+          <span class="d-inline-flex align-items-center gap-1">
+           Timestamp
+           <i class="fa-solid fa-sort text-muted" id="tsSortIcon">
+           </i>
+          </span>
+         </th>
+         <th scope="col">
+          Action Type
+         </th>
+         <th scope="col">
+          Actor (User)
+         </th>
+         <th scope="col">
+          Target
+         </th>
+         <th scope="col" style="min-width:260px;">
+          Details
+         </th>
+        </tr>
+       </thead>
+       <tbody id="logTbody">
+        <!-- Rows injected via JS -->
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="card-footer d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+     <div class="small text-muted" id="pageInfo">
+      Showing 1-10 of 0 entries
+     </div>
+     <nav aria-label="Audit log pagination">
+      <ul class="pagination pagination-sm mb-0">
+       <li class="page-item">
+        <button aria-label="Previous" class="page-link" id="btnPrev">
+         &lt; Previous
+        </button>
+       </li>
+       <li class="page-item disabled">
+        <span class="page-link" id="pageIndicator">
+         Page 1 of 1
+        </span>
+       </li>
+       <li class="page-item">
+        <button aria-label="Next" class="page-link" id="btnNext">
+         Next &gt;
+        </button>
+       </li>
+      </ul>
+     </nav>
+    </div>
+   </div>
+  </main>
+  <!-- Footer -->
+  <footer class="py-3" style="background-color:#f8f9fa;border-top:1px solid #e9ecef;margin-left:260px;">
+   <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+    <div class="d-flex align-items-center gap-2">
+     <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/footerlogo/40/20';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:20px;border-radius:3px;"/>
+     <small class="text-muted">
+      © 2025 Your University
+     </small>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+     <a class="text-decoration-none" href="./import_page.html">
+      <i class="fa fa-file-import me-1">
+      </i>
+      Import
+     </a>
+     <a class="text-decoration-none" href="./audit_log.html">
+      <i class="fa fa-clipboard-list me-1">
+      </i>
+      Audit
+     </a>
+     <a class="text-muted text-decoration-none" href="#">
+      Terms
+     </a>
+     <a class="text-muted text-decoration-none" href="#">
+      Privacy
+     </a>
+    </div>
+   </div>
+  </footer>
+  <!-- Bootstrap 5 JS Bundle -->
+  <script crossorigin="anonymous" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script>
+   // Sidebar toggle for mobile
+document.addEventListener('DOMContentLoaded', function() {
+    var t = document.getElementById('sidebarToggle');
+    var s = document.getElementById('sidebar');
+    if (t && s) {
+        t.addEventListener('click', function() {
+            s.classList.toggle('d-none');
+        });
+    }
+});
+
+// Enable tooltips
+const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+tooltipTriggerList.map(function(tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+});
+
+// State
+let isLoading = false;
+let sortColumn = 'timestamp';
+let sortDirection = 'desc';
+let currentPage = 1;
+const pageSize = 10;
+
+// Mock Data for Audit Log
+const mockLogs = [{
+    id: 1012,
+    timestamp: '2025-01-27T14:32:12Z',
+    actionType: 'Manual Override',
+    actor: {
+        id: 'F103',
+        name: 'Dr. Priya Nair'
+    },
+    target: {
+        id: 'S4512',
+        name: 'Liam Johnson'
+    },
+    details: {
+        reason: 'Attendance corrected after valid excuse email',
+        course: 'PHY 210',
+        sessionId: 'PHY210-2025-01-27-1',
+        before: 'Absent',
+        after: 'Present',
+        ip: '10.21.34.18'
+    }
+}, {
+    id: 1011,
+    timestamp: '2025-01-27T09:11:44Z',
+    actionType: 'Rule Changed',
+    actor: {
+        id: 'A002',
+        name: 'Admin Doe'
+    },
+    target: {
+        id: 'RULE-ATT-5',
+        name: 'Attendance Grace Period'
+    },
+    details: {
+        reason: 'Grace period extended from 5 to 8 minutes',
+        before: '5m',
+        after: '8m',
+        ip: '10.21.34.2'
+    }
+}, {
+    id: 1010,
+    timestamp: '2025-01-26T16:03:20Z',
+    actionType: 'User Created',
+    actor: {
+        id: 'A002',
+        name: 'Admin Doe'
+    },
+    target: {
+        id: 'F204',
+        name: 'Prof. Elena Petrova'
+    },
+    details: {
+        reason: 'New faculty onboarding',
+        ip: '10.21.34.2'
+    }
+}, {
+    id: 1009,
+    timestamp: '2025-01-26T08:51:09Z',
+    actionType: 'Manual Override',
+    actor: {
+        id: 'F101',
+        name: 'Dr. Arjun Mehta'
+    },
+    target: {
+        id: 'S4401',
+        name: 'Sophia Chen'
+    },
+    details: {
+        reason: 'Verified lab attendance via TA report',
+        course: 'CHE 101',
+        sessionId: 'CHE101-2025-01-26-1',
+        before: 'Absent',
+        after: 'Present',
+        ip: '10.21.34.10'
+    }
+}, {
+    id: 1008,
+    timestamp: '2025-01-25T18:20:42Z',
+    actionType: 'Manual Override',
+    actor: {
+        id: 'F102',
+        name: 'Prof. Michael Brown'
+    },
+    target: {
+        id: 'S4322',
+        name: 'Ethan Williams'
+    },
+    details: {
+        reason: 'Scan device failed during session',
+        course: 'CSE 301',
+        sessionId: 'CSE301-2025-01-25-2',
+        before: 'Absent',
+        after: 'Present',
+        ip: '10.21.34.23'
+    }
+}, {
+    id: 1007,
+    timestamp: '2025-01-25T11:05:55Z',
+    actionType: 'Rule Changed',
+    actor: {
+        id: 'A002',
+        name: 'Admin Doe'
+    },
+    target: {
+        id: 'RULE-LOC-2',
+        name: 'Location Sensitivity'
+    },
+    details: {
+        reason: 'Geofence radius reduced from 30m to 20m',
+        before: '30m',
+        after: '20m',
+        ip: '10.21.34.2'
+    }
+}, {
+    id: 1006,
+    timestamp: '2025-01-24T09:31:10Z',
+    actionType: 'Manual Override',
+    actor: {
+        id: 'F104',
+        name: 'Dr. Grace Wong'
+    },
+    target: {
+        id: 'S4210',
+        name: 'Ava Martinez'
+    },
+    details: {
+        reason: 'Excused due to medical appointment',
+        course: 'BIO 120',
+        sessionId: 'BIO120-2025-01-24-1',
+        before: 'Absent',
+        after: 'Excused',
+        ip: '10.21.34.31'
+    }
+}, {
+    id: 1005,
+    timestamp: '2025-01-23T15:14:48Z',
+    actionType: 'User Created',
+    actor: {
+        id: 'A002',
+        name: 'Admin Doe'
+    },
+    target: {
+        id: 'S4805',
+        name: 'Noah Davis'
+    },
+    details: {
+        reason: 'Late enrollment processed',
+        ip: '10.21.34.2'
+    }
+}, {
+    id: 1004,
+    timestamp: '2025-01-22T12:28:36Z',
+    actionType: 'Manual Override',
+    actor: {
+        id: 'F102',
+        name: 'Prof. Michael Brown'
+    },
+    target: {
+        id: 'S4098',
+        name: 'Mia Rodriguez'
+    },
+    details: {
+        reason: 'Multiple scans recorded; corrected to present',
+        course: 'CSE 301',
+        sessionId: 'CSE301-2025-01-22-1',
+        before: 'Absent',
+        after: 'Present',
+        ip: '10.21.34.23'
+    }
+}, {
+    id: 1003,
+    timestamp: '2025-01-21T10:44:05Z',
+    actionType: 'Manual Override',
+    actor: {
+        id: 'F101',
+        name: 'Dr. Arjun Mehta'
+    },
+    target: {
+        id: 'S4001',
+        name: 'Oliver Garcia'
+    },
+    details: {
+        reason: 'Instructor verified presence during demo',
+        course: 'CHE 101',
+        sessionId: 'CHE101-2025-01-21-1',
+        before: 'Absent',
+        after: 'Present',
+        ip: '10.21.34.10'
+    }
+}, {
+    id: 1002,
+    timestamp: '2025-01-20T17:57:49Z',
+    actionType: 'Rule Changed',
+    actor: {
+        id: 'A002',
+        name: 'Admin Doe'
+    },
+    target: {
+        id: 'RULE-ATT-4',
+        name: 'Duplicate Scan Handling'
+    },
+    details: {
+        reason: 'Ignoring second scan within 60s',
+        before: '30s',
+        after: '60s',
+        ip: '10.21.34.2'
+    }
+}, {
+    id: 1001,
+    timestamp: '2025-01-19T09:05:12Z',
+    actionType: 'Manual Override',
+    actor: {
+        id: 'F104',
+        name: 'Dr. Grace Wong'
+    },
+    target: {
+        id: 'S4012',
+        name: 'Charlotte Lee'
+    },
+    details: {
+        reason: 'TA confirmed attendance',
+        course: 'BIO 120',
+        sessionId: 'BIO120-2025-01-19-1',
+        before: 'Absent',
+        after: 'Present',
+        ip: '10.21.34.31'
+    }
+}];
+
+// Mock users for suggestions
+const faculty = [{
+    id: 'F101',
+    name: 'Dr. Arjun Mehta'
+}, {
+    id: 'F102',
+    name: 'Prof. Michael Brown'
+}, {
+    id: 'F103',
+    name: 'Dr. Priya Nair'
+}, {
+    id: 'F104',
+    name: 'Dr. Grace Wong'
+}, {
+    id: 'A002',
+    name: 'Admin Doe'
+}];
+const students = [{
+    id: 'S4512',
+    name: 'Liam Johnson'
+}, {
+    id: 'S4401',
+    name: 'Sophia Chen'
+}, {
+    id: 'S4322',
+    name: 'Ethan Williams'
+}, {
+    id: 'S4210',
+    name: 'Ava Martinez'
+}, {
+    id: 'S4805',
+    name: 'Noah Davis'
+}, {
+    id: 'S4098',
+    name: 'Mia Rodriguez'
+}, {
+    id: 'S4001',
+    name: 'Oliver Garcia'
+}, {
+    id: 'S4012',
+    name: 'Charlotte Lee'
+}];
+
+// Filters state
+const filters = {
+    dateStart: null,
+    dateEnd: null,
+    actorId: '',
+    targetId: '',
+    actionType: ''
+};
+let pendingFilters = {
+    ...filters
+};
+
+// Elements
+const tbody = document.getElementById('logTbody');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const pageInfo = document.getElementById('pageInfo');
+const pageIndicator = document.getElementById('pageIndicator');
+const btnPrev = document.getElementById('btnPrev');
+const btnNext = document.getElementById('btnNext');
+const tsSortIcon = document.getElementById('tsSortIcon');
+const systemAlert = document.getElementById('systemAlert');
+const btnApplyFilters = document.getElementById('btnApplyFilters');
+const btnResetFilters = document.getElementById('btnResetFilters');
+const btnClearSort = document.getElementById('btnClearSort');
+const btnRefresh = document.getElementById('btnRefresh');
+const btnExport = document.getElementById('btnExport');
+const appliedChips = document.getElementById('appliedChips');
+
+// Date Range Picker
+const fp = flatpickr('#dateRange', {
+    mode: 'range',
+    dateFormat: 'Y-m-d',
+    onChange: function(selectedDates) {
+        pendingFilters.dateStart = selectedDates[0] ? selectedDates[0].toISOString() : null;
+        pendingFilters.dateEnd = selectedDates[1] ? selectedDates[1].toISOString() : null;
+        updateApplyButtonState();
+    }
+});
+
+// Autocomplete helpers
+const actorInput = document.getElementById('actorSearch');
+const targetInput = document.getElementById('targetSearch');
+const actorSug = document.getElementById('actorSuggestions');
+const targetSug = document.getElementById('targetSuggestions');
+
+function debounce(fn, delay) {
+    let t;
+    return function(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), delay);
+    }
+}
+
+function showSuggestions(container, items, onSelect) {
+    container.innerHTML = '';
+    if (!items.length) {
+        container.classList.add('d-none');
+        return;
+    }
+    items.slice(0, 8).forEach(it => {
+        const a = document.createElement('a');
+        a.href = 'javascript:void(0)';
+        a.className = 'list-group-item list-group-item-action';
+        a.textContent = `${it.name} (${it.id})`;
+        a.addEventListener('click', () => {
+            onSelect(it);
+            container.classList.add('d-none');
+        });
+        container.appendChild(a);
+    });
+    container.classList.remove('d-none');
+}
+
+const searchActor = debounce((q) => {
+    const term = q.trim().toLowerCase();
+    if (!term) {
+        actorSug.classList.add('d-none');
+        return;
+    }
+    const matches = faculty.filter(u => u.name.toLowerCase().includes(term) || u.id.toLowerCase().includes(term));
+    showSuggestions(actorSug, matches, (sel) => {
+        actorInput.value = `${sel.name} (${sel.id})`;
+        pendingFilters.actorId = sel.id;
+        updateApplyButtonState();
+    });
+}, 200);
+
+const searchTarget = debounce((q) => {
+    const term = q.trim().toLowerCase();
+    if (!term) {
+        targetSug.classList.add('d-none');
+        return;
+    }
+    const matches = students.filter(u => u.name.toLowerCase().includes(term) || u.id.toLowerCase().includes(term));
+    showSuggestions(targetSug, matches, (sel) => {
+        targetInput.value = `${sel.name} (${sel.id})`;
+        pendingFilters.targetId = sel.id;
+        updateApplyButtonState();
+    });
+}, 200);
+
+actorInput.addEventListener('input', (e) => {
+    pendingFilters.actorId = '';
+    searchActor(e.target.value);
+});
+targetInput.addEventListener('input', (e) => {
+    pendingFilters.targetId = '';
+    searchTarget(e.target.value);
+});
+document.addEventListener('click', (e) => {
+    if (!actorSug.contains(e.target) && e.target !== actorInput) actorSug.classList.add('d-none');
+    if (!targetSug.contains(e.target) && e.target !== targetInput) targetSug.classList.add('d-none');
+});
+
+// Action Type
+document.getElementById('actionType').addEventListener('change', function() {
+    pendingFilters.actionType = this.value;
+    updateApplyButtonState();
+});
+
+// Sorting
+document.getElementById('thTimestamp').addEventListener('click', function() {
+    if (sortColumn !== 'timestamp') {
+        sortColumn = 'timestamp';
+        sortDirection = 'desc';
+    } else {
+        sortDirection = (sortDirection === 'asc') ? 'desc' : 'asc';
+    }
+    updateSortIcon();
+    render();
+});
+
+btnClearSort.addEventListener('click', () => {
+    sortColumn = 'timestamp';
+    sortDirection = 'desc';
+    updateSortIcon();
+    render();
+});
+
+function updateSortIcon() {
+    tsSortIcon.className = 'fa-solid ' + (sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down');
+    tsSortIcon.classList.add('text-info');
+}
+
+// Apply/Reset Filters
+btnApplyFilters.addEventListener('click', function() {
+    // Validate date range
+    if (pendingFilters.dateStart && pendingFilters.dateEnd) {
+        const s = new Date(pendingFilters.dateStart);
+        const e = new Date(pendingFilters.dateEnd);
+        if (s > e) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid date range',
+                text: 'Start date cannot be after end date.'
+            });
+            return;
+        }
+    }
+    Object.assign(filters, pendingFilters);
+    currentPage = 1;
+    showSystemAlert('Filters applied.');
+    fetchLogs();
+});
+
+btnResetFilters.addEventListener('click', function() {
+    Swal.fire({
+        title: 'Reset filters?',
+        text: 'This will clear all selected filters.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, reset',
+        cancelButtonText: 'Cancel'
+    }).then(res => {
+        if (res.isConfirmed) {
+            pendingFilters.dateStart = null;
+            pendingFilters.dateEnd = null;
+            pendingFilters.actorId = '';
+            pendingFilters.targetId = '';
+            pendingFilters.actionType = '';
+            document.getElementById('actionType').value = '';
+            document.getElementById('dateRange').value = '';
+            actorInput.value = '';
+            targetInput.value = '';
+            updateChips();
+            updateApplyButtonState();
+        }
+    })
+});
+
+function updateApplyButtonState() {
+    const changed = JSON.stringify(filters) !== JSON.stringify(pendingFilters);
+    btnApplyFilters.disabled = !changed;
+    updateChips();
+}
+
+function updateChips() {
+    appliedChips.innerHTML = '';
+    const chips = [];
+    if (pendingFilters.dateStart || pendingFilters.dateEnd) {
+        const s = pendingFilters.dateStart ? new Date(pendingFilters.dateStart).toLocaleDateString() : '...';
+        const e = pendingFilters.dateEnd ? new Date(pendingFilters.dateEnd).toLocaleDateString() : '...';
+        chips.push({
+            k: 'Date',
+            v: `${s} - ${e}`
+        });
+    }
+    if (pendingFilters.actorId) chips.push({
+        k: 'Actor',
+        v: pendingFilters.actorId
+    });
+    if (pendingFilters.targetId) chips.push({
+        k: 'Target',
+        v: pendingFilters.targetId
+    });
+    if (pendingFilters.actionType) chips.push({
+        k: 'Action',
+        v: pendingFilters.actionType
+    });
+    chips.forEach(c => {
+        const el = document.createElement('span');
+        el.className = 'tag';
+        el.innerHTML = `<strong class="me-1">${c.k}:</strong> ${c.v}`;
+        appliedChips.appendChild(el);
+    });
+    if (chips.length === 0) {
+        const el = document.createElement('span');
+        el.className = 'text-muted small';
+        el.textContent = 'No filters selected';
+        appliedChips.appendChild(el);
+    }
+}
+
+// Fetch logs (simulated)
+function setLoading(v) {
+    isLoading = v;
+    loadingOverlay.classList.toggle('d-none', !v);
+}
+
+function fetchLogs() {
+    setLoading(true);
+    setTimeout(() => {
+        render(); // uses mockLogs filtered
+        setLoading(false);
+    }, 600);
+}
+
+function applyFiltersToData(data) {
+    return data.filter(item => {
+        // date filter
+        if (filters.dateStart) {
+            if (new Date(item.timestamp) < new Date(filters.dateStart)) return false;
+        }
+        if (filters.dateEnd) {
+            if (new Date(item.timestamp) > new Date(filters.dateEnd)) return false;
+        }
+        // actor
+        if (filters.actorId && item.actor.id !== filters.actorId) return false;
+        // target
+        if (filters.targetId && item.target.id !== filters.targetId) return false;
+        // action type
+        if (filters.actionType && item.actionType !== filters.actionType) return false;
+        return true;
+    });
+}
+
+function sortData(data) {
+    if (sortColumn === 'timestamp') {
+        data.sort((a, b) => {
+            const da = new Date(a.timestamp).getTime();
+            const db = new Date(b.timestamp).getTime();
+            return sortDirection === 'asc' ? (da - db) : (db - da);
+        });
+    }
+    return data;
+}
+
+function paginate(data) {
+    const total = data.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if (currentPage > totalPages) currentPage = totalPages;
+    const startIdx = (currentPage - 1) * pageSize;
+    const pageItems = data.slice(startIdx, startIdx + pageSize);
+    return {
+        total,
+        totalPages,
+        items: pageItems,
+        startIdx
+    };
+}
+
+function render() {
+    let data = applyFiltersToData([...mockLogs]);
+    sortData(data);
+    const {
+        total,
+        totalPages,
+        items,
+        startIdx
+    } = paginate(data);
+    tbody.innerHTML = '';
+    items.forEach(entry => tbody.appendChild(renderRow(entry)));
+    const from = total ? startIdx + 1 : 0;
+    const to = startIdx + items.length;
+    pageInfo.textContent = `Showing ${from}-${to} of ${total} entries`;
+    pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+    btnPrev.disabled = currentPage <= 1;
+    btnNext.disabled = currentPage >= totalPages;
+    renderTrendChart();
+}
+
+function renderRow(log) {
+    const tr = document.createElement('tr');
+    const ts = new Date(log.timestamp).toLocaleString();
+
+    const tdTs = document.createElement('td');
+    tdTs.textContent = ts;
+    tdTs.className = 'small';
+    const tdAction = document.createElement('td');
+    tdAction.innerHTML = `<span class="badge-soft ${log.actionType==='Manual Override'?'warning': (log.actionType==='User Created'?'success':'info')}">${log.actionType}</span>`;
+
+    const tdActor = document.createElement('td');
+    const actorLink = document.createElement('a');
+    actorLink.href = `./management_page.html#users`;
+    actorLink.textContent = `${log.actor.name} (${log.actor.id})`;
+    actorLink.className = 'text-decoration-none';
+    tdActor.appendChild(actorLink);
+
+    const tdTarget = document.createElement('td');
+    const targetLink = document.createElement('a');
+    targetLink.href = `./management_page.html#users`;
+    targetLink.textContent = `${log.target.name} (${log.target.id})`;
+    targetLink.className = 'text-decoration-none';
+    tdTarget.appendChild(targetLink);
+
+    const tdDetails = document.createElement('td');
+    const detailParts = [];
+    if (log.details.course) detailParts.push(`<span class="me-2"><i class="fa-solid fa-book-open text-muted"></i> ${log.details.course}</span>`);
+    if (log.details.sessionId) detailParts.push(`<span class="me-2"><i class="fa-solid fa-hashtag text-muted"></i> ${log.details.sessionId}</span>`);
+    if (log.details.before || log.details.after) detailParts.push(`<span class="me-2"><i class="fa-solid fa-right-left text-muted"></i> ${log.details.before||'?'} → ${log.details.after||'?'}</span>`);
+    if (log.details.ip) detailParts.push(`<span class="me-2"><i class="fa-solid fa-network-wired text-muted"></i> ${log.details.ip}</span>`);
+    const reason = log.details.reason || '';
+    tdDetails.innerHTML = `<div class="text-truncate" style="max-width:540px;" data-bs-toggle="tooltip" data-bs-title="${reason.replace(/"/g,'&quot;')}"><i class="fa-solid fa-note-sticky text-muted"></i> ${reason}</div><div class="mt-1 small text-muted">${detailParts.join('')}</div>`;
+
+    tr.appendChild(tdTs);
+    tr.appendChild(tdAction);
+    tr.appendChild(tdActor);
+    tr.appendChild(tdTarget);
+    tr.appendChild(tdDetails);
+    return tr;
+}
+
+btnPrev.addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        render();
+    }
+});
+btnNext.addEventListener('click', () => {
+    currentPage++;
+    render();
+});
+
+btnRefresh.addEventListener('click', () => {
+    fetchLogs();
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Logs refreshed',
+        showConfirmButton: false,
+        timer: 1200
+    });
+});
+
+btnExport.addEventListener('click', () => {
+    Swal.fire({
+        icon: 'info',
+        title: 'Export CSV',
+        text: 'This will export the current filtered result set as CSV.',
+        showCancelButton: true,
+        confirmButtonText: 'Export'
+    }).then(res => {
+        if (res.isConfirmed) {
+            exportCSV();
+        }
+    });
+});
+
+function exportCSV() {
+    let data = applyFiltersToData([...mockLogs]);
+    sortData(data);
+    const rows = [
+        ['Timestamp', 'Action Type', 'Actor', 'Target', 'Details']
+    ];
+    data.forEach(l => {
+        rows.push([
+            new Date(l.timestamp).toISOString(), l.actionType, `${l.actor.name} (${l.actor.id})`, `${l.target.name} (${l.target.id})`, (l.details.reason || '').replaceAll('\n', ' ')
+        ]);
+    });
+    const csv = rows.map(r => r.map(x => `"${String(x).replaceAll('"','""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], {
+        type: 'text/csv;charset=utf-8;'
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'audit_log_export.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'CSV downloaded',
+        showConfirmButton: false,
+        timer: 1500
+    });
+}
+
+function showSystemAlert(msg) {
+    systemAlert.textContent = msg;
+    systemAlert.classList.remove('d-none');
+    setTimeout(() => systemAlert.classList.add('d-none'), 2000);
+}
+
+// Notifications demo
+document.getElementById('btnNotifications').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Notifications',
+        icon: 'info',
+        confirmButtonText: 'Close',
+        html: '<div class="text-start">\n          <div class="mb-2"><i class="fa-solid fa-circle text-warning me-2"></i> 2 pending overrides require review</div>\n          <div class="mb-2"><i class="fa-solid fa-circle text-info me-2"></i> New rule updated by Admin</div>\n        </div>'
+    });
+});
+
+// Trend Chart
+let chartInstance = null;
+
+function renderTrendChart() {
+    const ctx = document.getElementById('trendChart');
+    const days = 14;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const labels = [];
+    const counts = [];
+    for (let i = days - 1; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const label = `${d.getMonth()+1}/${d.getDate()}`;
+        labels.push(label);
+        const cnt = mockLogs.filter(l => l.actionType === 'Manual Override' && sameDay(new Date(l.timestamp), d)).length;
+        counts.push(cnt);
+    }
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Overrides',
+                data: counts,
+                fill: true,
+                tension: 0.35,
+                borderColor: '#00FFFF',
+                backgroundColor: 'rgba(0,255,255,0.15)',
+                pointRadius: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: true
+                }
+            },
+            scales: {
+                x: {
+                    display: true,
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+}
+
+function sameDay(a, b) {
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+
+// Initialize
+updateSortIcon();
+fetchLogs();
+  </script>
+ </body>
+</html>

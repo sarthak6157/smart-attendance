@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Data Management | Admin Console
+  </title>
+  <!-- Poppins Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Font Awesome 6 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <!-- FullCalendar -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css" rel="stylesheet"/>
+  <!-- Leaflet (Maps) -->
+  <link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
+  <!-- Site Theme -->
+  <link href="style.css" rel="stylesheet"/>
+  <!-- Page Specific CSS -->
+  <link href="management_page.css" rel="stylesheet"/>
+  <style>
+   /* Ensure Poppins is applied */
+    body { font-family: 'Poppins', var(--font-sans); }
+  </style>
+ </head>
+ <body>
+  <!-- Administrator Sidebar (Visible on md and above) -->
+  <style>
+   :root { --primary:#00FFFF; --secondary:#008080; }
+    .sidebar { width: 260px; min-height: 100vh; background-color: var(--secondary); position: fixed; top: 0; left: 0; z-index: 1030; }
+    .sidebar .brand { background: rgba(0,0,0,0.15); }
+    .sidebar .brand img { height: 36px; border-radius: 4px; }
+    .sidebar .profile { background: rgba(0,0,0,0.10); }
+    .sidebar .nav-link { color: #e6ffff; border-radius: .35rem; margin: 4px 8px; }
+    .sidebar .nav-link:hover { background-color: rgba(0,0,0,0.15); color: #fff; }
+    .sidebar .nav-link.active { background-color: rgba(0, 255, 255, 0.25); color: #fff; box-shadow: inset 3px 0 0 var(--primary); }
+    .sidebar .submenu .nav-link { padding-left: 2rem; }
+    @media (max-width: 767.98px){ .sidebar { display: none; } }
+  </style>
+  <aside class="sidebar d-none d-md-flex flex-column" id="sidebar">
+   <div class="brand d-flex align-items-center gap-2 p-3">
+    <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/admin-logo/40/40'" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg"/>
+    <span class="text-white fw-semibold">
+     Attendance Admin
+    </span>
+   </div>
+   <div class="profile d-flex align-items-center gap-2 p-3">
+    <div class="rounded-circle bg-light text-dark d-flex align-items-center justify-content-center" style="width:36px;height:36px;font-weight:600;">
+     AD
+    </div>
+    <div class="text-white small">
+     <div class="fw-semibold">
+      Admin User
+     </div>
+     <div class="opacity:0.85">
+      Administrator
+     </div>
+    </div>
+   </div>
+   <nav class="nav flex-column mt-2">
+    <a class="nav-link" href="./admin_dashboard.html">
+     <i class="fa fa-gauge fa-fw me-2">
+     </i>
+     Dashboard
+    </a>
+    <a aria-controls="dataMgmt" aria-expanded="true" class="nav-link" data-bs-toggle="collapse" href="#dataMgmt" role="button">
+     <i class="fa fa-database fa-fw me-2">
+     </i>
+     Data Management
+    </a>
+    <div class="collapse show" id="dataMgmt">
+     <div class="submenu nav flex-column">
+      <a class="nav-link active" href="./management_page.html#users">
+       <i class="fa fa-users fa-fw me-2">
+       </i>
+       Users
+      </a>
+      <a class="nav-link" href="./management_page.html#courses">
+       <i class="fa fa-book fa-fw me-2">
+       </i>
+       Courses
+      </a>
+      <a class="nav-link" href="./locations_page.html">
+       <i class="fa fa-location-dot fa-fw me-2">
+       </i>
+       Locations
+      </a>
+      <a class="nav-link" href="./management_page.html#timetable">
+       <i class="fa fa-calendar-days fa-fw me-2">
+       </i>
+       Timetables
+      </a>
+      <a class="nav-link" href="./import_page.html">
+       <i class="fa fa-file-import fa-fw me-2">
+       </i>
+       Bulk Import
+      </a>
+     </div>
+    </div>
+    <a class="nav-link" href="./reports_page.html">
+     <i class="fa fa-file-lines fa-fw me-2">
+     </i>
+     Reports
+    </a>
+    <a class="nav-link" href="./settings_page.html">
+     <i class="fa fa-gear fa-fw me-2">
+     </i>
+     Settings
+    </a>
+    <a class="nav-link" href="./audit_log.html">
+     <i class="fa fa-clipboard-list fa-fw me-2">
+     </i>
+     Audit Log
+    </a>
+    <a class="nav-link" href="./admin_dashboard.html#hotspots">
+     <i class="fa fa-bolt fa-fw me-2">
+     </i>
+     Hotspots
+    </a>
+   </nav>
+  </aside>
+  <!-- Administrator Header -->
+  <style>
+   :root { --primary:#00FFFF; --secondary:#008080; }
+    .navbar-admin { background-color: var(--secondary); }
+    .navbar-admin .nav-link, .navbar-admin .navbar-brand { color:#fff; }
+    .navbar-admin .btn-outline-light:hover { background-color: rgba(255,255,255,0.12); }
+  </style>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-admin" id="topNav" style="margin-left:260px;">
+   <div class="container-fluid">
+    <button aria-label="Toggle sidebar" class="btn btn-outline-light d-md-none me-2" id="sidebarToggle">
+     <i class="fa fa-bars">
+     </i>
+    </button>
+    <a class="navbar-brand d-flex align-items-center" href="./admin_dashboard.html">
+     <img alt="Logo" class="me-2" onerror="this.onerror=null;this.src='https://picsum.photos/seed/admin-brand/28/28'" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:28px;border-radius:4px;">
+      <span>
+       Admin Console
+      </span>
+     </img>
+    </a>
+    <form class="d-none d-lg-flex ms-3" role="search" style="width:420px;">
+     <input aria-label="Search" class="form-control form-control-sm me-2" placeholder="Search users, courses, locations" type="search"/>
+     <button class="btn btn-sm btn-outline-light" type="submit">
+      <i class="fa fa-search">
+      </i>
+     </button>
+    </form>
+    <div class="ms-auto d-flex align-items-center gap-2">
+     <a class="btn btn-sm btn-outline-light" href="./management_page.html#users">
+      <i class="fa fa-plus me-1">
+      </i>
+      Add User
+     </a>
+     <button aria-label="Notifications" class="btn btn-sm btn-outline-light" id="btnNotif">
+      <i class="fa fa-bell">
+      </i>
+     </button>
+     <button aria-label="Messages" class="btn btn-sm btn-outline-light">
+      <i class="fa fa-envelope">
+      </i>
+     </button>
+     <div class="dropdown">
+      <button aria-expanded="false" class="btn btn-sm btn-outline-light dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa fa-user-shield me-1">
+       </i>
+       Admin User
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li>
+        <h6 class="dropdown-header">
+         Signed in as Admin
+        </h6>
+       </li>
+       <li>
+        <a class="dropdown-item" href="./settings_page.html">
+         System Settings
+        </a>
+       </li>
+       <li>
+        <hr class="dropdown-divider"/>
+       </li>
+       <li>
+        <a class="dropdown-item" href="./login_page.html">
+         Logout
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <!-- Main Content -->
+  <main class="pt-3 pb-5" id="mainContent" style="margin-left:260px;">
+   <div class="container-fluid">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="breadcrumb">
+     <ol class="breadcrumb mb-2">
+      <li class="breadcrumb-item">
+       <a href="./admin_dashboard.html">
+        Admin
+       </a>
+      </li>
+      <li aria-current="page" class="breadcrumb-item active">
+       Data Management
+      </li>
+     </ol>
+    </nav>
+    <!-- Page Header -->
+    <div class="page-header">
+     <div class="d-flex align-items-center gap-3">
+      <h1 class="page-title mb-0">
+       Data Management
+      </h1>
+      <span class="badge-soft info">
+       <i class="fa fa-database me-1">
+       </i>
+       System Setup Hub
+      </span>
+     </div>
+     <div class="d-flex align-items-center gap-2">
+      <a class="btn btn-info btn-sm" href="./import_page.html">
+       <i class="fa fa-file-import me-1">
+       </i>
+       Bulk Import
+      </a>
+      <a class="btn btn-light btn-sm" href="./audit_log.html">
+       <i class="fa fa-clipboard-list me-1">
+       </i>
+       Audit Log
+      </a>
+     </div>
+    </div>
+    <!-- Tabbed Navigation for Panels -->
+    <ul class="nav nav-tabs" id="dmTabs" role="tablist">
+     <li class="nav-item" role="presentation">
+      <button aria-controls="usersPanel" aria-selected="true" class="nav-link active" data-bs-target="#usersPanel" data-bs-toggle="tab" id="users-tab" role="tab" type="button">
+       <i class="fa fa-users me-1">
+       </i>
+       Users
+      </button>
+     </li>
+     <li class="nav-item" role="presentation">
+      <button aria-controls="coursesPanel" aria-selected="false" class="nav-link" data-bs-target="#coursesPanel" data-bs-toggle="tab" id="courses-tab" role="tab" type="button">
+       <i class="fa fa-book me-1">
+       </i>
+       Courses
+      </button>
+     </li>
+     <li class="nav-item" role="presentation">
+      <button aria-controls="locationsPanel" aria-selected="false" class="nav-link" data-bs-target="#locationsPanel" data-bs-toggle="tab" id="locations-tab" role="tab" type="button">
+       <i class="fa fa-location-dot me-1">
+       </i>
+       Locations
+      </button>
+     </li>
+     <li class="nav-item" role="presentation">
+      <button aria-controls="timetablePanel" aria-selected="false" class="nav-link" data-bs-target="#timetablePanel" data-bs-toggle="tab" id="timetable-tab" role="tab" type="button">
+       <i class="fa fa-calendar-days me-1">
+       </i>
+       Timetables
+      </button>
+     </li>
+    </ul>
+    <div class="tab-content pt-3" id="dmTabsContent">
+     <!-- Users Panel -->
+     <div aria-labelledby="users-tab" class="tab-pane fade show active" id="usersPanel" role="tabpanel">
+      <div class="card">
+       <div class="card-header">
+        <div class="title d-flex align-items-center gap-2">
+         <i class="fa fa-users text-info">
+         </i>
+         <span class="widget-title">
+          User Management
+         </span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+         <button class="btn btn-primary btn-sm" id="btnAddUser">
+          <i class="fa fa-user-plus me-1">
+          </i>
+          Add New User
+         </button>
+         <a class="btn btn-light btn-sm" href="./import_page.html">
+          <i class="fa fa-file-import me-1">
+          </i>
+          Bulk Import Users
+         </a>
+        </div>
+       </div>
+       <div class="card-body">
+        <div class="row g-2 mb-2">
+         <div class="col-md-6">
+          <input class="form-control" id="userSearch" placeholder="Search by name or ID..." type="text">
+          </input>
+         </div>
+         <div class="col-md-3">
+          <select class="form-select" id="roleFilter">
+           <option value="All">
+            All Roles
+           </option>
+           <option value="Student">
+            Student
+           </option>
+           <option value="Faculty">
+            Faculty
+           </option>
+          </select>
+         </div>
+         <div class="col-md-3 text-md-end">
+          <div aria-label="Sorting" class="btn-group" role="group">
+           <button class="btn btn-light btn-sm" data-sort="id">
+            Sort by ID
+           </button>
+           <button class="btn btn-light btn-sm" data-sort="name">
+            Sort by Name
+           </button>
+          </div>
+         </div>
+        </div>
+        <div class="table-responsive">
+         <table class="table table-theme table-hover table-striped align-middle" id="usersTable">
+          <thead>
+           <tr>
+            <th>
+             ID
+            </th>
+            <th>
+             User
+            </th>
+            <th>
+             Role
+            </th>
+            <th>
+             Email
+            </th>
+            <th>
+             Last Active
+            </th>
+            <th class="text-end">
+             Actions
+            </th>
+           </tr>
+          </thead>
+          <tbody id="usersTbody">
+          </tbody>
+         </table>
+        </div>
+        <div class="d-flex align-items-center justify-content-between">
+         <small class="text-muted" id="usersPaginationInfo">
+          Page 1 of 1
+         </small>
+         <nav>
+          <ul class="pagination pagination-sm mb-0" id="usersPagination">
+          </ul>
+         </nav>
+        </div>
+       </div>
+      </div>
+     </div>
+     <!-- Courses Panel -->
+     <div aria-labelledby="courses-tab" class="tab-pane fade" id="coursesPanel" role="tabpanel">
+      <div class="card">
+       <div class="card-header">
+        <div class="title d-flex align-items-center gap-2">
+         <i class="fa fa-book text-success">
+         </i>
+         <span class="widget-title">
+          Course Management
+         </span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+         <button class="btn btn-primary btn-sm" id="btnAddCourse">
+          <i class="fa fa-plus me-1">
+          </i>
+          Add New Course
+         </button>
+        </div>
+       </div>
+       <div class="card-body">
+        <div class="row g-2 mb-2">
+         <div class="col-md-6">
+          <input class="form-control" id="courseSearch" placeholder="Search by course code or title..." type="text"/>
+         </div>
+         <div class="col-md-6 text-md-end">
+          <div aria-label="Sorting" class="btn-group" role="group">
+           <button class="btn btn-light btn-sm" data-sort="code">
+            Sort by Code
+           </button>
+           <button class="btn btn-light btn-sm" data-sort="title">
+            Sort by Title
+           </button>
+          </div>
+         </div>
+        </div>
+        <div class="table-responsive">
+         <table class="table table-theme table-hover align-middle" id="coursesTable">
+          <thead>
+           <tr>
+            <th>
+             Course Code
+            </th>
+            <th>
+             Title
+            </th>
+            <th>
+             Assigned Faculty
+            </th>
+            <th>
+             Credits
+            </th>
+            <th class="text-end">
+             Actions
+            </th>
+           </tr>
+          </thead>
+          <tbody id="coursesTbody">
+          </tbody>
+         </table>
+        </div>
+        <div class="d-flex align-items-center justify-content-between">
+         <small class="text-muted" id="coursesPaginationInfo">
+          Page 1 of 1
+         </small>
+         <nav>
+          <ul class="pagination pagination-sm mb-0" id="coursesPagination">
+          </ul>
+         </nav>
+        </div>
+       </div>
+      </div>
+     </div>
+     <!-- Locations Panel -->
+     <div aria-labelledby="locations-tab" class="tab-pane fade" id="locationsPanel" role="tabpanel">
+      <div class="card">
+       <div class="card-header">
+        <div class="title d-flex align-items-center gap-2">
+         <i class="fa fa-location-dot text-warning">
+         </i>
+         <span class="widget-title">
+          Location Management
+         </span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+         <button class="btn btn-primary btn-sm" id="btnAddLocation">
+          <i class="fa fa-plus me-1">
+          </i>
+          Add New Location
+         </button>
+        </div>
+       </div>
+       <div class="card-body">
+        <div class="table-responsive">
+         <table class="table table-theme table-hover align-middle" id="locationsTable">
+          <thead>
+           <tr>
+            <th>
+             Name
+            </th>
+            <th>
+             Latitude
+            </th>
+            <th>
+             Longitude
+            </th>
+            <th>
+             Geofence (m)
+            </th>
+            <th class="text-end">
+             Actions
+            </th>
+           </tr>
+          </thead>
+          <tbody id="locationsTbody">
+          </tbody>
+         </table>
+        </div>
+        <div class="d-flex align-items-center justify-content-between">
+         <small class="text-muted" id="locationsPaginationInfo">
+          Page 1 of 1
+         </small>
+         <nav>
+          <ul class="pagination pagination-sm mb-0" id="locationsPagination">
+          </ul>
+         </nav>
+        </div>
+       </div>
+      </div>
+     </div>
+     <!-- Timetable Panel -->
+     <div aria-labelledby="timetable-tab" class="tab-pane fade" id="timetablePanel" role="tabpanel">
+      <div class="card">
+       <div class="card-header">
+        <div class="title d-flex align-items-center gap-2">
+         <i class="fa fa-calendar-days text-primary">
+         </i>
+         <span class="widget-title">
+          Timetables
+         </span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+         <button class="btn btn-primary btn-sm" id="btnAddSchedule">
+          <i class="fa fa-plus me-1">
+          </i>
+          Schedule New Class
+         </button>
+         <a class="btn btn-light btn-sm" href="./import_page.html">
+          <i class="fa fa-file-import me-1">
+          </i>
+          Bulk Import Timetable
+         </a>
+        </div>
+       </div>
+       <div class="card-body">
+        <div class="border rounded" id="calendar" style="background:var(--surface-0);">
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- Bootstrap Modal for Location Map (used on Add/Edit) -->
+    <div aria-hidden="true" aria-labelledby="locationMapModalLabel" class="modal fade" id="locationMapModal" tabindex="-1">
+     <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+       <div class="modal-header">
+        <h5 class="modal-title" id="locationMapModalLabel">
+         Define Location
+        </h5>
+        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button">
+        </button>
+       </div>
+       <div class="modal-body">
+        <div class="row g-3">
+         <div class="col-md-6">
+          <label class="form-label">
+           Location Name
+          </label>
+          <input class="form-control" id="locName" placeholder="e.g., Building A - Room 101" type="text"/>
+         </div>
+         <div class="col-md-3">
+          <label class="form-label">
+           Latitude
+          </label>
+          <input class="form-control" id="locLat" step="0.000001" type="number"/>
+         </div>
+         <div class="col-md-3">
+          <label class="form-label">
+           Longitude
+          </label>
+          <input class="form-control" id="locLng" step="0.000001" type="number"/>
+         </div>
+         <div class="col-12">
+          <div class="rounded border" id="map" style="height:360px;">
+          </div>
+         </div>
+         <div class="col-12">
+          <label class="form-label">
+           Geofence Radius (meters)
+          </label>
+          <input class="form-range" id="locRadius" max="500" min="50" step="10" type="range"/>
+          <div>
+           <small class="text-muted">
+            Current radius:
+            <span id="radiusValue">
+             150
+            </span>
+            m
+           </small>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="modal-footer">
+        <button class="btn btn-light" data-bs-dismiss="modal" type="button">
+         Cancel
+        </button>
+        <button class="btn btn-primary" id="saveLocationBtn" type="button">
+         Save Location
+        </button>
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- Toast Container (System Feedback) -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+     <div aria-atomic="true" aria-live="assertive" class="toast align-items-center text-bg-primary border-0" id="liveToast" role="alert">
+      <div class="d-flex">
+       <div class="toast-body">
+        Action completed successfully.
+       </div>
+       <button aria-label="Close" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" type="button">
+       </button>
+      </div>
+     </div>
+    </div>
+   </div>
+  </main>
+  <!-- Administrator Footer -->
+  <footer class="py-3" id="siteFooter" style="background-color:#f8f9fa;border-top:1px solid #e9ecef;margin-left:260px;">
+   <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+    <div class="d-flex align-items-center gap-2">
+     <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/footer-logo/20/20'" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:20px;border-radius:3px;"/>
+     <small class="text-muted">
+      © 2025 Your University
+     </small>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+     <a class="text-decoration-none" href="./import_page.html">
+      <i class="fa fa-file-import me-1">
+      </i>
+      Import
+     </a>
+     <a class="text-decoration-none" href="./audit_log.html">
+      <i class="fa fa-clipboard-list me-1">
+      </i>
+      Audit
+     </a>
+     <a class="text-muted text-decoration-none" href="#">
+      Terms
+     </a>
+     <a class="text-muted text-decoration-none" href="#">
+      Privacy
+     </a>
+    </div>
+   </div>
+  </footer>
+  <!-- Dependencies: Bootstrap JS, SweetAlert2, FullCalendar, Leaflet -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js">
+  </script>
+  <script crossorigin="" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  </script>
+  <script>
+   // Sidebar toggle for small screens
+document.addEventListener('DOMContentLoaded', function() {
+    var t = document.getElementById('sidebarToggle');
+    var s = document.getElementById('sidebar');
+    if (t && s) {
+        t.addEventListener('click', function() {
+            s.classList.toggle('d-none');
+        });
+    }
+});
+
+// Simple toast trigger
+const toastEl = document.getElementById('liveToast');
+const toast = toastEl ? new bootstrap.Toast(toastEl) : null;
+const btnNotif = document.getElementById('btnNotif');
+if (btnNotif && toast) btnNotif.addEventListener('click', () => toast.show());
+
+// Helper: update tabs based on hash
+function activateTabFromHash() {
+    const hash = window.location.hash.replace('#', '');
+    const mapping = {
+        users: 'users-tab',
+        courses: 'courses-tab',
+        locations: 'locations-tab',
+        timetable: 'timetable-tab'
+    };
+    if (mapping[hash]) {
+        const btn = document.getElementById(mapping[hash]);
+        if (btn) new bootstrap.Tab(btn).show();
+    }
+    // highlight sidebar submenu links
+    document.querySelectorAll('.submenu .nav-link').forEach(a => a.classList.remove('active'));
+    if (hash === 'users' || hash === '') document.querySelector('.submenu .nav-link[href$="#users"]').classList.add('active');
+    if (hash === 'courses') document.querySelector('.submenu .nav-link[href$="#courses"]').classList.add('active');
+    if (hash === 'timetable') document.querySelector('.submenu .nav-link[href$="#timetable"]').classList.add('active');
+}
+window.addEventListener('hashchange', activateTabFromHash);
+activateTabFromHash();
+
+// Mock Data Stores
+let usersData = [{
+    id: 'S1001',
+    name: 'Alice Johnson',
+    role: 'Student',
+    email: 'alice.johnson@univ.edu',
+    lastActive: '2025-01-11 09:24'
+}, {
+    id: 'F2001',
+    name: 'Dr. Mark Spencer',
+    role: 'Faculty',
+    email: 'mark.spencer@univ.edu',
+    lastActive: '2025-01-12 14:02'
+}, {
+    id: 'S1002',
+    name: 'Brian Lee',
+    role: 'Student',
+    email: 'brian.lee@univ.edu',
+    lastActive: '2025-01-10 18:21'
+}, {
+    id: 'S1003',
+    name: 'Cynthia Wang',
+    role: 'Student',
+    email: 'cynthia.wang@univ.edu',
+    lastActive: '2025-01-13 08:15'
+}, {
+    id: 'F2002',
+    name: 'Prof. Emily Davis',
+    role: 'Faculty',
+    email: 'emily.davis@univ.edu',
+    lastActive: '2025-01-13 11:45'
+}, {
+    id: 'S1004',
+    name: 'Daniel Martinez',
+    role: 'Student',
+    email: 'daniel.martinez@univ.edu',
+    lastActive: '2025-01-09 12:40'
+}, ];
+
+let coursesData = [{
+    code: 'CS101',
+    title: 'Intro to Computer Science',
+    faculty: 'Prof. Emily Davis',
+    credits: 3
+}, {
+    code: 'MATH201',
+    title: 'Calculus II',
+    faculty: 'Dr. Mark Spencer',
+    credits: 4
+}, {
+    code: 'PHY150',
+    title: 'Physics I',
+    faculty: 'Dr. Mark Spencer',
+    credits: 3
+}, {
+    code: 'ENG210',
+    title: 'Advanced Composition',
+    faculty: 'Prof. Sarah Lee',
+    credits: 2
+}, {
+    code: 'CS202',
+    title: 'Data Structures',
+    faculty: 'Prof. Emily Davis',
+    credits: 3
+}, {
+    code: 'HIST120',
+    title: 'World History',
+    faculty: 'Dr. John Carter',
+    credits: 2
+}, ];
+
+let facultyList = ['Prof. Emily Davis', 'Prof. Sarah Lee', 'Dr. Mark Spencer', 'Dr. John Carter'];
+
+let locationsData = [{
+    name: 'Building A - Room 101',
+    lat: 37.4219999,
+    lng: -122.0840575,
+    radius: 150
+}, {
+    name: 'Science Hall - Lab 2',
+    lat: 37.4229,
+    lng: -122.0837,
+    radius: 120
+}, {
+    name: 'Library - Study Area',
+    lat: 37.4208,
+    lng: -122.0853,
+    radius: 100
+}, {
+    name: 'Engineering - E204',
+    lat: 37.4195,
+    lng: -122.0861,
+    radius: 200
+}, {
+    name: 'Business - B12',
+    lat: 37.4235,
+    lng: -122.082,
+    radius: 180
+}, {
+    name: 'North Field',
+    lat: 37.4241,
+    lng: -122.0812,
+    radius: 250
+}, ];
+
+// Pagination settings
+const pageState = {
+    users: {
+        page: 1,
+        size: 5,
+        sort: null
+    },
+    courses: {
+        page: 1,
+        size: 5,
+        sort: null
+    },
+    locations: {
+        page: 1,
+        size: 5,
+        sort: null
+    }
+};
+
+// Utility: paginate array
+function paginate(arr, page, size) {
+    const start = (page - 1) * size;
+    return arr.slice(start, start + size);
+}
+
+// Render Users
+const usersTbody = document.getElementById('usersTbody');
+const usersPagination = document.getElementById('usersPagination');
+const usersInfo = document.getElementById('usersPaginationInfo');
+const userSearch = document.getElementById('userSearch');
+const roleFilter = document.getElementById('roleFilter');
+
+function getFilteredUsers() {
+    const term = (userSearch.value || '').toLowerCase();
+    const role = roleFilter.value || 'All';
+    let list = usersData.filter(u =>
+        (u.id.toLowerCase().includes(term) || u.name.toLowerCase().includes(term) || u.email.toLowerCase().includes(term)) &&
+        (role === 'All' || u.role === role)
+    );
+    const sort = pageState.users.sort;
+    if (sort === 'id') list.sort((a, b) => a.id.localeCompare(b.id));
+    if (sort === 'name') list.sort((a, b) => a.name.localeCompare(b.name));
+    return list;
+}
+
+function renderUsers() {
+    const all = getFilteredUsers();
+    const totalPages = Math.max(1, Math.ceil(all.length / pageState.users.size));
+    if (pageState.users.page > totalPages) pageState.users.page = totalPages;
+    const pageItems = paginate(all, pageState.users.page, pageState.users.size);
+    usersTbody.innerHTML = pageItems.map(u => `
+        <tr>
+          <td>${u.id}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <img src="https://i.pravatar.cc/40?u=${encodeURIComponent(u.email)}" class="rounded-circle" width="32" height="32" alt="avatar" onerror="this.onerror=null;this.src='https://picsum.photos/seed/${encodeURIComponent(u.id)}/40/40'" />
+              <div>
+                <div class="fw-semibold">${u.name}</div>
+                <small class="text-muted">${u.email}</small>
+              </div>
+            </div>
+          </td>
+          <td><span class="badge-soft ${u.role==='Student'?'info':'secondary'}">${u.role}</span></td>
+          <td>${u.email}</td>
+          <td><small class="text-muted">${u.lastActive}</small></td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-light me-1" onclick="editUser('${u.id}')"><i class="fa fa-pen"></i></button>
+            <button class="btn btn-sm btn-danger" onclick="deleteUser('${u.id}')"><i class="fa fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    // Pagination controls
+    usersPagination.innerHTML = renderPagination('users', totalPages);
+    usersInfo.textContent = `Page ${pageState.users.page} of ${totalPages} • ${all.length} users`;
+}
+
+function renderPagination(key, totalPages) {
+    const curr = pageState[key].page;
+    let html = '';
+    html += `<li class="page-item ${curr===1?'disabled':''}"><a class="page-link" href="#" onclick="changePage('${key}', ${curr-1});return false;">Prev</a></li>`;
+    for (let i = 1; i <= totalPages; i++) {
+        html += `<li class="page-item ${i===curr?'active':''}"><a class="page-link" href="#" onclick="changePage('${key}', ${i});return false;">${i}</a></li>`;
+    }
+    html += `<li class="page-item ${curr===totalPages?'disabled':''}"><a class="page-link" href="#" onclick="changePage('${key}', ${curr+1});return false;">Next</a></li>`;
+    return html;
+}
+
+window.changePage = function(key, page) {
+    pageState[key].page = Math.max(1, page);
+    if (key === 'users') renderUsers();
+    if (key === 'courses') renderCourses();
+    if (key === 'locations') renderLocations();
+};
+
+// Sorting buttons
+document.querySelectorAll('#usersPanel [data-sort]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        pageState.users.sort = btn.getAttribute('data-sort');
+        renderUsers();
+    });
+});
+
+userSearch.addEventListener('input', () => {
+    pageState.users.page = 1;
+    renderUsers();
+});
+roleFilter.addEventListener('change', () => {
+    pageState.users.page = 1;
+    renderUsers();
+});
+
+// User CRUD via SweetAlert2
+document.getElementById('btnAddUser').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Add New User',
+        html: `
+          <div class="text-start">
+            <label class="form-label">ID</label>
+            <input id="swUserId" class="swal2-input" placeholder="e.g., S1005" />
+            <label class="form-label">Name</label>
+            <input id="swUserName" class="swal2-input" placeholder="Full Name" />
+            <label class="form-label">Role</label>
+            <select id="swUserRole" class="swal2-input">
+              <option>Student</option>
+              <option>Faculty</option>
+            </select>
+            <label class="form-label">Email</label>
+            <input id="swUserEmail" type="email" class="swal2-input" placeholder="name@univ.edu" />
+          </div>`,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: 'Create',
+        preConfirm: () => {
+            const id = document.getElementById('swUserId').value.trim();
+            const name = document.getElementById('swUserName').value.trim();
+            const role = document.getElementById('swUserRole').value;
+            const email = document.getElementById('swUserEmail').value.trim();
+            if (!id || !name || !email) {
+                Swal.showValidationMessage('Please fill ID, Name and Email');
+                return false;
+            }
+            return {
+                id,
+                name,
+                role,
+                email
+            };
+        }
+    }).then(res => {
+        if (res.isConfirmed) {
+            const now = new Date();
+            const lastActive = now.toISOString().slice(0, 16).replace('T', ' ');
+            usersData.unshift({
+                ...res.value,
+                lastActive
+            });
+            pageState.users.page = 1;
+            renderUsers();
+            toast && toast.show();
+        }
+    });
+});
+
+window.editUser = function(id) {
+    const u = usersData.find(x => x.id === id);
+    if (!u) return;
+    Swal.fire({
+        title: 'Edit User',
+        html: `
+          <div class="text-start">
+            <label class="form-label">ID</label>
+            <input id="swUserId" class="swal2-input" value="${u.id}" disabled />
+            <label class="form-label">Name</label>
+            <input id="swUserName" class="swal2-input" value="${u.name}" />
+            <label class="form-label">Role</label>
+            <select id="swUserRole" class="swal2-input">
+              <option ${u.role==='Student'?'selected':''}>Student</option>
+              <option ${u.role==='Faculty'?'selected':''}>Faculty</option>
+            </select>
+            <label class="form-label">Email</label>
+            <input id="swUserEmail" type="email" class="swal2-input" value="${u.email}" />
+          </div>`,
+        showCancelButton: true,
+        confirmButtonText: 'Save Changes',
+        preConfirm: () => {
+            const name = document.getElementById('swUserName').value.trim();
+            const role = document.getElementById('swUserRole').value;
+            const email = document.getElementById('swUserEmail').value.trim();
+            if (!name || !email) {
+                Swal.showValidationMessage('Name and Email are required');
+                return false;
+            }
+            return {
+                name,
+                role,
+                email
+            };
+        }
+    }).then(res => {
+        if (res.isConfirmed) {
+            u.name = res.value.name;
+            u.role = res.value.role;
+            u.email = res.value.email;
+            renderUsers();
+            Swal.fire({
+                icon: 'success',
+                title: 'Updated',
+                timer: 1200,
+                showConfirmButton: false
+            });
+        }
+    });
+}
+
+window.deleteUser = function(id) {
+    Swal.fire({
+            icon: 'warning',
+            title: 'Delete User?',
+            text: `Are you sure you want to delete ${id}?`,
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+            confirmButtonColor: '#CD2026'
+        })
+        .then(r => {
+            if (r.isConfirmed) {
+                usersData = usersData.filter(u => u.id !== id);
+                renderUsers();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted',
+                    timer: 1000,
+                    showConfirmButton: false
+                });
+            }
+        });
+}
+
+// Courses rendering & CRUD
+const coursesTbody = document.getElementById('coursesTbody');
+const coursesPagination = document.getElementById('coursesPagination');
+const coursesInfo = document.getElementById('coursesPaginationInfo');
+const courseSearch = document.getElementById('courseSearch');
+
+function getFilteredCourses() {
+    const term = (courseSearch.value || '').toLowerCase();
+    let list = coursesData.filter(c =>
+        c.code.toLowerCase().includes(term) || c.title.toLowerCase().includes(term) || c.faculty.toLowerCase().includes(term)
+    );
+    const sort = pageState.courses.sort;
+    if (sort === 'code') list.sort((a, b) => a.code.localeCompare(b.code));
+    if (sort === 'title') list.sort((a, b) => a.title.localeCompare(b.title));
+    return list;
+}
+
+function renderCourses() {
+    const all = getFilteredCourses();
+    const totalPages = Math.max(1, Math.ceil(all.length / pageState.courses.size));
+    if (pageState.courses.page > totalPages) pageState.courses.page = totalPages;
+    const pageItems = paginate(all, pageState.courses.page, pageState.courses.size);
+    coursesTbody.innerHTML = pageItems.map(c => `
+        <tr>
+          <td class="fw-semibold">${c.code}</td>
+          <td>${c.title}</td>
+          <td>${c.faculty}</td>
+          <td>${c.credits}</td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-light me-1" onclick="editCourse('${c.code}')"><i class="fa fa-pen"></i></button>
+            <button class="btn btn-sm btn-danger" onclick="deleteCourse('${c.code}')"><i class="fa fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    coursesPagination.innerHTML = renderPagination('courses', totalPages);
+    coursesInfo.textContent = `Page ${pageState.courses.page} of ${totalPages} • ${all.length} courses`;
+}
+
+document.querySelectorAll('#coursesPanel [data-sort]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        pageState.courses.sort = btn.getAttribute('data-sort');
+        renderCourses();
+    });
+});
+courseSearch.addEventListener('input', () => {
+    pageState.courses.page = 1;
+    renderCourses();
+});
+
+document.getElementById('btnAddCourse').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Add New Course',
+        html: `
+          <div class="text-start">
+            <label class="form-label">Course Code</label>
+            <input id="swCourseCode" class="swal2-input" placeholder="e.g., CS305" />
+            <label class="form-label">Title</label>
+            <input id="swCourseTitle" class="swal2-input" placeholder="Course Title" />
+            <label class="form-label">Assigned Faculty</label>
+            <select id="swCourseFaculty" class="swal2-input">${facultyList.map(f=>`<option>${f}</option>`).join('')}</select>
+            <label class="form-label">Credits</label>
+            <input id="swCourseCredits" type="number" min="1" max="6" class="swal2-input" value="3" />
+          </div>`,
+        showCancelButton: true,
+        confirmButtonText: 'Create',
+        preConfirm: () => {
+            const code = document.getElementById('swCourseCode').value.trim();
+            const title = document.getElementById('swCourseTitle').value.trim();
+            const faculty = document.getElementById('swCourseFaculty').value;
+            const credits = parseInt(document.getElementById('swCourseCredits').value, 10) || 3;
+            if (!code || !title) {
+                Swal.showValidationMessage('Code and Title are required');
+                return false;
+            }
+            return {
+                code,
+                title,
+                faculty,
+                credits
+            };
+        }
+    }).then(res => {
+        if (res.isConfirmed) {
+            coursesData.unshift(res.value);
+            pageState.courses.page = 1;
+            renderCourses();
+            Swal.fire({
+                icon: 'success',
+                title: 'Course Added',
+                timer: 1200,
+                showConfirmButton: false
+            });
+        }
+    });
+});
+
+window.editCourse = function(code) {
+    const c = coursesData.find(x => x.code === code);
+    if (!c) return;
+    Swal.fire({
+        title: 'Edit Course',
+        html: `
+          <div class="text-start">
+            <label class="form-label">Course Code</label>
+            <input id="swCourseCode" class="swal2-input" value="${c.code}" disabled />
+            <label class="form-label">Title</label>
+            <input id="swCourseTitle" class="swal2-input" value="${c.title}" />
+            <label class="form-label">Assigned Faculty</label>
+            <select id="swCourseFaculty" class="swal2-input">${facultyList.map(f=>`<option ${f===c.faculty?'selected':''}>${f}</option>`).join('')}</select>
+            <label class="form-label">Credits</label>
+            <input id="swCourseCredits" type="number" min="1" max="6" class="swal2-input" value="${c.credits}" />
+          </div>`,
+        showCancelButton: true,
+        confirmButtonText: 'Save Changes',
+        preConfirm: () => {
+            const title = document.getElementById('swCourseTitle').value.trim();
+            const faculty = document.getElementById('swCourseFaculty').value;
+            const credits = parseInt(document.getElementById('swCourseCredits').value, 10) || 3;
+            if (!title) {
+                Swal.showValidationMessage('Title is required');
+                return false;
+            }
+            return {
+                title,
+                faculty,
+                credits
+            };
+        }
+    }).then(res => {
+        if (res.isConfirmed) {
+            c.title = res.value.title;
+            c.faculty = res.value.faculty;
+            c.credits = res.value.credits;
+            renderCourses();
+            Swal.fire({
+                icon: 'success',
+                title: 'Updated',
+                timer: 1000,
+                showConfirmButton: false
+            });
+        }
+    });
+}
+
+window.deleteCourse = function(code) {
+    Swal.fire({
+            icon: 'warning',
+            title: 'Delete Course?',
+            text: `Are you sure you want to delete ${code}?`,
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+            confirmButtonColor: '#CD2026'
+        })
+        .then(r => {
+            if (r.isConfirmed) {
+                coursesData = coursesData.filter(c => c.code !== code);
+                renderCourses();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted',
+                    timer: 1000,
+                    showConfirmButton: false
+                });
+            }
+        })
+}
+
+// Locations rendering & CRUD
+const locationsTbody = document.getElementById('locationsTbody');
+const locationsPagination = document.getElementById('locationsPagination');
+const locationsInfo = document.getElementById('locationsPaginationInfo');
+
+function renderLocations() {
+    const all = locationsData.slice();
+    const totalPages = Math.max(1, Math.ceil(all.length / pageState.locations.size));
+    if (pageState.locations.page > totalPages) pageState.locations.page = totalPages;
+    const pageItems = paginate(all, pageState.locations.page, pageState.locations.size);
+    locationsTbody.innerHTML = pageItems.map((l, idx) => `
+        <tr>
+          <td>${l.name}</td>
+          <td>${l.lat.toFixed(6)}</td>
+          <td>${l.lng.toFixed(6)}</td>
+          <td>${l.radius}</td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-light me-1" onclick="openLocationModal(${(pageState.locations.page-1)*pageState.locations.size + idx})"><i class="fa fa-pen"></i></button>
+            <button class="btn btn-sm btn-danger" onclick="deleteLocation(${(pageState.locations.page-1)*pageState.locations.size + idx})"><i class="fa fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    locationsPagination.innerHTML = renderPagination('locations', totalPages);
+    locationsInfo.textContent = `Page ${pageState.locations.page} of ${totalPages} • ${all.length} locations`;
+}
+
+// Leaflet map in modal
+let map, marker, circle, editingIndex = null;
+const modalEl = document.getElementById('locationMapModal');
+const bsModal = new bootstrap.Modal(modalEl);
+const locName = document.getElementById('locName');
+const locLat = document.getElementById('locLat');
+const locLng = document.getElementById('locLng');
+const locRadius = document.getElementById('locRadius');
+const radiusValue = document.getElementById('radiusValue');
+
+function initMap(lat = 37.4219999, lng = -122.0840575, radius = 150) {
+    setTimeout(() => {
+        if (!map) {
+            map = L.map('map').setView([lat, lng], 16);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
+        } else {
+            map.invalidateSize();
+            map.setView([lat, lng], 16);
+        }
+        if (marker) marker.remove();
+        if (circle) circle.remove();
+        marker = L.marker([lat, lng], {
+            draggable: true
+        }).addTo(map);
+        circle = L.circle([lat, lng], {
+            radius: radius,
+            color: '#0FF'
+        }).addTo(map);
+        marker.on('dragend', (e) => {
+            const p = e.target.getLatLng();
+            locLat.value = p.lat.toFixed(6);
+            locLng.value = p.lng.toFixed(6);
+            circle.setLatLng(p);
+        });
+        locRadius.value = radius;
+        radiusValue.textContent = radius;
+        locRadius.oninput = () => {
+            circle.setRadius(parseInt(locRadius.value, 10));
+            radiusValue.textContent = locRadius.value;
+        };
+        locLat.addEventListener('change', syncFromInputs);
+        locLng.addEventListener('change', syncFromInputs);
+
+        function syncFromInputs() {
+            const la = parseFloat(locLat.value);
+            const ln = parseFloat(locLng.value);
+            if (!isNaN(la) && !isNaN(ln)) {
+                marker.setLatLng([la, ln]);
+                circle.setLatLng([la, ln]);
+                map.setView([la, ln]);
+            }
+        }
+    }, 150);
+}
+
+document.getElementById('btnAddLocation').addEventListener('click', () => {
+    editingIndex = null;
+    locName.value = '';
+    locLat.value = 37.4219999;
+    locLng.value = -122.0840575;
+    locRadius.value = 150;
+    radiusValue.textContent = '150';
+    bsModal.show();
+    initMap(37.4219999, -122.0840575, 150);
+});
+
+window.openLocationModal = function(index) {
+    editingIndex = index;
+    const loc = locationsData[index];
+    locName.value = loc.name;
+    locLat.value = loc.lat;
+    locLng.value = loc.lng;
+    locRadius.value = loc.radius;
+    radiusValue.textContent = String(loc.radius);
+    bsModal.show();
+    initMap(loc.lat, loc.lng, loc.radius);
+}
+
+document.getElementById('saveLocationBtn').addEventListener('click', () => {
+    const name = locName.value.trim();
+    const lat = parseFloat(locLat.value),
+        lng = parseFloat(locLng.value),
+        radius = parseInt(locRadius.value, 10);
+    if (!name || isNaN(lat) || isNaN(lng)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid data',
+            text: 'Please provide a name and valid coordinates.'
+        });
+        return;
+    }
+    const record = {
+        name,
+        lat,
+        lng,
+        radius
+    };
+    if (editingIndex === null) {
+        locationsData.unshift(record);
+        pageState.locations.page = 1;
+    } else {
+        locationsData[editingIndex] = record;
+    }
+    renderLocations();
+    bsModal.hide();
+    Swal.fire({
+        icon: 'success',
+        title: 'Location Saved',
+        timer: 1200,
+        showConfirmButton: false
+    });
+});
+
+window.deleteLocation = function(index) {
+    const loc = locationsData[index];
+    Swal.fire({
+            icon: 'warning',
+            title: 'Delete Location?',
+            text: `Delete "${loc.name}"?`,
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+            confirmButtonColor: '#CD2026'
+        })
+        .then(r => {
+            if (r.isConfirmed) {
+                locationsData.splice(index, 1);
+                renderLocations();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted',
+                    timer: 1000,
+                    showConfirmButton: false
+                });
+            }
+        });
+}
+
+// FullCalendar for Timetables
+let calendar;
+
+function initCalendar() {
+    const calendarEl = document.getElementById('calendar');
+    calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        height: 'auto',
+        nowIndicator: true,
+        selectable: true,
+        selectMirror: true,
+        select: (info) => {
+            openScheduleModal(null, info.startStr, info.endStr);
+        },
+        eventClick: (info) => {
+            openScheduleModal(info.event);
+        },
+        events: [{
+            id: 'evt1',
+            title: 'CS101 - Prof. Davis (E204)',
+            start: new Date().toISOString().slice(0, 10) + 'T09:00:00',
+            end: new Date().toISOString().slice(0, 10) + 'T10:15:00'
+        }, {
+            id: 'evt2',
+            title: 'MATH201 - Dr. Spencer (A101)',
+            start: new Date().toISOString().slice(0, 10) + 'T11:00:00',
+            end: new Date().toISOString().slice(0, 10) + 'T12:15:00'
+        }, {
+            id: 'evt3',
+            title: 'ENG210 - Prof. Lee (B12)',
+            start: new Date().toISOString().slice(0, 10) + 'T14:00:00',
+            end: new Date().toISOString().slice(0, 10) + 'T15:00:00'
+        }, ],
+    });
+    calendar.render();
+}
+
+function openScheduleModal(event, startISO, endISO) {
+    const isEdit = !!event;
+    const startVal = isEdit ? event.start.toISOString().slice(0, 16) : (startISO ? startISO.slice(0, 16) : '');
+    const endVal = isEdit && event.end ? event.end.toISOString().slice(0, 16) : (endISO ? endISO.slice(0, 16) : '');
+    Swal.fire({
+        title: isEdit ? 'Edit Schedule' : 'Schedule New Class',
+        html: `
+          <div class="text-start">
+            <label class="form-label">Course</label>
+            <select id="swSchedCourse" class="swal2-input">${coursesData.map(c=>`<option ${isEdit && event.title.startsWith(c.code) ? 'selected':''}>${c.code}</option>`).join('')}</select>
+            <label class="form-label">Faculty</label>
+            <select id="swSchedFaculty" class="swal2-input">${facultyList.map(f=>`<option ${isEdit && event.title.includes(f) ? 'selected':''}>${f}</option>`).join('')}</select>
+            <label class="form-label">Location</label>
+            <select id="swSchedLocation" class="swal2-input">${locationsData.map(l=>`<option>${l.name}</option>`).join('')}</select>
+            <label class="form-label">Start</label>
+            <input id="swSchedStart" type="datetime-local" class="swal2-input" value="${startVal}" />
+            <label class="form-label">End</label>
+            <input id="swSchedEnd" type="datetime-local" class="swal2-input" value="${endVal}" />
+          </div>`,
+        showCancelButton: true,
+        showDenyButton: isEdit,
+        denyButtonText: 'Delete',
+        confirmButtonText: isEdit ? 'Save Changes' : 'Create',
+        preConfirm: () => {
+            const course = document.getElementById('swSchedCourse').value;
+            const faculty = document.getElementById('swSchedFaculty').value;
+            const location = document.getElementById('swSchedLocation').value;
+            const start = document.getElementById('swSchedStart').value;
+            const end = document.getElementById('swSchedEnd').value;
+            if (!course || !start || !end) {
+                Swal.showValidationMessage('Course, Start and End are required');
+                return false;
+            }
+            return {
+                course,
+                faculty,
+                location,
+                start,
+                end
+            };
+        }
+    }).then(res => {
+        if (res.isConfirmed) {
+            const title = `${res.value.course} - ${res.value.faculty} (${res.value.location})`;
+            if (isEdit) {
+                event.setProp('title', title);
+                event.setStart(res.value.start);
+                event.setEnd(res.value.end);
+            } else {
+                calendar.addEvent({
+                    id: String(Date.now()),
+                    title,
+                    start: res.value.start,
+                    end: res.value.end
+                });
+            }
+            Swal.fire({
+                icon: 'success',
+                title: isEdit ? 'Updated' : 'Scheduled',
+                timer: 1200,
+                showConfirmButton: false
+            });
+        } else if (res.isDenied && isEdit) {
+            event.remove();
+            Swal.fire({
+                icon: 'success',
+                title: 'Deleted',
+                timer: 1000,
+                showConfirmButton: false
+            });
+        }
+    });
+}
+
+document.getElementById('btnAddSchedule').addEventListener('click', () => openScheduleModal(null));
+
+// Initialize renders on load and when switching tabs
+document.addEventListener('DOMContentLoaded', () => {
+    renderUsers();
+    renderCourses();
+    renderLocations();
+    initCalendar();
+});
+
+// Resize fixes when tabs shown (calendar & map)
+const dmTabsEl = document.getElementById('dmTabs');
+dmTabsEl.addEventListener('shown.bs.tab', function(event) {
+    const target = event.target.getAttribute('data-bs-target');
+    if (target === '#timetablePanel' && calendar) {
+        calendar.updateSize();
+    }
+});
+  </script>
+ </body>
+</html>

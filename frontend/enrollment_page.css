@@ -1,0 +1,125 @@
+/* enrollment_page.css - Page-specific styles for Facial Enrollment Page */
+/* Layout tweaks */
+.enroll-wizard .wizard-steps .stepper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3)
+    }
+.enroll-wizard .wizard-steps .step {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    padding: 10px 8px;
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-1);
+    background: var(--surface-0);
+    color: var(--text-muted)
+    }
+.enroll-wizard .wizard-steps .step .icon {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--neutral-soft);
+    color: var(--text)
+    }
+.enroll-wizard .wizard-steps .step.active {
+    border-style: solid;
+    border-color: var(--color-primary);
+    color: var(--text-strong);
+    box-shadow: var(--shadow-1)
+    }
+.enroll-wizard .wizard-steps .step.active .icon {
+    background: var(--primary-soft);
+    color: var(--text-strong);
+    animation: pulseGlow 2s ease-in-out infinite
+    }
+.enroll-wizard .wizard-steps .step.completed {
+    border-color: var(--color-success);
+    color: var(--text)
+    }
+.enroll-wizard .wizard-steps .step.completed .icon {
+    background: var(--success-soft);
+    color: var(--text-strong)
+    }
+/* Camera viewport */
+.camera-wrapper {
+    position: relative
+    }
+.camera-frame {
+    position: relative;
+    background: #000;
+    border-radius: var(--radius-2);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-1)
+    }
+#cameraFeed {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block
+    }
+.camera-skeleton {
+    position: absolute;
+    inset: 0;
+    display: none;
+    /* shown while loading */
+    }
+.face-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none
+    }
+.face-overlay::before {
+    content: "";
+    position: absolute;
+    width: 54%;
+    height: 70%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%/45% 45% 55% 55%;
+    /* oval */
+    box-shadow: 0 0 0 200vmax rgba(0, 0, 0, 0.32), 0 0 0 2px rgba(0, 255, 255, 0.75) inset
+    }
+.capture-hint {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--text);
+    border-radius: var(--radius-pill);
+    padding: 6px 10px;
+    box-shadow: var(--shadow-1);
+    font-weight: 600
+    }
+/* Buttons */
+#btnCapture {
+    min-width: 140px
+    }
+#btnAllowCamera {
+    min-width: 220px
+    }
+/* Diagnostics disabled visual */
+#diagnosticsCard.disabled, #diagnosticsCard[aria-disabled="true"] {
+    opacity: 0.6;
+    pointer-events: none;
+    filter: grayscale(0.1)
+    }
+/* Sortable header affordance */
+#diagTable th.sortable {
+    cursor: pointer;
+    user-select: none
+    }
+#diagTable th.sortable:hover {
+    background: var(--neutral-soft)
+    }
+/* Responsive adjustments */
+@media (max-width: 575.98px) {
+    .enroll-wizard .wizard-steps .stepper {
+        grid-template-columns: repeat(2, 1fr)
+        }
+    }

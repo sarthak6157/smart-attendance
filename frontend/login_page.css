@@ -1,0 +1,38 @@
+/* login_page.css (page-specific styles for Login Page) */
+/* Use Poppins as the preferred font on this page while respecting global theme */
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/* Centered auth visual tweaks */
+.auth-logo {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: var(--shadow-1)
+    }
+/* Improve spacing inside the login container */
+.login-form-container {
+    max-width: 520px
+    }
+.login-form-container .form-label {
+    font-weight: 600
+    }
+.login-form-container .btn-lg {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem
+    }
+/* Accessibility: focus state consistent */
+#togglePassword:focus-visible {
+    box-shadow: var(--focus-ring)
+    }
+/* Demo credentials card spacing */
+.widget-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px
+    }
+/* Tweak alert spacing */
+#authAlert {
+    margin-bottom: 12px
+    }

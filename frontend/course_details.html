@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Course Details • Attendance
+  </title>
+  <!-- Brand Typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Font Awesome 6 -->
+  <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2Pkf7uYpO5NtOM8uQVD7WfGZ7Gaxz6t+qlWHe1Z8F5zvY6Y5qX3LQ8b+Ag==" referrerpolicy="no-referrer" rel="stylesheet">
+   <!-- Flatpickr (Date Range) -->
+   <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet"/>
+   <!-- SweetAlert2 -->
+   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.min.css" rel="stylesheet"/>
+   <!-- Site Theme -->
+   <link href="style.css" rel="stylesheet"/>
+   <!-- Page-specific CSS -->
+   <link href="course_details.css" rel="stylesheet"/>
+  </link>
+ </head>
+ <body>
+  <!-- Administrator Sidebar (shown for Faculty/Administrator only) -->
+  <aside class="sidebar d-none d-md-flex flex-column" id="sidebar">
+   <div class="brand d-flex align-items-center gap-2 p-3">
+    <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/attendance-logo/48/36'" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg"/>
+    <span class="text-white fw-semibold">
+     Attendance Admin
+    </span>
+   </div>
+   <div class="profile d-flex align-items-center gap-2 p-3">
+    <div class="rounded-circle bg-light text-dark d-flex align-items-center justify-content-center" style="width:36px;height:36px;font-weight:600;">
+     AD
+    </div>
+    <div class="text-white small">
+     <div class="fw-semibold" id="sidebarUserName">
+      Admin User
+     </div>
+     <div class="opacity:0.85">
+      Administrator
+     </div>
+    </div>
+   </div>
+   <nav class="nav flex-column mt-2">
+    <a class="nav-link" href="./admin_dashboard.html">
+     <i class="fa fa-gauge fa-fw me-2">
+     </i>
+     Dashboard
+    </a>
+    <a aria-controls="dataMgmt" aria-expanded="false" class="nav-link" data-bs-toggle="collapse" href="#dataMgmt" role="button">
+     <i class="fa fa-database fa-fw me-2">
+     </i>
+     Data Management
+    </a>
+    <div class="collapse show" id="dataMgmt">
+     <div class="submenu nav flex-column">
+      <a class="nav-link" href="./management_page.html#users">
+       <i class="fa fa-users fa-fw me-2">
+       </i>
+       Users
+      </a>
+      <a class="nav-link" href="./management_page.html#courses">
+       <i class="fa fa-book fa-fw me-2">
+       </i>
+       Courses
+      </a>
+      <a class="nav-link" href="./locations_page.html">
+       <i class="fa fa-location-dot fa-fw me-2">
+       </i>
+       Locations
+      </a>
+      <a class="nav-link" href="./management_page.html#timetable">
+       <i class="fa fa-calendar-days fa-fw me-2">
+       </i>
+       Timetables
+      </a>
+      <a class="nav-link" href="./import_page.html">
+       <i class="fa fa-file-import fa-fw me-2">
+       </i>
+       Bulk Import
+      </a>
+     </div>
+    </div>
+    <a class="nav-link" href="./reports_page.html">
+     <i class="fa fa-file-lines fa-fw me-2">
+     </i>
+     Reports
+    </a>
+    <a class="nav-link" href="./settings_page.html">
+     <i class="fa fa-gear fa-fw me-2">
+     </i>
+     Settings
+    </a>
+    <a class="nav-link" href="./audit_log.html">
+     <i class="fa fa-clipboard-list fa-fw me-2">
+     </i>
+     Audit Log
+    </a>
+    <a class="nav-link" href="./admin_dashboard.html#hotspots">
+     <i class="fa fa-bolt fa-fw me-2">
+     </i>
+     Hotspots
+    </a>
+   </nav>
+  </aside>
+  <!-- Administrator Header (brand text adjusted by role) -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-admin" id="topNavbar">
+   <div class="container-fluid">
+    <button aria-label="Toggle sidebar" class="btn btn-outline-light d-md-none me-2" id="sidebarToggle">
+     <i class="fa fa-bars">
+     </i>
+    </button>
+    <a class="navbar-brand d-flex align-items-center" href="./admin_dashboard.html">
+     <img alt="Logo" class="me-2" onerror="this.onerror=null;this.src='https://picsum.photos/seed/brand/28/28'" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:28px;border-radius:4px;">
+      <span id="brandText">
+       Admin Console
+      </span>
+     </img>
+    </a>
+    <form class="d-none d-lg-flex ms-3" role="search" style="width:420px;">
+     <input aria-label="Search" class="form-control form-control-sm me-2" placeholder="Search users, courses, locations" type="search"/>
+     <button class="btn btn-sm btn-outline-light" type="submit">
+      <i class="fa fa-search">
+      </i>
+     </button>
+    </form>
+    <div class="ms-auto d-flex align-items-center gap-2">
+     <a class="btn btn-sm btn-outline-light d-none d-md-inline-flex" href="./management_page.html#users" id="addUserBtn">
+      <i class="fa fa-plus me-1">
+      </i>
+      Add User
+     </a>
+     <button aria-label="Notifications" class="btn btn-sm btn-outline-light">
+      <i class="fa fa-bell">
+      </i>
+     </button>
+     <button aria-label="Messages" class="btn btn-sm btn-outline-light">
+      <i class="fa fa-envelope">
+      </i>
+     </button>
+     <div class="dropdown">
+      <button aria-expanded="false" class="btn btn-sm btn-outline-light dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa fa-user-shield me-1">
+       </i>
+       <span id="navbarUserName">
+        Admin User
+       </span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li>
+        <h6 class="dropdown-header">
+         Signed in
+        </h6>
+       </li>
+       <li>
+        <a class="dropdown-item" href="./settings_page.html">
+         Settings
+        </a>
+       </li>
+       <li>
+        <hr class="dropdown-divider"/>
+       </li>
+       <li>
+        <a class="dropdown-item" href="./login_page.html">
+         Logout
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <!-- Main Content -->
+  <main class="main-content" id="main">
+   <div class="container-fluid container-max">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="breadcrumb mt-3">
+     <ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item">
+       <a href="./student_dashboard.html" id="crumbHome">
+        Dashboard
+       </a>
+      </li>
+      <li class="breadcrumb-item">
+       <a href="#" id="crumbCourses">
+        Courses
+       </a>
+      </li>
+      <li aria-current="page" class="breadcrumb-item active">
+       Course Details
+      </li>
+     </ol>
+    </nav>
+    <!-- System feedback area -->
+    <div class="alert alert-info mt-3 d-none" id="systemAlert" role="alert">
+     <i class="fa fa-circle-info me-2">
+     </i>
+     Data refreshed. Last sync at
+     <span id="lastSync">
+      --:--
+     </span>
+     .
+    </div>
+    <!-- Page Header: Course Information and KPIs -->
+    <header class="page-header mt-3">
+     <div class="d-flex flex-column">
+      <div class="d-flex align-items-center gap-2">
+       <h1 class="page-title mb-0" id="courseTitle">
+        Introduction to Data Science
+       </h1>
+       <span class="badge-soft info" id="roleBadge">
+        <i class="fa fa-user-graduate me-1">
+        </i>
+        Student View
+       </span>
+      </div>
+      <div class="text-muted small">
+       <span id="courseCode">
+        DSCI-201
+       </span>
+       •
+       <span id="facultyName">
+        Prof. Alicia Chen
+       </span>
+      </div>
+     </div>
+     <div class="d-flex align-items-center gap-2">
+      <select class="form-select form-select-sm" id="roleSelect" style="min-width: 180px;">
+       <option value="Student">
+        Viewing as: Student
+       </option>
+       <option value="Faculty">
+        Viewing as: Faculty
+       </option>
+       <option value="Administrator">
+        Viewing as: Administrator
+       </option>
+      </select>
+      <a class="btn btn-sm btn-outline-primary" href="./reports_page.html">
+       <i class="fa fa-chart-line me-1">
+       </i>
+       Reports
+      </a>
+     </div>
+    </header>
+    <!-- KPI Cards -->
+    <section class="grid auto-fit-lg mb-4" id="kpiGrid">
+     <div class="metric-card">
+      <div class="metric-title" id="kpi1Title">
+       My Attendance
+      </div>
+      <div class="d-flex align-items-end justify-content-between">
+       <div class="metric-value" id="kpi1Value">
+        --%
+       </div>
+       <span class="badge-soft success" id="kpi1Quality">
+        <i class="fa fa-check-circle me-1">
+        </i>
+        Good
+       </span>
+      </div>
+      <small class="text-muted" id="kpi1Note">
+       Updated this week
+      </small>
+     </div>
+     <div class="metric-card">
+      <div class="metric-title" id="kpi2Title">
+       Classes Attended
+      </div>
+      <div class="d-flex align-items-end justify-content-between">
+       <div class="metric-value" id="kpi2Value">
+        --/--
+       </div>
+       <span class="badge-soft info">
+        <i class="fa fa-calendar-check me-1">
+        </i>
+        To Date
+       </span>
+      </div>
+      <small class="text-muted" id="kpi2Note">
+       Includes all sessions so far
+      </small>
+     </div>
+     <div class="card app-card" id="trendCard">
+      <div class="card-header">
+       <div class="widget-title">
+        Attendance Trend
+       </div>
+       <div class="reveal-on-hover">
+        <button class="btn btn-sm btn-light reveal-target" id="refreshBtn">
+         <i class="fa fa-rotate">
+         </i>
+         Refresh
+        </button>
+       </div>
+      </div>
+      <div class="card-body">
+       <canvas aria-label="Attendance trend over time" height="110" id="trendChart">
+       </canvas>
+      </div>
+     </div>
+    </section>
+    <!-- Attendance Log -->
+    <section class="app-card card">
+     <div class="card-header">
+      <div class="d-flex align-items-center gap-2">
+       <div class="widget-title mb-0">
+        Attendance Log
+       </div>
+       <span class="text-muted small" id="resultCount">
+        -- records
+       </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+       <div class="input-group input-group-sm" style="width: 260px;">
+        <span class="input-group-text">
+         <i class="fa fa-calendar">
+         </i>
+        </span>
+        <input aria-label="Start date" class="form-control" id="startDate" placeholder="Start date" type="text"/>
+        <input aria-label="End date" class="form-control" id="endDate" placeholder="End date" type="text"/>
+       </div>
+       <button class="btn btn-sm btn-primary" id="applyFilter">
+        <i class="fa fa-filter me-1">
+        </i>
+        Apply
+       </button>
+       <!-- Export for Faculty/Admin -->
+       <div class="dropdown d-none" id="exportDropdown">
+        <button aria-expanded="false" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+         <i class="fa fa-file-export me-1">
+         </i>
+         Export
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+         <li>
+          <a class="dropdown-item export-option" data-format="csv" href="#">
+           CSV
+          </a>
+         </li>
+         <li>
+          <a class="dropdown-item export-option" data-format="xlsx" href="#">
+           Excel (.xlsx)
+          </a>
+         </li>
+         <li>
+          <a class="dropdown-item export-option" data-format="pdf" href="#">
+           PDF
+          </a>
+         </li>
+         <li>
+          <hr class="dropdown-divider"/>
+         </li>
+         <li>
+          <a class="dropdown-item" href="./reports_page.html?type=attendance&amp;scope=course&amp;courseId=DSCI-201">
+           Go to Reports Page
+          </a>
+         </li>
+        </ul>
+       </div>
+      </div>
+     </div>
+     <div class="card-body p-0">
+      <div class="table-responsive">
+       <table class="table table-theme table-hover-reveal mb-0" id="attendanceTable">
+        <thead>
+         <tr id="tableHeadRow">
+          <th class="sortable" data-sort="date" role="button">
+           Session Date &amp; Time
+           <i class="fa fa-sort text-muted">
+           </i>
+          </th>
+          <th class="student-only">
+           Status
+          </th>
+          <th class="student-only">
+           Notes
+          </th>
+          <th class="staff-only">
+           Present
+          </th>
+          <th class="staff-only">
+           Absent
+          </th>
+          <th class="staff-only">
+           Late
+          </th>
+          <th class="staff-only text-end">
+           Details
+          </th>
+         </tr>
+        </thead>
+        <tbody id="tableBody">
+         <!-- Populated by JS with mock data -->
+        </tbody>
+       </table>
+      </div>
+     </div>
+     <div class="card-footer d-flex align-items-center justify-content-between">
+      <div class="text-muted small" id="paginationInfo">
+       Page 1 of 1
+      </div>
+      <nav>
+       <ul class="pagination pagination-sm mb-0" id="pagination">
+        <!-- JS builds pagination -->
+       </ul>
+      </nav>
+     </div>
+    </section>
+    <!-- Helpful Tip -->
+    <div class="alert alert-warning mt-3" role="alert">
+     <i class="fa fa-triangle-exclamation me-2">
+     </i>
+     Reminder: Minimum required attendance is 75%. Falling below this threshold may impact eligibility for final exams.
+    </div>
+   </div>
+  </main>
+  <!-- Administrator Footer (visible when sidebar active) -->
+  <footer class="py-3" id="footerBar">
+   <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+    <div class="d-flex align-items-center gap-2">
+     <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/footer/20/20'" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:20px;border-radius:3px;"/>
+     <small class="text-muted">
+      © 2025 Your University
+     </small>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+     <a class="text-decoration-none" href="./import_page.html">
+      <i class="fa fa-file-import me-1">
+      </i>
+      Import
+     </a>
+     <a class="text-decoration-none" href="./audit_log.html">
+      <i class="fa fa-clipboard-list me-1">
+      </i>
+      Audit
+     </a>
+     <a class="text-muted text-decoration-none" href="#">
+      Terms
+     </a>
+     <a class="text-muted text-decoration-none" href="#">
+      Privacy
+     </a>
+    </div>
+   </div>
+  </footer>
+  <!-- JS: Bootstrap, Flatpickr, Chart.js, SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.all.min.js">
+  </script>
+  <script>
+   // Basic sidebar toggle for mobile
+document.addEventListener('DOMContentLoaded', function() {
+    var t = document.getElementById('sidebarToggle');
+    var s = document.getElementById('sidebar');
+    if (t && s) {
+        t.addEventListener('click', function() {
+            s.classList.toggle('d-none');
+            document.body.classList.toggle('with-sidebar');
+            adjustBars();
+        });
+    }
+});
+
+// Mock user context and course info
+const urlParams = new URLSearchParams(window.location.search);
+const initialRole = urlParams.get('role') || 'Student';
+const course = {
+    courseId: 'c_201',
+    courseName: 'Introduction to Data Science',
+    courseCode: 'DSCI-201',
+    facultyName: 'Prof. Alicia Chen'
+};
+
+// Sample attendance records (mock)
+// For Student: status per session; For Staff: aggregate per session
+const allRecords = [{
+    id: 'S-240401',
+    date: '2025-04-01T09:00:00',
+    status: 'Present',
+    note: 'On time',
+    present: 48,
+    absent: 2,
+    late: 3
+}, {
+    id: 'S-240408',
+    date: '2025-04-08T09:00:00',
+    status: 'Present',
+    note: 'On time',
+    present: 47,
+    absent: 3,
+    late: 5
+}, {
+    id: 'S-240415',
+    date: '2025-04-15T09:00:00',
+    status: 'Absent',
+    note: 'Sick leave',
+    present: 43,
+    absent: 7,
+    late: 4
+}, {
+    id: 'S-240422',
+    date: '2025-04-22T09:00:00',
+    status: 'Present',
+    note: 'On time',
+    present: 49,
+    absent: 1,
+    late: 3
+}, {
+    id: 'S-240429',
+    date: '2025-04-29T09:00:00',
+    status: 'Late',
+    note: '5 min late',
+    present: 46,
+    absent: 2,
+    late: 5
+}, {
+    id: 'S-240506',
+    date: '2025-05-06T09:00:00',
+    status: 'Present',
+    note: 'On time',
+    present: 48,
+    absent: 2,
+    late: 2
+}, {
+    id: 'S-240513',
+    date: '2025-05-13T09:00:00',
+    status: 'Present',
+    note: 'On time',
+    present: 50,
+    absent: 0,
+    late: 1
+}, {
+    id: 'S-240520',
+    date: '2025-05-20T09:00:00',
+    status: 'Present',
+    note: 'On time',
+    present: 49,
+    absent: 1,
+    late: 1
+}, {
+    id: 'S-240527',
+    date: '2025-05-27T09:00:00',
+    status: 'Present',
+    note: 'On time',
+    present: 47,
+    absent: 3,
+    late: 2
+}, {
+    id: 'S-240603',
+    date: '2025-06-03T09:00:00',
+    status: 'Present',
+    note: 'On time',
+    present: 48,
+    absent: 2,
+    late: 1
+}];
+
+// Pagination & state
+let state = {
+    role: initialRole,
+    sortField: 'date',
+    sortDir: 'desc',
+    page: 1,
+    pageSize: 6,
+    startDate: null,
+    endDate: null
+};
+
+// Init UI
+document.addEventListener('DOMContentLoaded', () => {
+    // Apply course meta
+    document.getElementById('courseTitle').textContent = course.courseName;
+    document.getElementById('courseCode').textContent = course.courseCode;
+    document.getElementById('facultyName').textContent = course.facultyName;
+
+    // Role selector
+    const roleSelect = document.getElementById('roleSelect');
+    roleSelect.value = state.role;
+    roleSelect.addEventListener('change', () => {
+        state.role = roleSelect.value;
+        applyRole();
+        renderAll();
+    });
+
+    // Datepickers
+    flatpickr('#startDate', {
+        dateFormat: 'Y-m-d'
+    });
+    flatpickr('#endDate', {
+        dateFormat: 'Y-m-d'
+    });
+
+    document.getElementById('applyFilter').addEventListener('click', () => {
+        const sd = document.getElementById('startDate').value || null;
+        const ed = document.getElementById('endDate').value || null;
+        if (sd && ed && new Date(sd) > new Date(ed)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid date range',
+                text: 'End date cannot be before start date.'
+            });
+            return;
+        }
+        state.startDate = sd;
+        state.endDate = ed;
+        state.page = 1;
+        showSystemAlert('Filters applied');
+        renderAll();
+    });
+
+    // Sorting
+    document.querySelectorAll('#tableHeadRow .sortable').forEach(th => {
+        th.addEventListener('click', () => {
+            const field = th.dataset.sort;
+            if (state.sortField === field) {
+                state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                state.sortField = field;
+                state.sortDir = 'asc';
+            }
+            renderTable();
+        });
+    });
+
+    // Export actions
+    document.querySelectorAll('.export-option').forEach(a => {
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const fmt = a.dataset.format;
+            if (getFiltered().length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No data to export',
+                    text: 'Try adjusting filters to include some sessions.'
+                });
+                return;
+            }
+            Swal.fire({
+                title: 'Generating report…',
+                html: `Format: <b>${fmt.toUpperCase()}</b><br/>Course: ${course.courseCode}`,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            setTimeout(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Report ready',
+                    text: `Your ${fmt.toUpperCase()} download has started.`
+                });
+            }, 1200);
+        });
+    });
+
+    // Refresh button for chart
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+        showSystemAlert('Data refreshed');
+        updateTrendChart();
+    });
+
+    // Initial role setup and render
+    applyRole();
+    initTrendChart();
+    renderAll();
+});
+
+function applyRole() {
+    const isStaff = (state.role === 'Faculty' || state.role === 'Administrator');
+    const sidebar = document.getElementById('sidebar');
+    const exportDd = document.getElementById('exportDropdown');
+    const addUserBtn = document.getElementById('addUserBtn');
+    const brandText = document.getElementById('brandText');
+    const crumbHome = document.getElementById('crumbHome');
+    const crumbCourses = document.getElementById('crumbCourses');
+    const roleBadge = document.getElementById('roleBadge');
+
+    // Show/hide sidebar and adjust layout
+    if (isStaff) {
+        sidebar.classList.remove('d-none');
+        document.body.classList.add('with-sidebar');
+    } else {
+        sidebar.classList.add('d-none');
+        document.body.classList.remove('with-sidebar');
+    }
+    adjustBars();
+
+    // Header brand & extras
+    brandText.textContent = isStaff ? 'Admin Console' : 'Course Attendance';
+    addUserBtn.classList.toggle('d-none', !isStaff);
+
+    // Export dropdown only for staff
+    exportDd.classList.toggle('d-none', !isStaff);
+
+    // Breadcrumb home target
+    crumbHome.setAttribute('href', isStaff ? './faculty_dashboard.html' : './student_dashboard.html');
+    crumbCourses.textContent = isStaff ? 'Teaching' : 'My Courses';
+
+    // Role badge
+    roleBadge.innerHTML = isStaff ? '<i class="fa fa-chalkboard-teacher me-1"></i>Staff View' : '<i class="fa fa-user-graduate me-1"></i>Student View';
+
+    // Show/hide columns by role
+    document.querySelectorAll('.student-only').forEach(el => el.style.display = isStaff ? 'none' : 'table-cell');
+    document.querySelectorAll('.staff-only').forEach(el => el.style.display = isStaff ? 'table-cell' : 'none');
+
+    // Username displays
+    document.getElementById('navbarUserName').textContent = isStaff ? 'Admin User' : 'Student User';
+    document.getElementById('sidebarUserName').textContent = isStaff ? 'Admin User' : '—';
+}
+
+function adjustBars() {
+    // Adjust navbar/footer margins based on sidebar presence
+    const hasSidebar = document.body.classList.contains('with-sidebar');
+    const navbar = document.getElementById('topNavbar');
+    const footer = document.getElementById('footerBar');
+    if (hasSidebar) {
+        navbar.style.marginLeft = '260px';
+        footer.style.marginLeft = '260px';
+    } else {
+        navbar.style.marginLeft = '0px';
+        footer.style.marginLeft = '0px';
+    }
+}
+
+// Rendering helpers
+function renderAll() {
+    renderKPIs();
+    renderTable();
+    updateTrendChart();
+    document.getElementById('lastSync').textContent = new Date().toLocaleTimeString();
+}
+
+function renderKPIs() {
+    const isStaff = (state.role === 'Faculty' || state.role === 'Administrator');
+    const total = allRecords.length;
+    const attended = allRecords.filter(r => r.status === 'Present' || r.status === 'Late').length;
+    const pct = Math.round((attended / total) * 100);
+
+    const kpi1Title = document.getElementById('kpi1Title');
+    const kpi1Value = document.getElementById('kpi1Value');
+    const kpi1Note = document.getElementById('kpi1Note');
+    const kpi1Quality = document.getElementById('kpi1Quality');
+    const kpi2Title = document.getElementById('kpi2Title');
+    const kpi2Value = document.getElementById('kpi2Value');
+
+    if (isStaff) {
+        // Mock class average
+        const classAvg = 92;
+        kpi1Title.textContent = 'Class Average Attendance';
+        kpi1Value.textContent = classAvg + '%';
+        kpi1Note.textContent = 'Based on all enrolled students';
+        kpi2Title.textContent = 'Sessions Held';
+        kpi2Value.textContent = total + '';
+    } else {
+        kpi1Title.textContent = 'My Attendance';
+        kpi1Value.textContent = pct + '%';
+        kpi1Note.textContent = 'Updated this week';
+        kpi2Title.textContent = 'Classes Attended';
+        kpi2Value.textContent = attended + '/' + total;
+    }
+
+    // Quality badge color
+    if (pct >= 90) {
+        kpi1Quality.className = 'badge-soft success';
+        kpi1Quality.innerHTML = '<i class="fa fa-check-circle me-1"></i>Excellent';
+    } else if (pct >= 75) {
+        kpi1Quality.className = 'badge-soft info';
+        kpi1Quality.innerHTML = '<i class="fa fa-circle-info me-1"></i>Good';
+    } else {
+        kpi1Quality.className = 'badge-soft warning';
+        kpi1Quality.innerHTML = '<i class="fa fa-exclamation-circle me-1"></i>Low';
+    }
+}
+
+function getFiltered() {
+    let rows = [...allRecords];
+    if (state.startDate) {
+        rows = rows.filter(r => new Date(r.date) >= new Date(state.startDate));
+    }
+    if (state.endDate) {
+        rows = rows.filter(r => new Date(r.date) <= new Date(state.endDate + 'T23:59:59'));
+    }
+    return rows;
+}
+
+function renderTable() {
+    const isStaff = (state.role === 'Faculty' || state.role === 'Administrator');
+    const tbody = document.getElementById('tableBody');
+    const pagination = document.getElementById('pagination');
+
+    let rows = getFiltered();
+
+    // Sort
+    rows.sort((a, b) => {
+        if (state.sortField === 'date') {
+            return (state.sortDir === 'asc') ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date);
+        }
+        return 0;
+    });
+
+    // Pagination
+    const total = rows.length;
+    const pages = Math.max(1, Math.ceil(total / state.pageSize));
+    if (state.page > pages) state.page = pages;
+    const start = (state.page - 1) * state.pageSize;
+    const end = start + state.pageSize;
+    const pageRows = rows.slice(start, end);
+
+    // Build rows
+    tbody.innerHTML = pageRows.map(r => {
+        const dt = new Date(r.date);
+        const dateStr = dt.toLocaleDateString() + ' ' + dt.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        const statusBadge = statusToBadge(r.status);
+        const notes = r.note || '';
+        const detailsBtn = `<a class="btn btn-sm btn-light" href="./session_page.html?sessionId=${encodeURIComponent(r.id)}" title="View roster"><i class=\"fa fa-users\"></i></a>`;
+        return `
+          <tr>
+            <td>${dateStr}</td>
+            <td class="student-only">${statusBadge}</td>
+            <td class="student-only">${escapeHtml(notes)}</td>
+            <td class="staff-only">${r.present}</td>
+            <td class="staff-only">${r.absent}</td>
+            <td class="staff-only">${r.late}</td>
+            <td class="staff-only text-end">${detailsBtn}</td>
+          </tr>
+        `;
+    }).join('');
+
+    // Update counts and pagination
+    document.getElementById('resultCount').textContent = `${total} records`;
+    document.getElementById('paginationInfo').textContent = `Page ${state.page} of ${Math.max(1, Math.ceil(total / state.pageSize))}`;
+
+    // Build pagination controls
+    pagination.innerHTML = '';
+    const pagesCount = Math.max(1, Math.ceil(total / state.pageSize));
+    const createPageItem = (label, page, disabled = false, active = false) => {
+        const li = document.createElement('li');
+        li.className = `page-item ${disabled ? 'disabled' : ''} ${active ? 'active' : ''}`;
+        const a = document.createElement('a');
+        a.className = 'page-link';
+        a.href = '#';
+        a.textContent = label;
+        if (!disabled) a.addEventListener('click', (e) => {
+            e.preventDefault();
+            state.page = page;
+            renderTable();
+        });
+        li.appendChild(a);
+        return li;
+    };
+    pagination.appendChild(createPageItem('«', Math.max(1, state.page - 1), state.page === 1));
+    for (let p = 1; p <= pagesCount; p++) {
+        pagination.appendChild(createPageItem(p, p, false, p === state.page));
+    }
+    pagination.appendChild(createPageItem('»', Math.min(pagesCount, state.page + 1), state.page === pagesCount));
+
+    // Toggle column visibility again (for responsiveness after rebuild)
+    document.querySelectorAll('.student-only').forEach(el => el.style.display = isStaff ? 'none' : 'table-cell');
+    document.querySelectorAll('.staff-only').forEach(el => el.style.display = isStaff ? 'table-cell' : 'none');
+}
+
+function statusToBadge(status) {
+    let cls = 'info',
+        text = status;
+    if (status === 'Present') cls = 'success';
+    else if (status === 'Absent') cls = 'error';
+    else if (status === 'Late') cls = 'warning';
+    return `<span class="badge-soft ${cls}"><span class="status-dot ${cls}"></span>&nbsp;${text}</span>`;
+}
+
+function escapeHtml(str) {
+    return (str || '').replace(/[&<>'"]/g, c => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '\'': '&#39;',
+        '"': '&quot;'
+    } [c]));
+}
+
+function showSystemAlert(message) {
+    const alert = document.getElementById('systemAlert');
+    const time = document.getElementById('lastSync');
+    time.textContent = new Date().toLocaleTimeString();
+    alert.classList.remove('d-none');
+    alert.querySelector('span#lastSync');
+    setTimeout(() => alert.classList.add('d-none'), 2500);
+}
+
+// Chart.js attendance trend
+let trendChart;
+
+function initTrendChart() {
+    const ctx = document.getElementById('trendChart');
+    trendChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: allRecords.map(r => new Date(r.date).toLocaleDateString()),
+            datasets: [{
+                label: 'Attendance % (class)',
+                data: allRecords.map((r, i) => {
+                    const base = 90 + (i % 3) * 2 - (i === 2 ? 10 : 0); // mock variation
+                    return Math.max(70, Math.min(100, base));
+                }),
+                borderColor: 'rgba(0, 153, 210, 1)',
+                backgroundColor: 'rgba(0, 153, 210, 0.1)',
+                tension: 0.25,
+                fill: true,
+                pointRadius: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        stepSize: 10
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: true
+                }
+            }
+        }
+    });
+}
+
+function updateTrendChart() {
+    if (!trendChart) return;
+    // simple refresh effect: shuffle slightly
+    const ds = trendChart.data.datasets[0].data;
+    trendChart.data.datasets[0].data = ds.map(v => Math.max(70, Math.min(100, v + (Math.random() * 4 - 2))));
+    trendChart.update();
+}
+  </script>
+ </body>
+</html>

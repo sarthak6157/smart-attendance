@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Bulk Data Import | Admin Console
+  </title>
+  <!-- Brand Typography: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <!-- Font Awesome 6 -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+   <!-- Global Theme Styles -->
+   <link href="style.css" rel="stylesheet"/>
+   <!-- Page-specific CSS -->
+   <link href="import_page.css" rel="stylesheet"/>
+  </link>
+ </head>
+ <body>
+  <!-- Sidebar (Admin pages only) -->
+  <style>
+   :root { --primary:#00FFFF; --secondary:#008080; }
+    .sidebar { width: 260px; min-height: 100vh; background-color: var(--secondary); position: fixed; top: 0; left: 0; z-index: 1030; }
+    .sidebar .brand { background: rgba(0,0,0,0.15); }
+    .sidebar .brand img { height: 36px; border-radius: 4px; }
+    .sidebar .profile { background: rgba(0,0,0,0.10); }
+    .sidebar .nav-link { color: #e6ffff; border-radius: .35rem; margin: 4px 8px; }
+    .sidebar .nav-link:hover { background-color: rgba(0,0,0,0.15); color: #fff; }
+    .sidebar .nav-link.active { background-color: rgba(0, 255, 255, 0.25); color: #fff; box-shadow: inset 3px 0 0 var(--primary); }
+    .sidebar .submenu .nav-link { padding-left: 2rem; }
+    @media (max-width: 767.98px){ .sidebar { display: none; } }
+  </style>
+  <aside class="sidebar d-none d-md-flex flex-column" id="sidebar">
+   <div class="brand d-flex align-items-center gap-2 p-3">
+    <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/univlogo/64/36';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg"/>
+    <span class="text-white fw-semibold">
+     Attendance Admin
+    </span>
+   </div>
+   <div class="profile d-flex align-items-center gap-2 p-3">
+    <div class="rounded-circle bg-light text-dark d-flex align-items-center justify-content-center" style="width:36px;height:36px;font-weight:600;">
+     AL
+    </div>
+    <div class="text-white small">
+     <div class="fw-semibold">
+      Alex Lee
+     </div>
+     <div class="opacity:0.85">
+      Administrator
+     </div>
+    </div>
+   </div>
+   <nav class="nav flex-column mt-2">
+    <a class="nav-link" href="./admin_dashboard.html">
+     <i class="fa fa-gauge fa-fw me-2">
+     </i>
+     Dashboard
+    </a>
+    <a aria-controls="dataMgmt" aria-expanded="true" class="nav-link" data-bs-toggle="collapse" href="#dataMgmt" role="button">
+     <i class="fa fa-database fa-fw me-2">
+     </i>
+     Data Management
+    </a>
+    <div class="collapse show" id="dataMgmt">
+     <div class="submenu nav flex-column">
+      <a class="nav-link" href="./management_page.html#users">
+       <i class="fa fa-users fa-fw me-2">
+       </i>
+       Users
+      </a>
+      <a class="nav-link" href="./management_page.html#courses">
+       <i class="fa fa-book fa-fw me-2">
+       </i>
+       Courses
+      </a>
+      <a class="nav-link" href="./locations_page.html">
+       <i class="fa fa-location-dot fa-fw me-2">
+       </i>
+       Locations
+      </a>
+      <a class="nav-link" href="./management_page.html#timetable">
+       <i class="fa fa-calendar-days fa-fw me-2">
+       </i>
+       Timetables
+      </a>
+      <a class="nav-link active" href="./import_page.html">
+       <i class="fa fa-file-import fa-fw me-2">
+       </i>
+       Bulk Import
+      </a>
+     </div>
+    </div>
+    <a class="nav-link" href="./reports_page.html">
+     <i class="fa fa-file-lines fa-fw me-2">
+     </i>
+     Reports
+    </a>
+    <a class="nav-link" href="./settings_page.html">
+     <i class="fa fa-gear fa-fw me-2">
+     </i>
+     Settings
+    </a>
+    <a class="nav-link" href="./audit_log.html">
+     <i class="fa fa-clipboard-list fa-fw me-2">
+     </i>
+     Audit Log
+    </a>
+    <a class="nav-link" href="./admin_dashboard.html#hotspots">
+     <i class="fa fa-bolt fa-fw me-2">
+     </i>
+     Hotspots
+    </a>
+   </nav>
+  </aside>
+  <!-- Header (Admin pages only) -->
+  <style>
+   :root { --primary:#00FFFF; --secondary:#008080; }
+    .navbar-admin { background-color: var(--secondary); }
+    .navbar-admin .nav-link, .navbar-admin .navbar-brand { color:#fff; }
+    .navbar-admin .btn-outline-light:hover { background-color: rgba(255,255,255,0.12); }
+  </style>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-admin" style="margin-left:260px;">
+   <div class="container-fluid">
+    <button aria-label="Toggle sidebar" class="btn btn-outline-light d-md-none me-2" id="sidebarToggle">
+     <i class="fa fa-bars">
+     </i>
+    </button>
+    <a class="navbar-brand d-flex align-items-center" href="./admin_dashboard.html">
+     <img alt="Logo" class="me-2" onerror="this.onerror=null;this.src='https://picsum.photos/seed/logo/56/28';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:28px;border-radius:4px;">
+      <span>
+       Admin Console
+      </span>
+     </img>
+    </a>
+    <form class="d-none d-lg-flex ms-3" role="search" style="width:420px;">
+     <input aria-label="Search" class="form-control form-control-sm me-2" placeholder="Search users, courses, locations" type="search"/>
+     <button class="btn btn-sm btn-outline-light" type="submit">
+      <i class="fa fa-search">
+      </i>
+     </button>
+    </form>
+    <div class="ms-auto d-flex align-items-center gap-2">
+     <a class="btn btn-sm btn-outline-light" href="./management_page.html#users">
+      <i class="fa fa-plus me-1">
+      </i>
+      Add User
+     </a>
+     <button aria-label="Notifications" class="btn btn-sm btn-outline-light" id="btnNotify">
+      <i class="fa fa-bell">
+      </i>
+     </button>
+     <button aria-label="Messages" class="btn btn-sm btn-outline-light">
+      <i class="fa fa-envelope">
+      </i>
+     </button>
+     <div class="dropdown">
+      <button aria-expanded="false" class="btn btn-sm btn-outline-light dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa fa-user-shield me-1">
+       </i>
+       Alex Lee
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li>
+        <h6 class="dropdown-header">
+         Signed in as Admin
+        </h6>
+       </li>
+       <li>
+        <a class="dropdown-item" href="./settings_page.html">
+         System Settings
+        </a>
+       </li>
+       <li>
+        <hr class="dropdown-divider"/>
+       </li>
+       <li>
+        <a class="dropdown-item" href="./login_page.html">
+         Logout
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <!-- Main Content -->
+  <main class="main-content" id="main">
+   <div class="container-fluid">
+    <nav aria-label="breadcrumb" class="breadcrumb mt-2">
+     <ol class="breadcrumb p-0 m-0">
+      <li class="breadcrumb-item">
+       <a href="./admin_dashboard.html">
+        Dashboard
+       </a>
+      </li>
+      <li aria-current="page" class="breadcrumb-item active">
+       Bulk Import
+      </li>
+     </ol>
+    </nav>
+    <div class="page-header">
+     <div class="d-flex align-items-center gap-2">
+      <h1 class="page-title mb-0">
+       Bulk Data Import
+      </h1>
+      <span class="badge-soft info">
+       <i class="fa fa-circle-info me-1">
+       </i>
+       Guided Wizard
+      </span>
+     </div>
+     <div aria-label="View options" class="view-switcher" role="group">
+      <div class="option active">
+       <i class="fa fa-wand-magic-sparkles me-1">
+       </i>
+       Wizard
+      </div>
+      <div class="option" data-bs-toggle="tooltip" title="CLI/Advanced coming soon">
+       <i class="fa fa-terminal me-1">
+       </i>
+       Advanced
+      </div>
+     </div>
+    </div>
+    <div class="alert alert-info d-flex align-items-start" role="alert">
+     <i class="fa fa-lightbulb me-2 mt-1">
+     </i>
+     <div>
+      Use this wizard to import Students, Faculty, Courses, or Timetables. Download the template, fill it in, and upload. The system validates your data before importing.
+     </div>
+    </div>
+    <!-- Data Import Manager (Wizard) -->
+    <div class="card app-card" id="importWizard">
+     <div class="card-header">
+      <div class="title d-flex align-items-center gap-2">
+       <span class="step-indicator step-1 active">
+        <span>
+         1
+        </span>
+       </span>
+       <span class="fw-semibold">
+        Select Data Type
+       </span>
+       <i class="fa fa-angles-right text-muted">
+       </i>
+       <span class="step-indicator step-2">
+        <span>
+         2
+        </span>
+       </span>
+       <span class="fw-semibold">
+        Upload File
+       </span>
+       <i class="fa fa-angles-right text-muted">
+       </i>
+       <span class="step-indicator step-3">
+        <span>
+         3
+        </span>
+       </span>
+       <span class="fw-semibold">
+        Validate &amp; Import
+       </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+       <span class="text-muted small">
+        Accepted: .csv, .xlsx
+       </span>
+       <button class="btn btn-sm btn-light" id="btnResetWizard">
+        <i class="fa fa-rotate-left me-1">
+        </i>
+        Reset
+       </button>
+      </div>
+     </div>
+     <div class="card-body">
+      <!-- Step 1: Data Type Selector -->
+      <section class="wizard-step" id="step1">
+       <ul class="nav nav-tabs" id="dataTypeTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+         <button class="nav-link active" data-type="students" id="students-tab" role="tab" type="button">
+          <i class="fa fa-user-graduate me-1">
+          </i>
+          Students
+         </button>
+        </li>
+        <li class="nav-item" role="presentation">
+         <button class="nav-link" data-type="faculty" id="faculty-tab" role="tab" type="button">
+          <i class="fa fa-chalkboard-user me-1">
+          </i>
+          Faculty
+         </button>
+        </li>
+        <li class="nav-item" role="presentation">
+         <button class="nav-link" data-type="courses" id="courses-tab" role="tab" type="button">
+          <i class="fa fa-book me-1">
+          </i>
+          Courses
+         </button>
+        </li>
+        <li class="nav-item" role="presentation">
+         <button class="nav-link" data-type="timetable" id="timetable-tab" role="tab" type="button">
+          <i class="fa fa-calendar-days me-1">
+          </i>
+          Timetable
+         </button>
+        </li>
+       </ul>
+       <div class="mt-3">
+        <div class="d-flex flex-column flex-lg-row gap-3 align-items-stretch">
+         <div class="flex-fill p-3 rounded bg-surface border">
+          <h6 class="mb-2">
+           Required Columns
+          </h6>
+          <ul class="mb-0" id="requiredColumnsList">
+           <!-- Dynamically populated -->
+          </ul>
+         </div>
+         <div class="flex-fill p-3 rounded bg-surface border">
+          <h6 class="mb-2">
+           Formatting Guidelines
+          </h6>
+          <p class="mb-1 small text-muted" id="formatGuidelines">
+           Select a data type to view specific formatting guidance.
+          </p>
+          <div class="d-flex gap-2 mt-2">
+           <button class="btn btn-info" id="btnDownloadTemplate">
+            <i class="fa fa-download me-1">
+            </i>
+            Download Template
+           </button>
+           <button class="btn btn-light" id="btnNextToUpload">
+            <i class="fa fa-arrow-right me-1">
+            </i>
+            Next: Upload
+           </button>
+          </div>
+         </div>
+        </div>
+       </div>
+      </section>
+      <!-- Step 2: File Upload Zone -->
+      <section class="wizard-step d-none" id="step2">
+       <div class="row g-3">
+        <div class="col-lg-8">
+         <div class="dropzone-area p-4 text-center rounded border-dashed" id="dropZone">
+          <i class="fa fa-cloud-arrow-up fa-2x text-info">
+          </i>
+          <p class="mt-2 mb-1">
+           Drag &amp; drop file here, or click to select file
+          </p>
+          <small class="text-muted">
+           Accepted types: .csv, .xlsx | Max size: 10MB
+          </small>
+          <input accept=".csv,.xlsx" class="visually-hidden" id="fileInput" type="file">
+          </input>
+         </div>
+         <div class="mt-3 d-none" id="selectedFileInfo">
+          <div class="d-flex align-items-center justify-content-between p-3 rounded bg-surface border">
+           <div class="d-flex align-items-center gap-2">
+            <i class="fa fa-file-lines text-info">
+            </i>
+            <div>
+             <div class="fw-semibold" id="fileName">
+              sample.csv
+             </div>
+             <small class="text-muted" id="fileMeta">
+              0 KB • text/csv
+             </small>
+            </div>
+           </div>
+           <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-sm btn-light" id="btnChangeFile">
+             <i class="fa fa-pen me-1">
+             </i>
+             Change
+            </button>
+            <button class="btn btn-sm btn-success" id="btnUpload">
+             <i class="fa fa-arrow-up-from-bracket me-1">
+             </i>
+             Upload
+            </button>
+           </div>
+          </div>
+          <div aria-label="Upload progress" class="progress mt-2 d-none" role="progressbar">
+           <div class="progress-bar" id="uploadProgressBar" style="width: 0%">
+            0%
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="col-lg-4">
+         <div class="p-3 rounded bg-surface border h-100">
+          <h6 class="mb-2">
+           Instructions
+          </h6>
+          <p class="small mb-2" id="dynamicInstructions">
+           Follow the guidelines and ensure the first row contains headers exactly matching the required columns.
+          </p>
+          <ul class="small text-muted mb-3" id="instructionBullets">
+           <li>
+            No empty required fields
+           </li>
+           <li>
+            Use UTF-8 encoding for CSV
+           </li>
+           <li>
+            Dates in ISO format (YYYY-MM-DD)
+           </li>
+          </ul>
+          <button class="btn btn-info w-100" id="btnReDownloadTemplate">
+           <i class="fa fa-download me-1">
+           </i>
+           Download Template
+          </button>
+         </div>
+        </div>
+       </div>
+      </section>
+      <!-- Step 3: Validation Results -->
+      <section class="wizard-step d-none" id="step3">
+       <div class="row g-3">
+        <div class="col-xl-4">
+         <div class="metric-card h-100">
+          <div class="d-flex align-items-center justify-content-between">
+           <div>
+            <div class="metric-title">
+             Validation Summary
+            </div>
+            <div class="metric-value" id="summaryCounts">
+             0 valid
+            </div>
+            <div class="text-muted" id="summaryText">
+             Awaiting validation results...
+            </div>
+           </div>
+           <div style="width:120px;height:120px">
+            <canvas aria-label="Validation chart" height="120" id="resultChart" width="120">
+            </canvas>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="col-xl-8">
+         <div class="card h-100">
+          <div class="card-header justify-content-between">
+           <div class="title d-flex align-items-center gap-2">
+            <i class="fa fa-triangle-exclamation text-warning">
+            </i>
+            <span class="widget-title">
+             Error Details
+            </span>
+           </div>
+           <div class="d-flex align-items-center gap-2">
+            <input class="form-control form-control-sm" id="errorFilter" placeholder="Filter errors..." style="width:220px;" type="text"/>
+            <div class="btn-group">
+             <button class="btn btn-sm btn-light" data-bs-toggle="tooltip" id="sortRowAsc" title="Sort by row ascending">
+              <i class="fa fa-arrow-up-wide-short">
+              </i>
+             </button>
+             <button class="btn btn-sm btn-light" data-bs-toggle="tooltip" id="sortRowDesc" title="Sort by row descending">
+              <i class="fa fa-arrow-down-short-wide">
+              </i>
+             </button>
+            </div>
+           </div>
+          </div>
+          <div class="card-body">
+           <div class="table-responsive">
+            <table class="table table-theme table-hover-reveal" id="errorsTable">
+             <thead>
+              <tr>
+               <th style="width:120px;">
+                Row Number
+               </th>
+               <th>
+                Error Message
+               </th>
+              </tr>
+             </thead>
+             <tbody>
+              <!-- Populated dynamically -->
+             </tbody>
+            </table>
+           </div>
+          </div>
+          <div class="card-footer d-flex align-items-center justify-content-between">
+           <div class="small text-muted" id="paginationInfo">
+            Showing 0-0 of 0
+           </div>
+           <nav>
+            <ul class="pagination pagination-sm mb-0" id="pagination">
+             <!-- Pagination buttons populated dynamically -->
+            </ul>
+           </nav>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="d-flex gap-2">
+         <button class="btn btn-light" id="btnBackToUpload">
+          <i class="fa fa-arrow-left me-1">
+          </i>
+          Back
+         </button>
+         <button class="btn btn-secondary d-none" id="btnDownloadErrorReport">
+          <i class="fa fa-file-arrow-down me-1">
+          </i>
+          Download Error Report
+         </button>
+        </div>
+        <div class="d-flex gap-2">
+         <button class="btn btn-outline-secondary" id="btnCancelImport">
+          Cancel
+         </button>
+         <button class="btn btn-success" disabled="" id="btnConfirmImport">
+          <i class="fa fa-check me-1">
+          </i>
+          Confirm Import
+         </button>
+        </div>
+       </div>
+      </section>
+     </div>
+    </div>
+    <!-- Notifications / Toasts -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index:1060">
+     <div aria-atomic="true" aria-live="assertive" class="toast" id="appToast" role="alert">
+      <div class="toast-header">
+       <i class="fa fa-circle-check text-success me-2">
+       </i>
+       <strong class="me-auto">
+        System
+       </strong>
+       <small class="text-muted">
+        just now
+       </small>
+       <button aria-label="Close" class="btn-close ms-2 mb-1" data-bs-dismiss="toast" type="button">
+       </button>
+      </div>
+      <div class="toast-body" id="toastBody">
+       Action completed.
+      </div>
+     </div>
+    </div>
+   </div>
+  </main>
+  <!-- Footer (Admin pages only) -->
+  <footer class="py-3" style="background-color:#f8f9fa;border-top:1px solid #e9ecef;margin-left:260px;">
+   <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+    <div class="d-flex align-items-center gap-2">
+     <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/footerlogo/40/20';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:20px;border-radius:3px;"/>
+     <small class="text-muted">
+      © 2025 Your University
+     </small>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+     <a class="text-decoration-none" href="./import_page.html">
+      <i class="fa fa-file-import me-1">
+      </i>
+      Import
+     </a>
+     <a class="text-decoration-none" href="./audit_log.html">
+      <i class="fa fa-clipboard-list me-1">
+      </i>
+      Audit
+     </a>
+     <a class="text-muted text-decoration-none" href="#">
+      Terms
+     </a>
+     <a class="text-muted text-decoration-none" href="#">
+      Privacy
+     </a>
+    </div>
+   </div>
+  </footer>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.all.min.js">
+  </script>
+  <!-- Chart.js for visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js">
+  </script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script>
+   document.addEventListener('DOMContentLoaded', function() {
+    // Sidebar toggle (mobile)
+    var t = document.getElementById('sidebarToggle');
+    var s = document.getElementById('sidebar');
+    if (t && s) {
+        t.addEventListener('click', function() {
+            s.classList.toggle('d-none');
+        });
+    }
+
+    // Enable tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+
+    // Toast
+    const toastEl = document.getElementById('appToast');
+    const appToast = toastEl ? new bootstrap.Toast(toastEl) : null;
+    const showToast = (msg, success = true) => {
+        const icon = toastEl.querySelector('.toast-header i');
+        if (success) {
+            icon.className = 'fa fa-circle-check text-success me-2';
+        } else {
+            icon.className = 'fa fa-circle-xmark text-danger me-2';
+        }
+        document.getElementById('toastBody').textContent = msg;
+        appToast && appToast.show();
+    };
+    document.getElementById('btnNotify')?.addEventListener('click', () => showToast('No new notifications'));
+
+    // Wizard State
+    const state = {
+        currentStep: 1,
+        selectedDataType: 'students',
+        uploadedFile: null,
+        validationResults: null,
+        importStatus: 'idle'
+    };
+
+    // Elements
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+    const stepIndicators = document.querySelectorAll('.step-indicator');
+
+    const requiredColumnsList = document.getElementById('requiredColumnsList');
+    const formatGuidelines = document.getElementById('formatGuidelines');
+    const dynamicInstructions = document.getElementById('dynamicInstructions');
+    const instructionBullets = document.getElementById('instructionBullets');
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const selectedFileInfo = document.getElementById('selectedFileInfo');
+    const fileNameEl = document.getElementById('fileName');
+    const fileMetaEl = document.getElementById('fileMeta');
+    const uploadProgress = document.querySelector('.progress');
+    const uploadProgressBar = document.getElementById('uploadProgressBar');
+
+    const summaryCounts = document.getElementById('summaryCounts');
+    const summaryText = document.getElementById('summaryText');
+    const errorsTableBody = document.querySelector('#errorsTable tbody');
+    const paginationInfo = document.getElementById('paginationInfo');
+    const pagination = document.getElementById('pagination');
+
+    const btnResetWizard = document.getElementById('btnResetWizard');
+    const btnNextToUpload = document.getElementById('btnNextToUpload');
+    const btnDownloadTemplate = document.getElementById('btnDownloadTemplate');
+    const btnReDownloadTemplate = document.getElementById('btnReDownloadTemplate');
+    const btnUpload = document.getElementById('btnUpload');
+    const btnChangeFile = document.getElementById('btnChangeFile');
+    const btnBackToUpload = document.getElementById('btnBackToUpload');
+    const btnCancelImport = document.getElementById('btnCancelImport');
+    const btnConfirmImport = document.getElementById('btnConfirmImport');
+    const btnDownloadErrorReport = document.getElementById('btnDownloadErrorReport');
+
+    const errorFilter = document.getElementById('errorFilter');
+    const sortRowAsc = document.getElementById('sortRowAsc');
+    const sortRowDesc = document.getElementById('sortRowDesc');
+
+    // Data type metadata
+    const typeMeta = {
+        students: {
+            columns: ['student_id', 'first_name', 'last_name', 'email', 'date_of_birth', 'program', 'year'],
+            guidelines: 'Student IDs must be unique; email must be valid; date_of_birth in YYYY-MM-DD.',
+            bullets: ['student_id: alphanumeric (max 12)', 'email must be institution domain', 'year: integer 1-5']
+        },
+        faculty: {
+            columns: ['faculty_id', 'first_name', 'last_name', 'email', 'department', 'title'],
+            guidelines: 'Faculty ID unique; department must match existing departments.',
+            bullets: ['title: Assistant/Associate/Professor', 'email verified domain', 'department exact match']
+        },
+        courses: {
+            columns: ['course_code', 'course_name', 'credits', 'department', 'instructor_email'],
+            guidelines: 'course_code unique; credits numeric; instructor must exist or will be pending.',
+            bullets: ['credits: 0.5 to 6', 'department exact match', 'instructor_email optional']
+        },
+        timetable: {
+            columns: ['course_code', 'section', 'day_of_week', 'start_time', 'end_time', 'location'],
+            guidelines: '24h times HH:MM; day_of_week as Mon..Sun; no overlaps per section.',
+            bullets: ['start_time < end_time', 'location must exist', 'section max 3 chars']
+        }
+    };
+
+    // Chart instance
+    let chartInstance = null;
+
+    function renderChart(valid, errors) {
+        const ctx = document.getElementById('resultChart');
+        const data = {
+            labels: ['Valid', 'Errors'],
+            datasets: [{
+                data: [valid, errors],
+                backgroundColor: ['rgba(0, 119, 78, 0.9)', 'rgba(205, 32, 38, 0.9)'],
+                borderColor: ['#00774E', '#CD2026'],
+                borderWidth: 1
+            }]
+        };
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+        chartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data,
+            options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    // Helper: Update Step UI
+    function gotoStep(step) {
+        state.currentStep = step;
+        step1.classList.toggle('d-none', step !== 1);
+        step2.classList.toggle('d-none', step !== 2);
+        step3.classList.toggle('d-none', step !== 3);
+        stepIndicators.forEach((el, idx) => {
+            el.classList.toggle('active', idx < step);
+        });
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
+    function populateTypeInfo() {
+        const meta = typeMeta[state.selectedDataType];
+        requiredColumnsList.innerHTML = meta.columns.map(c => `<li><code>${c}</code></li>`).join('');
+        formatGuidelines.textContent = meta.guidelines;
+        dynamicInstructions.textContent = meta.guidelines;
+        instructionBullets.innerHTML = meta.bullets.map(b => `<li>${b}</li>`).join('');
+    }
+
+    // Tabs selection
+    document.querySelectorAll('#dataTypeTabs .nav-link').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('#dataTypeTabs .nav-link').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.selectedDataType = btn.dataset.type;
+            populateTypeInfo();
+        });
+    });
+
+    // Template download
+    function templateContent(type) {
+        const cols = typeMeta[type].columns.join(',');
+        // Provide a few sample rows
+        const samples = {
+            students: ['S0001,Alex,Lee,alex.lee@univ.edu,2003-05-12,Computer Science,2', 'S0002,Lina,Park,lina.park@univ.edu,2002-09-02,Mathematics,3'],
+            faculty: ['F1001,Maya,Rao,maya.rao@univ.edu,Physics,Associate Professor', 'F1002,David,Kim,david.kim@univ.edu,CS,Assistant Professor'],
+            courses: ['CS101,Intro to CS,4,CS,maya.rao@univ.edu', 'MATH210,Linear Algebra,3,Mathematics,david.kim@univ.edu'],
+            timetable: ['CS101,A,Mon,09:00,10:30,ENG-101', 'MATH210,B,Wed,11:00,12:30,MTH-204']
+        };
+        return cols + '\n' + (samples[type]?.join('\n') || '');
+    }
+
+    function downloadFile(filename, content) {
+        const blob = new Blob([content], {
+            type: 'text/csv;charset=utf-8;'
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            URL.revokeObjectURL(url);
+            a.remove();
+        }, 0);
+    }
+    btnDownloadTemplate.addEventListener('click', () => {
+        downloadFile(`${state.selectedDataType}_template.csv`, templateContent(state.selectedDataType));
+        showToast('Template downloaded');
+    });
+    btnReDownloadTemplate.addEventListener('click', () => {
+        downloadFile(`${state.selectedDataType}_template.csv`, templateContent(state.selectedDataType));
+    });
+
+    // Navigation
+    btnNextToUpload.addEventListener('click', () => gotoStep(2));
+    btnBackToUpload.addEventListener('click', () => gotoStep(2));
+    btnCancelImport.addEventListener('click', () => resetWizard());
+    btnResetWizard.addEventListener('click', () => resetWizard());
+
+    function resetWizard() {
+        state.currentStep = 1;
+        state.uploadedFile = null;
+        state.validationResults = null;
+        fileInput.value = '';
+        selectedFileInfo.classList.add('d-none');
+        uploadProgress.classList.add('d-none');
+        uploadProgressBar.style.width = '0%';
+        uploadProgressBar.textContent = '0%';
+        btnConfirmImport.disabled = true;
+        btnDownloadErrorReport.classList.add('d-none');
+        errorsTableBody.innerHTML = '';
+        pagination.innerHTML = '';
+        paginationInfo.textContent = 'Showing 0-0 of 0';
+        gotoStep(1);
+    }
+
+    // Dropzone events
+    function isValidFile(file) {
+        const okTypes = ['text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+        const okExt = ['.csv', '.xlsx'];
+        const nameOk = okExt.some(ext => file.name.toLowerCase().endsWith(ext));
+        return nameOk || okTypes.includes(file.type);
+    }
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-active');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-active'));
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-active');
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+        handleFileSelected(file);
+    });
+    fileInput.addEventListener('change', (e) => {
+        const f = e.target.files[0];
+        if (f) handleFileSelected(f);
+    });
+
+    function handleFileSelected(file) {
+        if (!isValidFile(file)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid file type',
+                text: 'Please upload a .csv or .xlsx file.'
+            });
+            return;
+        }
+        state.uploadedFile = file;
+        fileNameEl.textContent = file.name;
+        fileMetaEl.textContent = `${(file.size/1024).toFixed(1)} KB • ${file.type || 'n/a'}`;
+        selectedFileInfo.classList.remove('d-none');
+    }
+    btnChangeFile.addEventListener('click', () => fileInput.click());
+
+    // Upload simulation and validation
+    btnUpload.addEventListener('click', () => {
+        if (!state.uploadedFile) {
+            showToast('Select a file first', false);
+            return;
+        }
+        uploadProgress.classList.remove('d-none');
+        let p = 0;
+        const interval = setInterval(() => {
+            p += Math.floor(Math.random() * 18) + 7;
+            if (p > 100) p = 100;
+            uploadProgressBar.style.width = p + '%';
+            uploadProgressBar.textContent = p + '%';
+            if (p >= 100) {
+                clearInterval(interval);
+                setTimeout(validateFile, 350);
+            }
+        }, 250);
+    });
+
+    function validateFile() {
+        // Simple text read for CSV to derive counts; otherwise random for xlsx
+        const file = state.uploadedFile;
+        if (file && file.name.toLowerCase().endsWith('.csv')) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const text = reader.result || '';
+                const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+                const total = Math.max(0, lines.length - 1); // ignore header
+                const errorCount = Math.min(Math.floor(total * 0.1) + (Math.random() < 0.4 ? 2 : 0), Math.max(6, Math.floor(total * 0.2)));
+                const valid = Math.max(0, total - errorCount);
+                state.validationResults = buildValidationResults(total, valid, errorCount);
+                renderResults();
+            };
+            reader.readAsText(file);
+        } else {
+            // xlsx or unknown: simulate
+            const total = 160 + Math.floor(Math.random() * 60);
+            const errorCount = 6 + Math.floor(Math.random() * 8);
+            const valid = Math.max(0, total - errorCount);
+            state.validationResults = buildValidationResults(total, valid, errorCount);
+            renderResults();
+        }
+    }
+
+    function buildValidationResults(total, valid, errorCount) {
+        // Build 6-12 mock errors
+        const errors = [];
+        const messages = [
+            'Missing required field: email',
+            'Invalid date format (YYYY-MM-DD)',
+            'Duplicate ID detected',
+            'Department not found',
+            'Credits must be numeric',
+            'Start time must be before end time',
+            'Location does not exist',
+            'Invalid email domain',
+            'Section exceeds max length',
+            'Year must be between 1 and 5'
+        ];
+        const rowsUsed = new Set();
+        const count = Math.max(6, Math.min(errorCount, 12));
+        for (let i = 0; i < count; i++) {
+            let row;
+            do {
+                row = 2 + Math.floor(Math.random() * Math.max(20, total));
+            } while (rowsUsed.has(row));
+            rowsUsed.add(row);
+            const msg = messages[Math.floor(Math.random() * messages.length)];
+            errors.push({
+                rowNumber: row,
+                message: msg
+            });
+        }
+        return {
+            total,
+            validCount: valid,
+            errorCount: count,
+            errors
+        };
+    }
+
+    function renderResults() {
+        const res = state.validationResults;
+        if (!res) return;
+        gotoStep(3);
+        summaryCounts.textContent = `${res.validCount} valid`;
+        summaryText.textContent = `${res.validCount} records are valid and ready to import. ${res.errorCount} records have errors.`;
+        renderChart(res.validCount, res.errorCount);
+        btnConfirmImport.disabled = (res.validCount === 0);
+        btnDownloadErrorReport.classList.toggle('d-none', res.errorCount === 0);
+
+        // Populate table with pagination
+        currentErrors = res.errors.slice();
+        currentFiltered = currentErrors.slice();
+        currentPage = 1;
+        renderTable();
+    }
+
+    // Table filtering, sorting, pagination
+    let currentErrors = [];
+    let currentFiltered = [];
+    let currentPage = 1;
+    const pageSize = 6;
+
+    function renderTable() {
+        const start = (currentPage - 1) * pageSize;
+        const pageRows = currentFiltered.slice(start, start + pageSize);
+        errorsTableBody.innerHTML = pageRows.map(r => `<tr><td>${r.rowNumber}</td><td>${r.message}</td></tr>`).join('');
+        const total = currentFiltered.length;
+        const from = total ? start + 1 : 0;
+        const to = Math.min(total, start + pageSize);
+        paginationInfo.textContent = `Showing ${from}-${to} of ${total}`;
+        // Build pagination controls
+        const totalPages = Math.max(1, Math.ceil(total / pageSize));
+        let html = '';
+        html += `<li class="page-item ${currentPage===1?'disabled':''}"><a class="page-link" href="#" data-page="prev">Prev</a></li>`;
+        for (let p = 1; p <= totalPages; p++) {
+            html += `<li class="page-item ${p===currentPage?'active':''}"><a class="page-link" href="#" data-page="${p}">${p}</a></li>`;
+        }
+        html += `<li class="page-item ${currentPage===totalPages?'disabled':''}"><a class="page-link" href="#" data-page="next">Next</a></li>`;
+        pagination.innerHTML = html;
+        pagination.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                const val = a.getAttribute('data-page');
+                const totalPages = Math.max(1, Math.ceil(currentFiltered.length / pageSize));
+                if (val === 'prev' && currentPage > 1) {
+                    currentPage--;
+                    renderTable();
+                } else if (val === 'next' && currentPage < totalPages) {
+                    currentPage++;
+                    renderTable();
+                } else if (!isNaN(parseInt(val))) {
+                    currentPage = parseInt(val);
+                    renderTable();
+                }
+            });
+        });
+    }
+
+    errorFilter.addEventListener('input', () => {
+        const q = errorFilter.value.toLowerCase();
+        currentFiltered = currentErrors.filter(e => e.message.toLowerCase().includes(q) || String(e.rowNumber).includes(q));
+        currentPage = 1;
+        renderTable();
+    });
+    sortRowAsc.addEventListener('click', () => {
+        currentFiltered.sort((a, b) => a.rowNumber - b.rowNumber);
+        currentPage = 1;
+        renderTable();
+    });
+    sortRowDesc.addEventListener('click', () => {
+        currentFiltered.sort((a, b) => b.rowNumber - a.rowNumber);
+        currentPage = 1;
+        renderTable();
+    });
+
+    // Confirm Import
+    btnConfirmImport.addEventListener('click', () => {
+        if (!state.validationResults || state.validationResults.validCount === 0) {
+            return;
+        }
+        Swal.fire({
+            icon: 'question',
+            title: 'Confirm Import',
+            html: `<div class="text-start">You are about to import <b>${state.validationResults.validCount}</b> valid records for <b>${state.selectedDataType}</b>.<br/>Proceed?</div>`,
+            showCancelButton: true,
+            confirmButtonText: 'Yes, import',
+            cancelButtonText: 'Cancel'
+        }).then(res => {
+            if (res.isConfirmed) {
+                state.importStatus = 'in_progress';
+                Swal.fire({
+                    title: 'Importing...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                setTimeout(() => {
+                    state.importStatus = 'completed';
+                    Swal.close();
+                    showToast('Import completed successfully');
+                    // Redirect based on type
+                    const redirectMap = {
+                        students: './management_page.html#users',
+                        faculty: './management_page.html#users',
+                        courses: './management_page.html#courses',
+                        timetable: './management_page.html#timetable'
+                    };
+                    setTimeout(() => {
+                        window.location.href = redirectMap[state.selectedDataType] || './management_page.html';
+                    }, 900);
+                }, 1500);
+            }
+        });
+    });
+
+    // Download Error Report
+    btnDownloadErrorReport.addEventListener('click', () => {
+        const res = state.validationResults;
+        if (!res || res.errorCount === 0) return;
+        const header = 'row_number,error_message';
+        const rows = res.errors.map(e => `${e.rowNumber},"${e.message.replace(/"/g,'""')}"`).join('\n');
+        const csv = header + '\n' + rows;
+        downloadFile(`${state.selectedDataType}_error_report.csv`, csv);
+        showToast('Error report downloaded');
+    });
+
+    // Initialize
+    populateTypeInfo();
+});
+  </script>
+ </body>
+</html>

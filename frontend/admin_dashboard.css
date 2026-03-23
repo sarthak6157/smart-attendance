@@ -1,0 +1,158 @@
+/* admin_dashboard.css - Page-specific styles for Admin Dashboard */
+:root {
+    --admin-sidebar-w: 260px
+    }
+/***** Global font override for this page *****/
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/***** Sidebar (as provided component style) *****/
+:root {
+    --primary: #0FF;
+    --secondary: #008080
+    }
+.sidebar {
+    width: var(--admin-sidebar-w);
+    min-height: 100vh;
+    background-color: var(--secondary);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1030
+    }
+.sidebar .brand {
+    background: rgba(0, 0, 0, 0.15)
+    }
+.sidebar .brand img {
+    height: 36px;
+    border-radius: 4px
+    }
+.sidebar .profile {
+    background: rgba(0, 0, 0, 0.1)
+    }
+.sidebar .nav-link {
+    color: #e6ffff;
+    border-radius: 0.35rem;
+    margin: 4px 8px
+    }
+.sidebar .nav-link:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+    color: #fff
+    }
+.sidebar .nav-link.active {
+    background-color: rgba(0, 255, 255, 0.25);
+    color: #fff;
+    box-shadow: inset 3px 0 0 var(--primary)
+    }
+.sidebar .submenu .nav-link {
+    padding-left: 2rem
+    }
+@media (max-width: 767.98px) {
+    .sidebar {
+        display: none
+        }
+    }
+/***** Header (as provided component style) *****/
+.navbar-admin {
+    background-color: var(--secondary);
+    margin-left: var(--admin-sidebar-w);
+    position: relative;
+    z-index: var(--z-nav)
+    }
+.navbar-admin .nav-link, .navbar-admin .navbar-brand {
+    color: #fff
+    }
+.navbar-admin .btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.12)
+    }
+@media (max-width: 767.98px) {
+    .navbar-admin {
+        margin-left: 0 !important
+        }
+    }
+/***** Footer (as provided component style) *****/
+.admin-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    margin-left: var(--admin-sidebar-w)
+    }
+@media (max-width: 767.98px) {
+    .admin-footer {
+        margin-left: 0 !important
+        }
+    }
+/***** Main content wrapper to account for fixed sidebar *****/
+.content-wrapper {
+    margin-left: var(--admin-sidebar-w);
+    min-height: 100vh
+    }
+@media (max-width: 767.98px) {
+    .content-wrapper {
+        margin-left: 0
+        }
+    }
+/***** KPI Stat Cards *****/
+.stat-card {
+    border: 1px solid var(--border-color);
+    transition: transform 0.12s ease, box-shadow 0.2s ease
+    }
+.stat-card:hover {
+    transform: translatey(-2px);
+    box-shadow: var(--shadow-2)
+    }
+.stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem
+    }
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-strong)
+    }
+/***** Chart loader overlay *****/
+.chart-loader {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.35));
+    backdrop-filter: blur(2px);
+    display: none
+    }
+/***** Hotspots table *****/
+.hotspot-row {
+    cursor: pointer
+    }
+.hotspot-row:hover {
+    background: var(--neutral-soft)
+    }
+/***** Utilities tweaks *****/
+.table-sm th, .table-sm td {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem
+    }
+.badge.bg-warning-subtle {
+    background-color: var(--warning-soft) !important;
+    color: #5a3f00 !important
+    }
+/***** Breadcrumbs / Page header spacing tweaks *****/
+.page-header {
+    margin-bottom: var(--space-4)
+    }
+/***** Ensure pics scale nicely in brand areas *****/
+.brand img {
+    object-fit: cover
+    }
+/***** Override conflicts with global sidebar (hover-expand) *****/
+/* Ensure our admin sidebar does not shrink/expand on hover from global rules */
+.sidebar:hover .label {
+    opacity: 1;
+    transform: none
+    }
+/* Neutralize global width transition on hover */
+.sidebar {
+    transition: none
+    }

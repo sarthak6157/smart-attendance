@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html class="h-100" lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Active Session • Attendance System
+  </title>
+  <!-- Poppins Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet"/>
+  <!-- Font Awesome 6 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+   <!-- Theme CSS (global) -->
+   <link href="style.css" rel="stylesheet">
+    <!-- Page CSS -->
+    <link href="session_page.css" rel="stylesheet"/>
+   </link>
+  </link>
+ </head>
+ <body class="with-sidebar">
+  <!-- Sidebar (Faculty) - included on session page (faculty context) -->
+  <style>
+   :root { --primary:#00FFFF; --secondary:#008080; }
+    .sidebar { width: 260px; min-height: 100vh; background-color: var(--secondary); position: fixed; top: 0; left: 0; z-index: 1030; }
+    .sidebar .brand { background: rgba(0,0,0,0.15); }
+    .sidebar .brand img { height: 36px; border-radius: 4px; }
+    .sidebar .profile { background: rgba(0,0,0,0.10); }
+    .sidebar .nav-link { color: #e6ffff; border-radius: .35rem; margin: 4px 8px; }
+    .sidebar .nav-link:hover { background-color: rgba(0,0,0,0.15); color: #fff; }
+    .sidebar .nav-link.active { background-color: rgba(0, 255, 255, 0.25); color: #fff; box-shadow: inset 3px 0 0 var(--primary); }
+    @media (max-width: 767.98px){ .sidebar { display: none; } }
+  </style>
+  <aside class="sidebar d-none d-md-flex flex-column" id="sidebar">
+   <div class="brand d-flex align-items-center gap-2 p-3">
+    <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/universitylogo/40/40';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg"/>
+    <span class="text-white fw-semibold">
+     Attendance System
+    </span>
+   </div>
+   <div class="profile d-flex align-items-center gap-2 p-3">
+    <div class="rounded-circle bg-light text-dark d-flex align-items-center justify-content-center" style="width:36px;height:36px;font-weight:600;">
+     FA
+    </div>
+    <div class="text-white small">
+     <div class="fw-semibold">
+      Dr. Alex Fisher
+     </div>
+     <div class="opacity-75">
+      Faculty
+     </div>
+    </div>
+   </div>
+   <nav class="nav flex-column mt-2">
+    <a class="nav-link" href="./faculty_dashboard.html">
+     <i class="fa fa-gauge fa-fw me-2">
+     </i>
+     Dashboard
+    </a>
+    <a class="nav-link" href="./faculty_dashboard.html#today">
+     <i class="fa fa-play fa-fw me-2">
+     </i>
+     Start Session
+    </a>
+    <a class="nav-link active" href="./session_page.html">
+     <i class="fa fa-chalkboard-user fa-fw me-2">
+     </i>
+     Active Session
+    </a>
+    <a class="nav-link" href="./reports_page.html">
+     <i class="fa fa-chart-bar fa-fw me-2">
+     </i>
+     Reports
+    </a>
+    <a class="nav-link" href="./faculty_dashboard.html#alerts">
+     <i class="fa fa-user-minus fa-fw me-2">
+     </i>
+     At-Risk Students
+    </a>
+    <a class="nav-link" href="./settings_page.html#help">
+     <i class="fa fa-circle-question fa-fw me-2">
+     </i>
+     Help
+    </a>
+   </nav>
+  </aside>
+  <!-- Header (Faculty) -->
+  <style>
+   :root { --primary:#00FFFF; --secondary:#008080; }
+    .navbar-faculty { background-color: var(--secondary); }
+    .navbar-faculty .nav-link, .navbar-faculty .navbar-brand { color:#fff; }
+    .navbar-faculty .btn-outline-light:hover { background-color: rgba(255,255,255,0.12); }
+  </style>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-faculty" style="margin-left:260px;">
+   <div class="container-fluid">
+    <button aria-label="Toggle sidebar" class="btn btn-outline-light d-md-none me-2" id="sidebarToggle">
+     <i class="fa fa-bars">
+     </i>
+    </button>
+    <a class="navbar-brand d-flex align-items-center" href="./faculty_dashboard.html">
+     <img alt="Logo" class="me-2" onerror="this.onerror=null;this.src='https://picsum.photos/seed/faculty/28/28';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:28px;border-radius:4px;">
+      <span>
+       Faculty Portal
+      </span>
+     </img>
+    </a>
+    <form class="d-none d-lg-flex ms-3" role="search" style="width:360px;">
+     <input aria-label="Search" class="form-control form-control-sm me-2" placeholder="Search students, courses" type="search"/>
+     <button class="btn btn-sm btn-outline-light" type="submit">
+      <i class="fa fa-search">
+      </i>
+     </button>
+    </form>
+    <div class="ms-auto d-flex align-items-center gap-2">
+     <a class="btn btn-sm btn-outline-light" href="./faculty_dashboard.html#today">
+      <i class="fa fa-rocket me-1">
+      </i>
+      Start Session
+     </a>
+     <button aria-label="Notifications" class="btn btn-sm btn-outline-light" id="btnNotifications">
+      <i class="fa fa-bell">
+      </i>
+     </button>
+     <button aria-label="Messages" class="btn btn-sm btn-outline-light">
+      <i class="fa fa-envelope">
+      </i>
+     </button>
+     <div class="dropdown">
+      <button aria-expanded="false" class="btn btn-sm btn-outline-light dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa fa-user-circle me-1">
+       </i>
+       Dr. Alex Fisher
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li>
+        <h6 class="dropdown-header">
+         Signed in as Faculty
+        </h6>
+       </li>
+       <li>
+        <a class="dropdown-item" href="./faculty_dashboard.html#profile">
+         Profile
+        </a>
+       </li>
+       <li>
+        <hr class="dropdown-divider"/>
+       </li>
+       <li>
+        <a class="dropdown-item" href="./login_page.html">
+         Logout
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <!-- Main Content -->
+  <main class="main-panel" id="main" style="margin-left:260px;">
+   <div class="container-fluid">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="breadcrumb mb-3">
+     <ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item">
+       <a href="./faculty_dashboard.html">
+        Dashboard
+       </a>
+      </li>
+      <li aria-current="page" class="breadcrumb-item active">
+       Active Session
+      </li>
+     </ol>
+    </nav>
+    <!-- Session Header -->
+    <section class="app-card mb-4">
+     <div class="card-header">
+      <div class="d-flex align-items-center gap-3">
+       <div class="rounded bg-info-soft p-2 d-flex align-items-center justify-content-center" style="width:44px;height:44px;">
+        <i aria-hidden="true" class="fa-solid fa-qrcode text-info fs-5">
+        </i>
+       </div>
+       <div>
+        <h2 class="page-title mb-1" id="courseName">
+         CS101 • Introduction to Algorithms
+        </h2>
+        <div class="text-muted small" id="courseMeta">
+         Course Code:
+         <span id="courseCode">
+          CS101
+         </span>
+         • Scheduled:
+         <span id="scheduledTime">
+          Mon 10:00–11:30
+         </span>
+        </div>
+       </div>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+       <div class="badge-soft info" id="sessionIdBadge" title="Session ID">
+        <i class="fa-solid fa-hashtag me-1">
+        </i>
+        <span id="sessionId">
+         ABC123
+        </span>
+       </div>
+       <div class="badge-soft success" id="attendanceCounter">
+        <i class="fa-solid fa-user-check me-1">
+        </i>
+        <span id="attendeeCount">
+         0
+        </span>
+        /
+        <span id="totalStudents">
+         48
+        </span>
+        Present
+       </div>
+      </div>
+     </div>
+    </section>
+    <!-- Content Layout -->
+    <div class="row g-4 align-items-stretch">
+     <!-- QR Code Display -->
+     <div class="col-12 col-lg-7">
+      <div class="app-card h-100" id="qrCard">
+       <div class="card-header">
+        <div class="d-flex align-items-center gap-2">
+         <i class="fa-solid fa-qrcode text-strong">
+         </i>
+         <span class="widget-title">
+          Live QR Code
+         </span>
+         <span class="text-muted small">
+          Scan with Student App
+         </span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+         <span class="badge-soft primary">
+          <i class="fa-solid fa-rotate me-1">
+          </i>
+          Auto refresh
+         </span>
+         <button class="btn btn-light btn-sm" id="btnRefreshNow" type="button">
+          <i class="fa-solid fa-arrows-rotate me-1">
+          </i>
+          Refresh Now
+         </button>
+        </div>
+       </div>
+       <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
+        <div class="qr-container mb-3" id="qrContainer">
+         <div class="skeleton" style="height:320px;width:320px;border-radius:12px;">
+         </div>
+        </div>
+        <div class="w-100" style="max-width:520px;">
+         <div class="d-flex align-items-center justify-content-between mb-1">
+          <span class="text-muted small">
+           <i class="fa-regular fa-clock me-1">
+           </i>
+           Next refresh in
+           <span id="secondsLeft">
+            --
+           </span>
+           s
+          </span>
+          <span class="text-muted small">
+           Interval:
+           <span id="refreshIntervalLabel">
+            45s
+           </span>
+          </span>
+         </div>
+         <div aria-label="QR refresh timer" aria-valuemax="100" aria-valuemin="0" class="progress" role="progressbar">
+          <div class="progress-bar" id="refreshProgress" style="width: 0%">
+          </div>
+         </div>
+        </div>
+        <div class="mt-3 small text-muted">
+         If students have trouble scanning, share the code verbally:
+         <code id="shortCode">
+          —
+         </code>
+        </div>
+       </div>
+       <div class="card-footer d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div class="text-muted small">
+         <i class="fa-solid fa-shield-halved me-1">
+         </i>
+         Codes are unique and expire automatically.
+        </div>
+        <div class="d-flex align-items-center gap-2">
+         <a class="btn btn-outline-primary btn-sm" href="./scan_page.html" rel="noopener" target="_blank">
+          <i class="fa-solid fa-up-right-from-square me-1">
+          </i>
+          Student Scan Page
+         </a>
+         <button class="btn btn-warning btn-sm" id="btnShowCode">
+          <i class="fa-solid fa-eye me-1">
+          </i>
+          Reveal Raw Code
+         </button>
+        </div>
+       </div>
+      </div>
+     </div>
+     <!-- Live Attendance Roster -->
+     <div class="col-12 col-lg-5">
+      <div class="app-card h-100 d-flex flex-column">
+       <div class="card-header">
+        <div class="d-flex align-items-center gap-2">
+         <i class="fa-solid fa-users-rectangle text-strong">
+         </i>
+         <span class="widget-title">
+          Live Attendance Roster
+         </span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+         <div aria-label="Filter Status" class="view-switcher" role="group">
+          <span class="option active" data-filter="all">
+           All
+          </span>
+          <span class="option" data-filter="present">
+           Present
+          </span>
+          <span class="option" data-filter="absent">
+           Absent
+          </span>
+         </div>
+        </div>
+       </div>
+       <div class="p-3 pb-0">
+        <div class="row g-2 align-items-center">
+         <div class="col-12 col-sm-7">
+          <div class="input-group input-group-sm">
+           <span class="input-group-text">
+            <i class="fa-solid fa-magnifying-glass">
+            </i>
+           </span>
+           <input class="form-control" id="searchInput" placeholder="Search by name or ID..." type="text">
+           </input>
+          </div>
+         </div>
+         <div class="col-6 col-sm-3">
+          <select class="form-select form-select-sm" id="sortSelect">
+           <option value="name">
+            Sort: Name
+           </option>
+           <option value="status">
+            Sort: Status
+           </option>
+           <option value="id">
+            Sort: ID
+           </option>
+          </select>
+         </div>
+         <div class="col-6 col-sm-2 text-end">
+          <select class="form-select form-select-sm" id="pageSize">
+           <option value="10">
+            10
+           </option>
+           <option value="20">
+            20
+           </option>
+           <option value="50">
+            50
+           </option>
+          </select>
+         </div>
+        </div>
+       </div>
+       <div class="card-body pt-2 flex-grow-1 d-flex flex-column" style="min-height: 300px;">
+        <div class="table-responsive flex-grow-1">
+         <table class="table table-theme align-middle" id="rosterTable">
+          <thead>
+           <tr>
+            <th scope="col">
+             Student
+            </th>
+            <th scope="col">
+             ID
+            </th>
+            <th scope="col">
+             Status
+            </th>
+            <th class="text-end" scope="col">
+             Action
+            </th>
+           </tr>
+          </thead>
+          <tbody id="rosterBody">
+           <!-- Rows injected by JS -->
+          </tbody>
+         </table>
+        </div>
+       </div>
+       <div class="card-footer d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div class="small text-muted" id="paginationInfo">
+         Showing 0–0 of 0
+        </div>
+        <div class="d-flex align-items-center gap-1">
+         <button class="btn btn-light btn-sm" disabled="" id="prevPage">
+          <i class="fa-solid fa-chevron-left">
+          </i>
+         </button>
+         <span class="small px-2" id="pageIndicator">
+          1 / 1
+         </span>
+         <button class="btn btn-light btn-sm" disabled="" id="nextPage">
+          <i class="fa-solid fa-chevron-right">
+          </i>
+         </button>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- Session Controls Bar -->
+    <div class="session-controls-bar app-card mt-4">
+     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-3">
+      <div class="d-flex align-items-center gap-2 text-muted">
+       <i aria-hidden="true" class="fa-solid fa-circle text-success" id="liveDot">
+       </i>
+       <span id="liveStatusText">
+        Live session is active
+       </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+       <button class="btn btn-danger" id="btnEndSession">
+        <i class="fa-solid fa-stop-circle me-1">
+        </i>
+        End Session
+       </button>
+      </div>
+     </div>
+    </div>
+    <!-- System feedback area -->
+    <div class="alert alert-info mt-3" role="alert">
+     Tip: Keep this page open on the projector. The QR code will refresh automatically to prevent re-use.
+    </div>
+   </div>
+  </main>
+  <!-- Footer (Faculty) -->
+  <footer class="py-3 faculty-footer" style="background-color:#f8f9fa;border-top:1px solid #e9ecef;margin-left:260px;">
+   <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+    <div class="d-flex align-items-center gap-2">
+     <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/footlogo/20/20';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:20px;border-radius:3px;"/>
+     <small class="text-muted">
+      © 2025 Your University
+     </small>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+     <a class="text-decoration-none" href="./reports_page.html">
+      <i class="fa fa-chart-bar me-1">
+      </i>
+      Reports
+     </a>
+     <a class="text-muted text-decoration-none" href="#">
+      Terms
+     </a>
+     <a class="text-muted text-decoration-none" href="#">
+      Privacy
+     </a>
+    </div>
+   </div>
+  </footer>
+  <!-- Toast Container -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+   <div aria-atomic="true" aria-live="assertive" class="toast align-items-center text-bg-primary border-0" id="liveToast" role="alert">
+    <div class="d-flex">
+     <div class="toast-body">
+      <i class="fa-solid fa-rotate me-1">
+      </i>
+      QR code refreshed
+     </div>
+     <button aria-label="Close" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" type="button">
+     </button>
+    </div>
+   </div>
+  </div>
+  <!-- Scripts -->
+  <script crossorigin="anonymous" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
+  </script>
+  <script>
+   // Sidebar toggle for mobile
+document.addEventListener('DOMContentLoaded', function() {
+    var t = document.getElementById('sidebarToggle');
+    var s = document.getElementById('sidebar');
+    if (t && s) {
+        t.addEventListener('click', function() {
+            s.classList.toggle('d-none');
+        });
+    }
+});
+
+// Session data (mock)
+const session = {
+    id: 'ABC123',
+    courseName: 'CS101 • Introduction to Algorithms',
+    courseCode: 'CS101',
+    scheduledTime: 'Mon 10:00–11:30',
+    totalStudents: 48,
+    isActive: true,
+    refreshIntervalSec: 45
+};
+
+// State
+let attendeeCount = 0;
+let secondsLeft = session.refreshIntervalSec;
+let refreshTimer = null;
+let qr = null;
+let qrInitialized = false;
+
+// Elements
+const elCourseName = document.getElementById('courseName');
+const elCourseCode = document.getElementById('courseCode');
+const elScheduledTime = document.getElementById('scheduledTime');
+const elSessionId = document.getElementById('sessionId');
+const elAttendeeCount = document.getElementById('attendeeCount');
+const elTotalStudents = document.getElementById('totalStudents');
+const elSecondsLeft = document.getElementById('secondsLeft');
+const elRefreshProgress = document.getElementById('refreshProgress');
+const elRefreshIntervalLabel = document.getElementById('refreshIntervalLabel');
+const elQRContainer = document.getElementById('qrContainer');
+const elShortCode = document.getElementById('shortCode');
+const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+
+// Initialize header
+function initHeader() {
+    elCourseName.textContent = session.courseName;
+    elCourseCode.textContent = session.courseCode;
+    elScheduledTime.textContent = session.scheduledTime;
+    elSessionId.textContent = session.id;
+    elTotalStudents.textContent = session.totalStudents;
+    elRefreshIntervalLabel.textContent = session.refreshIntervalSec + 's';
+}
+
+// Generate QR payload (simulate API)
+function fetchQrCodeValue() {
+    // Simulate occasional error
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const fail = Math.random() < 0.05; // 5% error chance
+            if (fail) return reject(new Error('Network error'));
+            const token = Math.random().toString(36).slice(2);
+            const payloadUrl = `${location.origin}${location.pathname.replace('session_page.html','scan_page.html')}?session=${encodeURIComponent(session.id)}&token=${token}`;
+            resolve({
+                token,
+                url: payloadUrl,
+                short: token.slice(0, 6).toUpperCase()
+            });
+        }, 400);
+    });
+}
+
+function renderQr(value) {
+    if (!qrInitialized) {
+        elQRContainer.innerHTML = '';
+        const div = document.createElement('div');
+        div.id = 'qrCanvas';
+        elQRContainer.appendChild(div);
+        qr = new QRCode(div, {
+            text: value.url,
+            width: 320,
+            height: 320,
+            colorDark: '#000000',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.M
+        });
+        qrInitialized = true;
+    } else {
+        qr.clear();
+        qr.makeCode(value.url);
+    }
+    elShortCode.textContent = value.short;
+}
+
+function startRefreshTimer() {
+    clearInterval(refreshTimer);
+    secondsLeft = session.refreshIntervalSec;
+    updateTimerUI();
+    refreshTimer = setInterval(() => {
+        secondsLeft -= 1;
+        if (secondsLeft <= 0) {
+            refreshQr();
+            secondsLeft = session.refreshIntervalSec;
+        }
+        updateTimerUI();
+    }, 1000);
+}
+
+function updateTimerUI() {
+    elSecondsLeft.textContent = Math.max(secondsLeft, 0);
+    const pct = 100 * (session.refreshIntervalSec - secondsLeft) / session.refreshIntervalSec;
+    elRefreshProgress.style.width = Math.max(0, Math.min(100, pct)) + '%';
+    elRefreshProgress.setAttribute('aria-valuenow', Math.round(pct));
+}
+
+async function refreshQr(showToast = true) {
+    try {
+        const value = await fetchQrCodeValue();
+        renderQr(value);
+        if (showToast) toast.show();
+    } catch (err) {
+        Swal.fire({
+            icon: 'error',
+            title: 'QR refresh failed',
+            text: 'Could not fetch a new QR code. Retrying soon...',
+            timer: 2500,
+            showConfirmButton: false
+        });
+    }
+}
+
+// Roster data (mock)
+const roster = [{
+    name: 'Jordan Lee',
+    id: 'S23001',
+    status: 'Absent'
+}, {
+    name: 'Priya Patel',
+    id: 'S23002',
+    status: 'Absent'
+}, {
+    name: 'Diego Martinez',
+    id: 'S23003',
+    status: 'Absent'
+}, {
+    name: 'Hannah Kim',
+    id: 'S23004',
+    status: 'Absent'
+}, {
+    name: 'Ethan Chen',
+    id: 'S23005',
+    status: 'Absent'
+}, {
+    name: 'Amelia Johnson',
+    id: 'S23006',
+    status: 'Absent'
+}, {
+    name: 'Noah Smith',
+    id: 'S23007',
+    status: 'Absent'
+}, {
+    name: 'Olivia Brown',
+    id: 'S23008',
+    status: 'Absent'
+}, {
+    name: 'Lucas Davis',
+    id: 'S23009',
+    status: 'Absent'
+}, {
+    name: 'Sophia Wilson',
+    id: 'S23010',
+    status: 'Absent'
+}, {
+    name: 'Mason Garcia',
+    id: 'S23011',
+    status: 'Absent'
+}, {
+    name: 'Isabella Miller',
+    id: 'S23012',
+    status: 'Absent'
+}, {
+    name: 'Ava Taylor',
+    id: 'S23013',
+    status: 'Absent'
+}, {
+    name: 'Liam Anderson',
+    id: 'S23014',
+    status: 'Absent'
+}, {
+    name: 'Mia Thomas',
+    id: 'S23015',
+    status: 'Absent'
+}];
+
+// Pagination state
+let filterStatus = 'all';
+let searchTerm = '';
+let sortBy = 'name';
+let currentPage = 1;
+let pageSize = 10;
+
+// Helpers for roster rendering
+function getBadge(status) {
+    const base = 'badge-soft ';
+    switch (status) {
+        case 'Present':
+            return base + 'success';
+        case 'Override':
+            return base + 'info';
+        case 'Pending':
+            return base + 'warning';
+        default:
+            return base + 'error'; // Absent
+    }
+}
+
+function applyFilters(data) {
+    let out = data.slice();
+    if (filterStatus === 'present') out = out.filter(r => r.status === 'Present' || r.status === 'Override');
+    if (filterStatus === 'absent') out = out.filter(r => r.status !== 'Present' && r.status !== 'Override');
+    if (searchTerm) {
+        const q = searchTerm.toLowerCase();
+        out = out.filter(r => r.name.toLowerCase().includes(q) || r.id.toLowerCase().includes(q));
+    }
+    switch (sortBy) {
+        case 'name':
+            out.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+        case 'id':
+            out.sort((a, b) => a.id.localeCompare(b.id));
+            break;
+        case 'status':
+            out.sort((a, b) => a.status.localeCompare(b.status));
+            break;
+    }
+    return out;
+}
+
+function renderRoster() {
+    const body = document.getElementById('rosterBody');
+    const info = document.getElementById('paginationInfo');
+    const indicator = document.getElementById('pageIndicator');
+    const prevBtn = document.getElementById('prevPage');
+    const nextBtn = document.getElementById('nextPage');
+
+    const filtered = applyFilters(roster);
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    currentPage = Math.min(currentPage, totalPages);
+    const start = (currentPage - 1) * pageSize;
+    const end = Math.min(start + pageSize, total);
+    const pageItems = filtered.slice(start, end);
+
+    body.innerHTML = pageItems.map(r => {
+        const disabled = (r.status === 'Present' || r.status === 'Override') ? 'disabled' : '';
+        const label = (r.status === 'Present' || r.status === 'Override') ? 'Marked' : 'Mark Present';
+        const statusDisplay = (r.status === 'Override') ? 'Present (Manual)' : r.status;
+        return `
+          <tr>
+            <td>
+              <div class="fw-semibold">${r.name}</div>
+              <div class="small text-muted">Enrolled</div>
+            </td>
+            <td>${r.id}</td>
+            <td><span class="${getBadge(r.status)}">${statusDisplay}</span></td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-success" ${disabled} data-id="${r.id}" data-name="${r.name}" onclick="manualOverride(this)"><i class="fa-solid fa-user-check me-1"></i>${label}</button>
+            </td>
+          </tr>`;
+    }).join('');
+
+    info.textContent = `Showing ${total ? (start+1) : 0}–${end} of ${total}`;
+    indicator.textContent = `${currentPage} / ${totalPages}`;
+    prevBtn.disabled = (currentPage <= 1);
+    nextBtn.disabled = (currentPage >= totalPages);
+
+    prevBtn.onclick = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderRoster();
+        }
+    };
+    nextBtn.onclick = () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderRoster();
+        }
+    };
+}
+
+// Expose manualOverride for inline handler
+window.manualOverride = function(btn) {
+    const id = btn.getAttribute('data-id');
+    const name = btn.getAttribute('data-name');
+    if (!session.isActive) return;
+    Swal.fire({
+        title: 'Mark Present (Manual Override)',
+        html: `<div class="text-start">Student: <strong>${name}</strong> (${id})</div><div class="mt-2 text-start">Reason</div>` +
+            '<select id="reasonSelect" class="swal2-select" style="width:100%">' +
+            '<option value="Scanner issue">Scanner issue</option>' +
+            '<option value="Late entry">Late entry</option>' +
+            '<option value="Device problem">Device problem</option>' +
+            '<option value="Other">Other</option>' +
+            '</select>',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel'
+    }).then(res => {
+        if (res.isConfirmed) {
+            const student = roster.find(r => r.id === id);
+            if (student && student.status !== 'Present') {
+                student.status = 'Override';
+                attendeeCount = Math.min(session.totalStudents, attendeeCount + 1);
+                updateHeaderCount();
+                renderRoster();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Marked Present',
+                    text: `${name} has been marked present (manual override).`,
+                    timer: 1800,
+                    showConfirmButton: false
+                });
+            }
+        }
+    });
+}
+
+function updateHeaderCount() {
+    elAttendeeCount.textContent = attendeeCount;
+}
+
+// Simulate live check-ins via WS/polling
+function startSimulatedAttendance() {
+    const interval = setInterval(() => {
+        if (!session.isActive) {
+            clearInterval(interval);
+            return;
+        }
+        // Randomly mark one absent student as present
+        const candidates = roster.filter(r => r.status === 'Absent');
+        if (candidates.length === 0) {
+            clearInterval(interval);
+            return;
+        }
+        if (Math.random() < 0.6) { // 60% chance per tick
+            const pick = candidates[Math.floor(Math.random() * candidates.length)];
+            pick.status = 'Present';
+            attendeeCount = Math.min(session.totalStudents, attendeeCount + 1);
+            updateHeaderCount();
+            renderRoster();
+        }
+    }, 3000);
+}
+
+// Button handlers
+document.getElementById('btnRefreshNow').addEventListener('click', () => {
+    refreshQr(true);
+    secondsLeft = session.refreshIntervalSec;
+    updateTimerUI();
+});
+
+document.getElementById('btnShowCode').addEventListener('click', () => {
+    const code = elShortCode.textContent || '(not generated)';
+    Swal.fire({
+        title: 'Current QR Short Code',
+        text: code,
+        icon: 'info'
+    });
+});
+
+document.getElementById('btnEndSession').addEventListener('click', () => {
+    Swal.fire({
+        title: 'End attendance session?',
+        text: 'This will stop QR refresh and finalize attendance records.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, end session',
+        cancelButtonText: 'Cancel'
+    }).then(res => {
+        if (res.isConfirmed) {
+            // Simulate API call
+            setTimeout(() => {
+                session.isActive = false;
+                clearInterval(refreshTimer);
+                document.getElementById('liveDot').classList.remove('text-success');
+                document.getElementById('liveDot').classList.add('text-error');
+                document.getElementById('liveStatusText').textContent = 'Session ended';
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Session ended',
+                    text: 'Attendance has been finalized.'
+                });
+            }, 400);
+        }
+    });
+});
+
+// Filter/sort/search controls
+document.querySelectorAll('.view-switcher .option').forEach(el => {
+    el.addEventListener('click', () => {
+        document.querySelectorAll('.view-switcher .option').forEach(o => o.classList.remove('active'));
+        el.classList.add('active');
+        filterStatus = el.getAttribute('data-filter');
+        currentPage = 1;
+        renderRoster();
+    });
+});
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    searchTerm = e.target.value.trim();
+    currentPage = 1;
+    renderRoster();
+});
+
+document.getElementById('sortSelect').addEventListener('change', (e) => {
+    sortBy = e.target.value;
+    currentPage = 1;
+    renderRoster();
+});
+
+document.getElementById('pageSize').addEventListener('change', (e) => {
+    pageSize = parseInt(e.target.value, 10) || 10;
+    currentPage = 1;
+    renderRoster();
+});
+
+// Notifications demo
+document.getElementById('btnNotifications').addEventListener('click', () => {
+    Swal.fire({
+        title: 'No new notifications',
+        text: 'You are all caught up.',
+        icon: 'info',
+        timer: 1500,
+        showConfirmButton: false
+    });
+});
+
+// Initialize
+(async function init() {
+    initHeader();
+    renderRoster();
+    updateHeaderCount();
+    await refreshQr(false);
+    startRefreshTimer();
+    startSimulatedAttendance();
+})();
+  </script>
+ </body>
+</html>

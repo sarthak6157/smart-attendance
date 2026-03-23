@@ -1,0 +1,49 @@
+/* management_page.css - Page-specific styles for Data Management */
+/* Layout offsets relative to fixed sidebar/header/footer */
+#topNav {
+    margin-left: 260px
+    }
+#mainContent {
+    margin-left: 260px
+    }
+#siteFooter {
+    margin-left: 260px
+    }
+@media (max-width: 767.98px) {
+    #topNav, #mainContent, #siteFooter {
+        margin-left: 0 !important
+        }
+    }
+/* Adjust table action columns */
+.table .text-end .btn {
+    min-width: 32px
+    }
+/* Improve spacing in headers and controls */
+.page-header {
+    margin-top: 8px
+    }
+#dmTabs .nav-link {
+    font-weight: 600
+    }
+/* Calendar styling tweaks */
+#calendar {
+    min-height: 600px
+    }
+/* Modal map height and responsive handling */
+#map {
+    height: 360px
+    }
+@media (max-width: 575.98px) {
+    #map {
+        height: 280px
+        }
+    }
+/* SweetAlert2 input width fix on desktop */
+.swal2-popup .swal2-input, .swal2-popup .swal2-select {
+    width: 100% !important;
+    box-sizing: border-box
+    }
+/* Breadcrumb overflow fade already handled by site theme; ensure small spacing */
+.breadcrumb {
+    padding-top: 0
+    }

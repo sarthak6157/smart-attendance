@@ -1,0 +1,73 @@
+/* reports_page.css - page specific styles for Attendance Reports */
+/* Ensure main content accounts for fixed sidebar */
+.reports-main {
+    margin-left: 260px;
+    padding: var(--space-4, 16px)
+    }
+@media (max-width: 767.98px) {
+    .reports-main {
+        margin-left: 0
+        }
+    nav.navbar-admin {
+        margin-left: 0 !important
+        }
+    footer {
+        margin-left: 0 !important
+        }
+    }
+/* Sortable header indicator spacing */
+th.sortable .sort-indicator {
+    opacity: 0.6
+    }
+th.sortable:hover .sort-indicator {
+    opacity: 1
+    }
+/* Export buttons look consistent */
+.export-controls .btn {
+    min-width: 120px
+    }
+/* Chart container height for responsiveness */
+#attendanceChart {
+    min-height: 260px;
+    height: 320px
+    }
+/* Loading state */
+.loading-state {
+    background: var(--surface-muted, #ececed);
+    border-top: 1px solid var(--border-color, #d3d3d4);
+    border-bottom: 1px solid var(--border-color, #d3d3d4)
+    }
+/* Feedback alert animation */
+#systemFeedback {
+    animation: fadeInOut 2.2s ease-in-out
+    }
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translateY(-6px);
+        } 10% {
+        opacity: 1;
+        transform: translateY(0);
+        } 90% {
+        opacity: 1;
+        } 100% {
+        opacity: 0;
+        }
+    }
+/* Tighten table cells on small screens */
+@media (max-width: 575.98px) {
+    #reportTable td, #reportTable th {
+        padding: 10px
+        }
+    }
+/* Action buttons */
+#reportTable .btn.btn-light {
+    border-color: var(--border-color, #d3d3d4)
+    }
+/* Filter panel spacing */
+#filterForm .form-label {
+    font-weight: 600
+    }
+#filterForm .form-text {
+    margin-top: 4px
+    }

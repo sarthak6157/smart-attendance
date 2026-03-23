@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Attendance Reports
+  </title>
+  <!-- Brand font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <!-- Font Awesome 6 -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+   <!-- Site Theme -->
+   <link href="style.css" rel="stylesheet"/>
+   <!-- Page specific CSS -->
+   <link href="reports_page.css" rel="stylesheet"/>
+  </link>
+ </head>
+ <body>
+  <!-- Administrator Sidebar (included on reports page) -->
+  <style>
+   :root { --primary:#00FFFF; --secondary:#008080; }
+    .sidebar { width: 260px; min-height: 100vh; background-color: var(--secondary); position: fixed; top: 0; left: 0; z-index: 1030; }
+    .sidebar .brand { background: rgba(0,0,0,0.15); }
+    .sidebar .brand img { height: 36px; border-radius: 4px; }
+    .sidebar .profile { background: rgba(0,0,0,0.10); }
+    .sidebar .nav-link { color: #e6ffff; border-radius: .35rem; margin: 4px 8px; }
+    .sidebar .nav-link:hover { background-color: rgba(0,0,0,0.15); color: #fff; }
+    .sidebar .nav-link.active { background-color: rgba(0, 255, 255, 0.25); color: #fff; box-shadow: inset 3px 0 0 var(--primary); }
+    .sidebar .submenu .nav-link { padding-left: 2rem; }
+    @media (max-width: 767.98px){ .sidebar { display: none; } }
+  </style>
+  <aside class="sidebar d-none d-md-flex flex-column" id="sidebar">
+   <div class="brand d-flex align-items-center gap-2 p-3">
+    <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/unilogo/40/40';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg"/>
+    <span class="text-white fw-semibold">
+     Attendance Admin
+    </span>
+   </div>
+   <div class="profile d-flex align-items-center gap-2 p-3">
+    <div class="rounded-circle bg-light text-dark d-flex align-items-center justify-content-center" id="adminInitials" style="width:36px;height:36px;font-weight:600;">
+     AD
+    </div>
+    <div class="text-white small">
+     <div class="fw-semibold" id="adminUserName">
+      Admin User
+     </div>
+     <div class="opacity:0.85">
+      Administrator
+     </div>
+    </div>
+   </div>
+   <nav class="nav flex-column mt-2">
+    <a class="nav-link" href="/admin/dashboard">
+     <i class="fa fa-gauge fa-fw me-2">
+     </i>
+     Dashboard
+    </a>
+    <a aria-controls="dataMgmt" aria-expanded="false" class="nav-link" data-bs-toggle="collapse" href="#dataMgmt" role="button">
+     <i class="fa fa-database fa-fw me-2">
+     </i>
+     Data Management
+    </a>
+    <div class="collapse show" id="dataMgmt">
+     <div class="submenu nav flex-column">
+      <a class="nav-link" href="/admin/management#users">
+       <i class="fa fa-users fa-fw me-2">
+       </i>
+       Users
+      </a>
+      <a class="nav-link" href="/admin/management#courses">
+       <i class="fa fa-book fa-fw me-2">
+       </i>
+       Courses
+      </a>
+      <a class="nav-link" href="/admin/locations">
+       <i class="fa fa-location-dot fa-fw me-2">
+       </i>
+       Locations
+      </a>
+      <a class="nav-link" href="/admin/management#timetable">
+       <i class="fa fa-calendar-days fa-fw me-2">
+       </i>
+       Timetables
+      </a>
+      <a class="nav-link" href="/admin/import">
+       <i class="fa fa-file-import fa-fw me-2">
+       </i>
+       Bulk Import
+      </a>
+     </div>
+    </div>
+    <a class="nav-link active" href="/admin/reports">
+     <i class="fa fa-file-lines fa-fw me-2">
+     </i>
+     Reports
+    </a>
+    <a class="nav-link" href="/admin/settings">
+     <i class="fa fa-gear fa-fw me-2">
+     </i>
+     Settings
+    </a>
+    <a class="nav-link" href="/admin/audit">
+     <i class="fa fa-clipboard-list fa-fw me-2">
+     </i>
+     Audit Log
+    </a>
+    <a class="nav-link" href="/admin/dashboard#hotspots">
+     <i class="fa fa-bolt fa-fw me-2">
+     </i>
+     Hotspots
+    </a>
+   </nav>
+  </aside>
+  <!-- Administrator Header (included on reports page) -->
+  <style>
+   :root { --primary:#00FFFF; --secondary:#008080; }
+    .navbar-admin { background-color: var(--secondary); }
+    .navbar-admin .nav-link, .navbar-admin .navbar-brand { color:#fff; }
+    .navbar-admin .btn-outline-light:hover { background-color: rgba(255,255,255,0.12); }
+  </style>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-admin" style="margin-left:260px;">
+   <div class="container-fluid">
+    <button aria-label="Toggle sidebar" class="btn btn-outline-light d-md-none me-2" id="sidebarToggle">
+     <i class="fa fa-bars">
+     </i>
+    </button>
+    <a class="navbar-brand d-flex align-items-center" href="/admin/dashboard">
+     <img alt="Logo" class="me-2" onerror="this.onerror=null;this.src='https://picsum.photos/seed/unilogo2/28/28';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:28px;border-radius:4px;">
+      <span>
+       Admin Console
+      </span>
+     </img>
+    </a>
+    <form class="d-none d-lg-flex ms-3" role="search" style="width:420px;">
+     <input aria-label="Search" class="form-control form-control-sm me-2" placeholder="Search users, courses, locations" type="search"/>
+     <button class="btn btn-sm btn-outline-light" type="submit">
+      <i class="fa fa-search">
+      </i>
+     </button>
+    </form>
+    <div class="ms-auto d-flex align-items-center gap-2">
+     <a class="btn btn-sm btn-outline-light" href="/admin/management#users">
+      <i class="fa fa-plus me-1">
+      </i>
+      Add User
+     </a>
+     <button aria-label="Notifications" class="btn btn-sm btn-outline-light">
+      <i class="fa fa-bell">
+      </i>
+     </button>
+     <button aria-label="Messages" class="btn btn-sm btn-outline-light">
+      <i class="fa fa-envelope">
+      </i>
+     </button>
+     <div class="dropdown">
+      <button aria-expanded="false" class="btn btn-sm btn-outline-light dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa fa-user-shield me-1">
+       </i>
+       <span id="headerUserName">
+        Admin User
+       </span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li>
+        <h6 class="dropdown-header">
+         Signed in as Admin
+        </h6>
+       </li>
+       <li>
+        <a class="dropdown-item" href="/admin/settings">
+         System Settings
+        </a>
+       </li>
+       <li>
+        <hr class="dropdown-divider"/>
+       </li>
+       <li>
+        <a class="dropdown-item" href="./login_page.html">
+         Logout
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <!-- Main Content -->
+  <main class="reports-main" id="mainContent">
+   <div class="container-fluid">
+    <!-- Breadcrumb / Page Header -->
+    <div class="page-header">
+     <div class="d-flex align-items-center gap-3">
+      <h1 class="page-title mb-0">
+       Attendance Reports
+      </h1>
+      <span class="badge bg-info-subtle text-info border border-info">
+       Generate, filter, preview &amp; export
+      </span>
+     </div>
+     <div class="d-flex align-items-center gap-2">
+      <div class="view-as d-flex align-items-center gap-2">
+       <span class="text-muted small">
+        Viewing as
+       </span>
+       <div aria-label="Role switcher" class="btn-group" role="group">
+        <input autocomplete="off" checked="" class="btn-check" id="roleAdmin" name="roleSwitch" type="radio"/>
+        <label class="btn btn-sm btn-outline-secondary" for="roleAdmin">
+         <i class="fa fa-user-shield me-1">
+         </i>
+         Admin
+        </label>
+        <input autocomplete="off" class="btn-check" id="roleFaculty" name="roleSwitch" type="radio"/>
+        <label class="btn btn-sm btn-outline-secondary" for="roleFaculty">
+         <i class="fa fa-chalkboard-teacher me-1">
+         </i>
+         Faculty
+        </label>
+       </div>
+      </div>
+     </div>
+    </div>
+    <nav aria-label="breadcrumb" class="breadcrumb">
+     <ol class="breadcrumb mb-3">
+      <li class="breadcrumb-item">
+       <a href="./admin_dashboard.html">
+        Dashboard
+       </a>
+      </li>
+      <li aria-current="page" class="breadcrumb-item active">
+       Reports
+      </li>
+     </ol>
+    </nav>
+    <!-- System feedback area -->
+    <div class="alert alert-info d-none" id="systemFeedback" role="alert">
+     <i class="fa fa-info-circle me-2">
+     </i>
+     <span class="message">
+      Loading...
+     </span>
+    </div>
+    <!-- Report Generator -->
+    <section class="app-card mb-4">
+     <div class="card-header">
+      <div class="title d-flex align-items-center gap-2">
+       <i class="fa fa-filter text-info">
+       </i>
+       <span class="widget-title">
+        Filter Panel
+       </span>
+      </div>
+      <div class="text-muted small">
+       Define criteria, then generate a preview below
+      </div>
+     </div>
+     <div class="card-body">
+      <form class="row g-3 align-items-end" id="filterForm">
+       <div class="col-12 col-md-3">
+        <label class="form-label" for="startDate">
+         Start Date
+        </label>
+        <input class="form-control" id="startDate" required="" type="date">
+        </input>
+       </div>
+       <div class="col-12 col-md-3">
+        <label class="form-label" for="endDate">
+         End Date
+        </label>
+        <input class="form-control" id="endDate" required="" type="date">
+        </input>
+       </div>
+       <div class="col-12 col-md-3" id="programWrapper">
+        <label class="form-label" for="programSelect">
+         Program (Admin only)
+        </label>
+        <select class="form-select" id="programSelect">
+         <option value="">
+          All Programs
+         </option>
+        </select>
+       </div>
+       <div class="col-12 col-md-3">
+        <label class="form-label" for="courseSelect">
+         Course
+         <span class="text-danger">
+          *
+         </span>
+        </label>
+        <select class="form-select" id="courseSelect" required="">
+         <option value="">
+          Select course
+         </option>
+        </select>
+        <div class="form-text">
+         Required to generate the report
+        </div>
+       </div>
+       <div class="col-12 col-md-3">
+        <label class="form-label" for="sectionSelect">
+         Section
+        </label>
+        <select class="form-select" id="sectionSelect">
+         <option value="">
+          All Sections
+         </option>
+        </select>
+       </div>
+       <div class="col-12 col-md-3">
+        <label class="form-label" for="studentInput">
+         Student (optional)
+        </label>
+        <input class="form-control" id="studentInput" placeholder="Search by name or ID" type="text">
+        </input>
+       </div>
+       <div class="col-12 col-md-6 text-md-end">
+        <button class="btn btn-light me-2" id="clearFilters" type="button">
+         <i class="fa fa-eraser me-1">
+         </i>
+         Clear
+        </button>
+        <button class="btn btn-info" id="generateBtn" type="submit">
+         <span class="btn-label">
+          <i class="fa fa-play me-1">
+          </i>
+          Generate Report
+         </span>
+         <span class="spinner-border spinner-border-sm ms-2 d-none" id="genSpinner">
+         </span>
+        </button>
+       </div>
+      </form>
+     </div>
+    </section>
+    <!-- Export Controls -->
+    <section class="app-card mb-4">
+     <div class="card-header">
+      <div class="title d-flex align-items-center gap-2">
+       <i class="fa fa-file-export text-success">
+       </i>
+       <span class="widget-title">
+        Export
+       </span>
+      </div>
+      <div class="text-muted small">
+       Download generated data
+      </div>
+     </div>
+     <div class="card-body d-flex flex-wrap align-items-center justify-content-between gap-2">
+      <div aria-label="Export options" class="export-controls btn-group" role="group">
+       <button class="btn btn-outline-secondary" disabled="" id="exportPDF">
+        <i class="fa-regular fa-file-pdf me-2">
+        </i>
+        PDF
+       </button>
+       <button class="btn btn-outline-secondary" disabled="" id="exportCSV">
+        <i class="fa-regular fa-file-lines me-2">
+        </i>
+        CSV
+       </button>
+       <button class="btn btn-outline-secondary" disabled="" id="exportXLSX">
+        <i class="fa-regular fa-file-excel me-2">
+        </i>
+        Excel
+       </button>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+       <label class="form-label mb-0 small text-muted" for="rowsPerPage">
+        Rows per page
+       </label>
+       <select class="form-select form-select-sm" id="rowsPerPage" style="width:auto;">
+        <option selected="" value="10">
+         10
+        </option>
+        <option value="25">
+         25
+        </option>
+        <option value="50">
+         50
+        </option>
+       </select>
+      </div>
+     </div>
+    </section>
+    <!-- Quick Insight Chart -->
+    <section class="app-card mb-4">
+     <div class="card-header">
+      <div class="title d-flex align-items-center gap-2">
+       <i class="fa fa-chart-line text-primary">
+       </i>
+       <span class="widget-title">
+        Attendance Over Time
+       </span>
+      </div>
+      <div class="text-muted small">
+       Interactive: zoom, pan and hover for details
+      </div>
+     </div>
+     <div class="card-body">
+      <canvas height="100" id="attendanceChart">
+      </canvas>
+      <div class="empty-state mt-3 d-none" id="chartEmptyState">
+       <div class="text-center">
+        <div class="mb-2">
+         <i class="fa fa-circle-info text-muted">
+         </i>
+        </div>
+        <div class="empty-state-text">
+         Generate a report to visualize attendance trends here.
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+    <!-- Report Preview Table -->
+    <section class="app-card">
+     <div class="card-header">
+      <div class="d-flex align-items-center gap-2">
+       <i class="fa fa-table text-primary">
+       </i>
+       <span class="widget-title">
+        Report Preview
+       </span>
+      </div>
+      <div class="text-muted small">
+       <span id="recordCount">
+        0
+       </span>
+       records • Sorted by
+       <span id="sortedBy">
+        Date
+       </span>
+      </div>
+     </div>
+     <div class="card-body p-0">
+      <div class="loading-state p-4 d-none" id="tableLoading">
+       <div class="d-flex align-items-center gap-3">
+        <div aria-hidden="true" class="spinner-border text-info" role="status">
+        </div>
+        <div>
+         Generating report, please wait...
+        </div>
+       </div>
+      </div>
+      <div class="empty-state d-none m-3" id="noDataState">
+       <div>
+        <div class="mb-2">
+         <i class="fa-regular fa-face-frown text-warning" style="font-size:1.5rem">
+         </i>
+        </div>
+        <div class="empty-state-text">
+         No data found for the selected criteria.
+        </div>
+       </div>
+      </div>
+      <div class="table-responsive">
+       <table class="table table-hover table-theme mb-0 align-middle" id="reportTable">
+        <thead>
+         <tr>
+          <th class="sortable" data-key="studentName">
+           Student Name
+           <i class="fa fa-sort ms-1 sort-indicator">
+           </i>
+          </th>
+          <th class="sortable" data-key="studentId">
+           Student ID
+           <i class="fa fa-sort ms-1 sort-indicator">
+           </i>
+          </th>
+          <th class="sortable" data-key="date">
+           Date
+           <i class="fa fa-sort ms-1 sort-indicator">
+           </i>
+          </th>
+          <th class="sortable" data-key="status">
+           Status
+           <i class="fa fa-sort ms-1 sort-indicator">
+           </i>
+          </th>
+          <th class="text-end">
+           Actions
+          </th>
+         </tr>
+        </thead>
+        <tbody id="reportTableBody">
+         <!-- rows injected by JS -->
+        </tbody>
+       </table>
+      </div>
+      <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2 p-3 border-top">
+       <div class="small text-muted" id="paginationInfo">
+        Page 1 of 1
+       </div>
+       <nav aria-label="Report table pagination">
+        <ul class="pagination pagination-sm mb-0" id="pagination">
+         <!-- pagination items injected by JS -->
+        </ul>
+       </nav>
+      </div>
+     </div>
+    </section>
+    <!-- Spacer for bottom -->
+    <div class="my-4">
+    </div>
+   </div>
+  </main>
+  <!-- Administrator Footer (included on reports page) -->
+  <footer class="py-3" style="background-color:#f8f9fa;border-top:1px solid #e9ecef;margin-left:260px;">
+   <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+    <div class="d-flex align-items-center gap-2">
+     <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/unifooter/20/20';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:20px;border-radius:3px;"/>
+     <small class="text-muted">
+      © 2025 Your University
+     </small>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+     <a class="text-decoration-none" href="/admin/import">
+      <i class="fa fa-file-import me-1">
+      </i>
+      Import
+     </a>
+     <a class="text-decoration-none" href="/admin/audit">
+      <i class="fa fa-clipboard-list me-1">
+      </i>
+      Audit
+     </a>
+     <a class="text-muted text-decoration-none" href="#">
+      Terms
+     </a>
+     <a class="text-muted text-decoration-none" href="#">
+      Privacy
+     </a>
+    </div>
+   </div>
+  </footer>
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.all.min.js">
+  </script>
+  <!-- Chart.js + Zoom plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.umd.min.js">
+  </script>
+  <!-- SheetJS for Excel export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js">
+  </script>
+  <!-- jsPDF for PDF export -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js">
+  </script>
+  <script>
+   // Sidebar toggler for mobile
+document.addEventListener('DOMContentLoaded', function() {
+    var t = document.getElementById('sidebarToggle');
+    var s = document.getElementById('sidebar');
+    if (t && s) {
+        t.addEventListener('click', function() {
+            s.classList.toggle('d-none');
+        });
+    }
+});
+
+// State
+let userRole = 'Admin';
+let filters = {
+    dateRange: {
+        start: '',
+        end: ''
+    },
+    program: '',
+    course: '',
+    section: '',
+    student: ''
+};
+let reportData = []; // full data set
+let filteredPage = 1;
+let itemsPerPage = 10;
+let sortConfig = {
+    key: 'date',
+    direction: 'desc'
+};
+
+// Mock datasets
+const programs = [{
+    id: 'ENG',
+    name: 'B.Eng Computer Engineering'
+}, {
+    id: 'CSE',
+    name: 'B.Tech Computer Science'
+}, {
+    id: 'MBA',
+    name: 'MBA Business Analytics'
+}];
+const coursesByProgram = {
+    'ENG': [{
+        id: 'ENG101',
+        name: 'Circuits I'
+    }, {
+        id: 'ENG205',
+        name: 'Signals & Systems'
+    }],
+    'CSE': [{
+        id: 'CSE101',
+        name: 'Intro to Programming'
+    }, {
+        id: 'CSE220',
+        name: 'Data Structures'
+    }, {
+        id: 'CSE310',
+        name: 'Operating Systems'
+    }],
+    'MBA': [{
+        id: 'MBA501',
+        name: 'Financial Accounting'
+    }, {
+        id: 'MBA530',
+        name: 'Marketing Analytics'
+    }]
+};
+const facultyCourses = [{
+    id: 'CSE101',
+    name: 'Intro to Programming'
+}, {
+    id: 'CSE220',
+    name: 'Data Structures'
+}];
+const sectionsByCourse = {
+    'ENG101': ['A1', 'A2'],
+    'ENG205': ['B1'],
+    'CSE101': ['A', 'B', 'C'],
+    'CSE220': ['A'],
+    'CSE310': ['A'],
+    'MBA501': ['M1'],
+    'MBA530': ['M1', 'M2']
+};
+
+// Elements
+const programWrapper = document.getElementById('programWrapper');
+const programSelect = document.getElementById('programSelect');
+const courseSelect = document.getElementById('courseSelect');
+const sectionSelect = document.getElementById('sectionSelect');
+const studentInput = document.getElementById('studentInput');
+const startDate = document.getElementById('startDate');
+const endDate = document.getElementById('endDate');
+const filterForm = document.getElementById('filterForm');
+const generateBtn = document.getElementById('generateBtn');
+const genSpinner = document.getElementById('genSpinner');
+const clearFiltersBtn = document.getElementById('clearFilters');
+const reportTableBody = document.getElementById('reportTableBody');
+const recordCount = document.getElementById('recordCount');
+const sortedBy = document.getElementById('sortedBy');
+const rowsPerPage = document.getElementById('rowsPerPage');
+const pagination = document.getElementById('pagination');
+const paginationInfo = document.getElementById('paginationInfo');
+const tableLoading = document.getElementById('tableLoading');
+const noDataState = document.getElementById('noDataState');
+const systemFeedback = document.getElementById('systemFeedback');
+const exportPDF = document.getElementById('exportPDF');
+const exportCSV = document.getElementById('exportCSV');
+const exportXLSX = document.getElementById('exportXLSX');
+const chartEmptyState = document.getElementById('chartEmptyState');
+
+// Role switcher
+document.getElementById('roleAdmin').addEventListener('change', () => setRole('Admin'));
+document.getElementById('roleFaculty').addEventListener('change', () => setRole('Faculty'));
+
+function setRole(role) {
+    userRole = role;
+    // Toggle visibility of Program filter
+    programWrapper.style.display = userRole === 'Admin' ? 'block' : 'none';
+    // Populate course list based on role and selected program
+    populatePrograms();
+    populateCourses();
+    // Update header/profile labels
+    const headerUserName = document.getElementById('headerUserName');
+    const adminUserName = document.getElementById('adminUserName');
+    const adminInitials = document.getElementById('adminInitials');
+    if (role === 'Admin') {
+        headerUserName.textContent = 'Admin User';
+        adminUserName.textContent = 'Admin User';
+        adminInitials.textContent = 'AD';
+    } else {
+        headerUserName.textContent = 'Prof. Garcia';
+        adminUserName.textContent = 'Prof. Garcia';
+        adminInitials.textContent = 'PG';
+    }
+}
+
+// Populate selects
+function populatePrograms() {
+    programSelect.innerHTML = '<option value="">All Programs</option>' + programs.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+}
+
+function populateCourses() {
+    const selectedProgram = programSelect.value || Object.keys(coursesByProgram)[0];
+    let courses = [];
+    if (userRole === 'Admin') {
+        // If admin and specific program selected
+        if (programSelect.value) {
+            courses = coursesByProgram[programSelect.value] || [];
+        } else {
+            courses = Object.values(coursesByProgram).flat();
+        }
+    } else {
+        courses = facultyCourses; // faculty limited
+    }
+    courseSelect.innerHTML = '<option value="">Select course</option>' + courses.map(c => `<option value="${c.id}">${c.name} (${c.id})</option>`).join('');
+    // Reset section based on first course
+    populateSections();
+}
+
+function populateSections() {
+    const course = courseSelect.value;
+    const sections = course ? (sectionsByCourse[course] || []) : [];
+    sectionSelect.innerHTML = '<option value="">All Sections</option>' + sections.map(s => `<option value="${s}">${s}</option>`).join('');
+}
+
+programSelect.addEventListener('change', () => {
+    populateCourses();
+});
+courseSelect.addEventListener('change', () => {
+    populateSections();
+    validateGenerateBtn();
+});
+sectionSelect.addEventListener('change', () => {
+    /* no-op */ });
+startDate.addEventListener('change', validateGenerateBtn);
+endDate.addEventListener('change', validateGenerateBtn);
+studentInput.addEventListener('input', () => {});
+
+function validateGenerateBtn() {
+    const validDates = (startDate.value && endDate.value) ? (new Date(endDate.value) >= new Date(startDate.value)) : false;
+    if (startDate.value && endDate.value && !validDates) {
+        showInfo('End date must be on or after start date.');
+    }
+    const isCourseSelected = !!courseSelect.value;
+    generateBtn.disabled = !(isCourseSelected && validDates);
+}
+
+clearFiltersBtn.addEventListener('click', () => {
+    filterForm.reset();
+    if (userRole === 'Admin') populatePrograms();
+    populateCourses();
+    updateReport([]);
+    updateExportButtons(false);
+    showInfo('Filters cleared.');
+    chartEmptyState.classList.remove('d-none');
+    if (attendanceChart) attendanceChart.data.labels = [], attendanceChart.data.datasets[0].data = [], attendanceChart.update();
+});
+
+// Generate report
+filterForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (generateBtn.disabled) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Incomplete filters',
+            text: 'Please select a valid date range and a course.'
+        });
+        return;
+    }
+    startLoading();
+    // Update filters state
+    filters.dateRange.start = startDate.value;
+    filters.dateRange.end = endDate.value;
+    filters.program = userRole === 'Admin' ? programSelect.value : '';
+    filters.course = courseSelect.value;
+    filters.section = sectionSelect.value;
+    filters.student = (studentInput.value || '').trim();
+
+    // Simulate API delay and generate mock data
+    setTimeout(() => {
+        reportData = generateMockData(filters);
+        filteredPage = 1;
+        updateReport(reportData);
+        updateExportButtons(reportData.length > 0);
+        stopLoading();
+        if (reportData.length > 0) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Report generated',
+                text: 'Your report preview is ready.'
+            });
+        } else {
+            Swal.fire({
+                icon: 'info',
+                title: 'No records',
+                text: 'No data matched your filters.'
+            });
+        }
+    }, 700);
+});
+
+function startLoading() {
+    tableLoading.classList.remove('d-none');
+    genSpinner.classList.remove('d-none');
+    generateBtn.disabled = true;
+}
+
+function stopLoading() {
+    tableLoading.classList.add('d-none');
+    genSpinner.classList.add('d-none');
+    validateGenerateBtn();
+}
+
+function showInfo(msg) {
+    if (!systemFeedback) return;
+    systemFeedback.querySelector('.message').textContent = msg;
+    systemFeedback.classList.remove('d-none');
+    setTimeout(() => systemFeedback.classList.add('d-none'), 2200);
+}
+
+// Mock data generator
+function generateMockData(f) {
+    // Students pool
+    const students = [{
+        id: 'S1001',
+        name: 'Alice Johnson'
+    }, {
+        id: 'S1002',
+        name: 'Brian Lee'
+    }, {
+        id: 'S1003',
+        name: 'Carla Chen'
+    }, {
+        id: 'S1004',
+        name: 'Daniel Kim'
+    }, {
+        id: 'S1005',
+        name: 'Eva Martínez'
+    }, {
+        id: 'S1006',
+        name: 'Farhan Ali'
+    }];
+    const statuses = ['Present', 'Present', 'Present', 'Late', 'Absent', 'Manual Override'];
+    const start = new Date(f.dateRange.start);
+    const end = new Date(f.dateRange.end);
+    if (!(start instanceof Date) || !(end instanceof Date) || isNaN(start) || isNaN(end)) return [];
+    // Create date list (weekdays only)
+    const dates = [];
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const dow = d.getDay(); // 0 Sun - 6 Sat
+        if (dow !== 0 && dow !== 6) dates.push(new Date(d));
+    }
+    const sec = f.section ? [f.section] : ['A', 'B', 'C'];
+    let data = [];
+    dates.forEach(date => {
+        students.forEach(stu => {
+            // Filter by student search if provided
+            const matchStudent = f.student ? (stu.name.toLowerCase().includes(f.student.toLowerCase()) || stu.id.toLowerCase().includes(f.student.toLowerCase())) : true;
+            if (!matchStudent) return;
+            // random pick status
+            const status = statuses[Math.floor(Math.random() * statuses.length)];
+            const section = sec[Math.floor(Math.random() * sec.length)];
+            data.push({
+                studentName: stu.name,
+                studentId: stu.id,
+                date: date.toISOString().substring(0, 10),
+                status: status,
+                course: f.course,
+                section: section
+            });
+        });
+    });
+    // Trim for demo
+    return data.slice(0, 120);
+}
+
+function updateReport(data) {
+    // Sort
+    applySort(data);
+    // Update count
+    recordCount.textContent = data.length;
+    // Handle empty
+    noDataState.classList.toggle('d-none', data.length !== 0);
+    // Render table page
+    renderTablePage();
+    // Update chart
+    updateChart(data);
+}
+
+function applySort(data) {
+    const {
+        key,
+        direction
+    } = sortConfig;
+    data.sort((a, b) => {
+        let va = a[key],
+            vb = b[key];
+        if (key === 'date') {
+            va = new Date(va);
+            vb = new Date(vb);
+        }
+        if (va < vb) return direction === 'asc' ? -1 : 1;
+        if (va > vb) return direction === 'asc' ? 1 : -1;
+        return 0;
+    });
+    // Update header indicator
+    sortedBy.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+    document.querySelectorAll('th.sortable').forEach(th => {
+        const icon = th.querySelector('.sort-indicator');
+        icon.className = 'fa ms-1 sort-indicator ' + (th.dataset.key === key ? (direction === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort');
+    });
+}
+
+function renderTablePage() {
+    const total = reportData.length;
+    itemsPerPage = parseInt(rowsPerPage.value, 10);
+    const startIdx = (filteredPage - 1) * itemsPerPage;
+    const pageData = reportData.slice(startIdx, startIdx + itemsPerPage);
+    reportTableBody.innerHTML = pageData.map(r => renderRow(r)).join('');
+    // Pagination
+    const totalPages = Math.max(1, Math.ceil(total / itemsPerPage));
+    pagination.innerHTML = renderPagination(filteredPage, totalPages);
+    paginationInfo.textContent = `Page ${filteredPage} of ${totalPages}`;
+}
+
+function renderRow(r) {
+    const statusBadge = statusToBadge(r.status);
+    return `<tr>
+        <td>${r.studentName}</td>
+        <td>${r.studentId}</td>
+        <td>${formatDate(r.date)}</td>
+        <td>${statusBadge}</td>
+        <td class="text-end">
+          <button class="btn btn-sm btn-light" data-stu="${r.studentId}" data-date="${r.date}" onclick="viewRecord(this)"><i class="fa fa-eye me-1"></i>View</button>
+        </td>
+      </tr>`;
+}
+
+function statusToBadge(s) {
+    let cls = 'neutral';
+    let label = s;
+    if (s === 'Present') cls = 'success';
+    else if (s === 'Absent') cls = 'error';
+    else if (s === 'Late') cls = 'warning';
+    else if (s === 'Manual Override') cls = 'info';
+    return `<span class="badge-soft ${cls}">${label}</span>`;
+}
+
+function renderPagination(current, totalPages) {
+    const prevDisabled = current === 1 ? ' disabled' : '';
+    const nextDisabled = current === totalPages ? ' disabled' : '';
+    let items = `<li class="page-item${prevDisabled}"><button class="page-link" data-page="${current-1}">Previous</button></li>`;
+    for (let p = 1; p <= totalPages; p++) {
+        items += `<li class="page-item ${p===current?'active':''}"><button class="page-link" data-page="${p}">${p}</button></li>`;
+    }
+    items += `<li class="page-item${nextDisabled}"><button class="page-link" data-page="${current+1}">Next</button></li>`;
+    return items;
+}
+
+// Pagination click
+pagination.addEventListener('click', (e) => {
+    if (e.target.matches('button.page-link')) {
+        const page = parseInt(e.target.getAttribute('data-page'), 10);
+        const totalPages = Math.max(1, Math.ceil(reportData.length / itemsPerPage));
+        if (page >= 1 && page <= totalPages) {
+            filteredPage = page;
+            renderTablePage();
+        }
+    }
+});
+
+rowsPerPage.addEventListener('change', () => {
+    filteredPage = 1;
+    renderTablePage();
+});
+
+// Sorting
+document.querySelectorAll('th.sortable').forEach(th => {
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', () => {
+        const key = th.dataset.key;
+        if (sortConfig.key === key) sortConfig.direction = (sortConfig.direction === 'asc') ? 'desc' : 'asc';
+        else {
+            sortConfig.key = key;
+            sortConfig.direction = 'asc';
+        }
+        updateReport(reportData);
+    });
+});
+
+// Export handlers
+function updateExportButtons(enabled) {
+    exportPDF.disabled = exportCSV.disabled = exportXLSX.disabled = !enabled;
+}
+exportCSV.addEventListener('click', () => doExportCSV());
+exportXLSX.addEventListener('click', () => doExportXLSX());
+exportPDF.addEventListener('click', () => doExportPDF());
+
+function doExportCSV() {
+    if (reportData.length === 0) return;
+    const headers = ['Student Name', 'Student ID', 'Date', 'Status', 'Course', 'Section'];
+    const rows = reportData.map(r => [r.studentName, r.studentId, r.date, r.status, r.course, r.section]);
+    const csv = [headers, ...rows].map(r => r.map(v => '"' + String(v).replaceAll('"', '""') + '"').join(',')).join('\n');
+    const blob = new Blob([csv], {
+        type: 'text/csv;charset=utf-8;'
+    });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `attendance_report_${Date.now()}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    Swal.fire({
+        icon: 'success',
+        title: 'CSV Exported',
+        timer: 1500,
+        showConfirmButton: false
+    });
+}
+
+function doExportXLSX() {
+    if (reportData.length === 0) return;
+    const ws = XLSX.utils.json_to_sheet(reportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Report');
+    XLSX.writeFile(wb, `attendance_report_${Date.now()}.xlsx`);
+    Swal.fire({
+        icon: 'success',
+        title: 'Excel Exported',
+        timer: 1500,
+        showConfirmButton: false
+    });
+}
+
+function doExportPDF() {
+    if (reportData.length === 0) return;
+    const {
+        jsPDF
+    } = window.jspdf;
+    const doc = new jsPDF({
+        orientation: 'landscape'
+    });
+    doc.setFontSize(14);
+    doc.text('Attendance Report', 14, 14);
+    const headers = [
+        ['Student Name', 'Student ID', 'Date', 'Status', 'Course', 'Section']
+    ];
+    const rows = reportData.map(r => [r.studentName, r.studentId, formatDate(r.date), r.status, r.course, r.section]);
+    doc.autoTable({
+        head: headers,
+        body: rows,
+        startY: 20,
+        styles: {
+            fontSize: 9
+        }
+    });
+    doc.save(`attendance_report_${Date.now()}.pdf`);
+    Swal.fire({
+        icon: 'success',
+        title: 'PDF Exported',
+        timer: 1500,
+        showConfirmButton: false
+    });
+}
+
+// Row action
+window.viewRecord = function(btn) {
+    const stu = btn.getAttribute('data-stu');
+    const date = btn.getAttribute('data-date');
+    const rec = reportData.find(r => r.studentId === stu && r.date === date);
+    if (!rec) return;
+    Swal.fire({
+        title: 'Attendance Detail',
+        html: `<div class="text-start">
+          <div><strong>Student:</strong> ${rec.studentName} (${rec.studentId})</div>
+          <div><strong>Date:</strong> ${formatDate(rec.date)}</div>
+          <div><strong>Status:</strong> ${rec.status}</div>
+          <div><strong>Course:</strong> ${rec.course}</div>
+          <div><strong>Section:</strong> ${rec.section}</div>
+        </div>`,
+        icon: 'info'
+    });
+}
+
+// Chart
+let attendanceChart = null;
+
+function initChart() {
+    const ctx = document.getElementById('attendanceChart');
+    attendanceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: '% Present',
+                data: [],
+                borderColor: '#00CCCC',
+                backgroundColor: 'rgba(0,255,255,0.15)',
+                tension: 0.25,
+                fill: true,
+                pointRadius: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    min: 0,
+                    max: 100,
+                    ticks: {
+                        stepSize: 10,
+                        callback: v => v + '%'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true
+                },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => ` ${ctx.parsed.y}% present`
+                    }
+                },
+                zoom: {
+                    zoom: {
+                        wheel: {
+                            enabled: true
+                        },
+                        pinch: {
+                            enabled: true
+                        },
+                        mode: 'x'
+                    },
+                    pan: {
+                        enabled: true,
+                        mode: 'x'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function updateChart(data) {
+    if (!attendanceChart) {
+        initChart();
+    }
+    if (data.length === 0) {
+        chartEmptyState.classList.remove('d-none');
+        attendanceChart.data.labels = [];
+        attendanceChart.data.datasets[0].data = [];
+        attendanceChart.update();
+        return;
+    }
+    chartEmptyState.classList.add('d-none');
+    // Compute daily presence percentage
+    const byDate = {};
+    data.forEach(r => {
+        if (!byDate[r.date]) byDate[r.date] = {
+            present: 0,
+            total: 0
+        };
+        byDate[r.date].total += 1;
+        if (r.status === 'Present') byDate[r.date].present += 1;
+    });
+    const labels = Object.keys(byDate).sort();
+    const series = labels.map(d => Math.round((byDate[d].present / byDate[d].total) * 100));
+    attendanceChart.data.labels = labels.map(formatDate);
+    attendanceChart.data.datasets[0].data = series;
+    attendanceChart.update();
+}
+
+// Helpers
+function formatDate(iso) {
+    const d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit'
+    });
+}
+
+// Initialize
+(function init() {
+    setRole('Admin');
+    populatePrograms();
+    populateCourses();
+    populateSections();
+    validateGenerateBtn();
+    initChart();
+})();
+  </script>
+ </body>
+</html>
