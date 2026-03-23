@@ -277,29 +277,54 @@ const ACCOUNT_ROUTES = {
     'faculty1:teach123': './faculty_dashboard.html',
     'admin1:admin123': './admin_dashboard.html'
 };
+// Real API call to your Render Backend
+    const backendUrl = 'https://smart-attendance-dsye.onrender.com/api/auth/login';
 
-// Prefill User ID if remembered
-document.addEventListener('DOMContentLoaded', () => {
-    const remembered = localStorage.getItem('rememberedUserId');
-    if (remembered) {
-        userIdEl.value = remembered;
-        rememberMeEl.checked = true;
-    }
-    updateButtonState();
-});
+    fetch(backendUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: uid, // Your backend expects 'username'
+            password: pwd
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Invalid credentials');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // 1. Store the security token
+        localStorage.setItem('token', data.access_token);
+        
+        // 2. Success message
+        Swal.fire({
+            icon: 'success',
+            title: 'Welcome',
+            text: 'Authentication successful. Redirecting...',
+            showConfirmButton: false,
+            timer: 1200
+        });
 
-// Enable/disable login button based on inputs
-function updateButtonState() {
-    const uidTrimmed = userIdEl.value.trim();
-    const pwd = passwordEl.value;
-    const canSubmit = uidTrimmed.length > 0 && pwd.length > 0;
-    loginBtn.disabled = !canSubmit;
-}
-
-userIdEl.addEventListener('input', updateButtonState);
-passwordEl.addEventListener('input', updateButtonState);
-
-// Toggle password visibility
+        // 3. Redirect based on the role sent by the backend
+        setTimeout(() => {
+            if (data.role === 'admin') {
+                window.location.href = './admin_dashboard.html';
+            } else if (data.role === 'faculty') {
+                window.location.href = './faculty_dashboard.html';
+            } else {
+                window.location.href = './student_dashboard.html';
+            }
+        }, 900);
+    })
+    .catch(error => {
+        setLoading(false);
+        showError('Login failed. Please check your User ID and Password.');
+        passwordEl.focus();
+    });
 togglePasswordBtn.addEventListener('click', () => {
     const isPwd = passwordEl.type === 'password';
     passwordEl.type = isPwd ? 'text' : 'password';
