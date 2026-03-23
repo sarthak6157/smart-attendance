@@ -13,7 +13,7 @@ const togglePasswordIcon = document.getElementById('togglePasswordIcon');
 const rememberMeEl = document.getElementById('rememberMe');
 const capsWarning = document.getElementById('capsWarning');
 
-// Prefill User ID if remembered
+// Prefill User ID if remembered from previous sessions
 document.addEventListener('DOMContentLoaded', () => {
     const remembered = localStorage.getItem('rememberedUserId');
     if (remembered) {
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateButtonState();
 });
 
+// Enable/disable the login button based on input presence
 function updateButtonState() {
     const uidTrimmed = userIdEl.value.trim();
     const pwd = passwordEl.value;
@@ -32,6 +33,7 @@ function updateButtonState() {
 userIdEl.addEventListener('input', updateButtonState);
 passwordEl.addEventListener('input', updateButtonState);
 
+// Toggle password visibility (eye icon)
 togglePasswordBtn.addEventListener('click', () => {
     const isPwd = passwordEl.type === 'password';
     passwordEl.type = isPwd ? 'text' : 'password';
@@ -39,11 +41,13 @@ togglePasswordBtn.addEventListener('click', () => {
     togglePasswordIcon.classList.toggle('fa-eye-slash');
 });
 
+// Detect if Caps Lock is enabled for user convenience
 passwordEl.addEventListener('keyup', (e) => {
     const caps = e.getModifierState && e.getModifierState('CapsLock');
     capsWarning.classList.toggle('d-none', !caps);
 });
 
+// UI helper to show loading state during the API request
 function setLoading(isLoading) {
     if (isLoading) {
         loginBtn.setAttribute('disabled', 'disabled');
@@ -56,6 +60,7 @@ function setLoading(isLoading) {
     }
 }
 
+// Display error messages using SweetAlert2 and local alert box
 function showError(message) {
     alertBox.textContent = message;
     alertBox.classList.remove('d-none');
@@ -72,7 +77,7 @@ function clearError() {
     alertBox.textContent = '';
 }
 
-// --- LOGIN SUBMISSION ---
+// --- LOGIN SUBMISSION HANDLER ---
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     clearError();
@@ -87,20 +92,21 @@ loginForm.addEventListener('submit', (e) => {
 
     setLoading(true);
 
+    // Save or clear remembered username
     if (rememberMeEl.checked) {
         localStorage.setItem('rememberedUserId', uid);
     } else {
         localStorage.removeItem('rememberedUserId');
     }
 
-    // REAL API CALL TO YOUR RENDER BACKEND
+    // Connect to your live backend endpoint
     const backendUrl = 'https://smart-attendance-2-qkmd.onrender.com/api/auth/login';
 
     fetch(backendUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            username: uid, // Backend expects 'username'
+            username: uid, // Matches the backend's expected field
             password: pwd
         })
     })
@@ -109,7 +115,7 @@ loginForm.addEventListener('submit', (e) => {
         return response.json();
     })
     .then(data => {
-        // Store the token for other pages to use
+        // Securely store the JWT access token for subsequent authenticated requests
         localStorage.setItem('token', data.access_token);
         
         Swal.fire({
@@ -120,7 +126,7 @@ loginForm.addEventListener('submit', (e) => {
             timer: 1200
         });
 
-        // Redirect based on the role received from backend
+        // Redirect the user to their specific dashboard based on their role
         setTimeout(() => {
             if (data.role === 'admin') window.location.href = './admin_dashboard.html';
             else if (data.role === 'faculty') window.location.href = './faculty_dashboard.html';
