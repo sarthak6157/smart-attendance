@@ -1,261 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1" name="viewport"/>
-  <title>
-   Login | Hybrid QR + GPS Attendance
-  </title>
-  <!-- Brand font: Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-  <!-- Bootstrap 5 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <!-- Font Awesome 6 -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-  <!-- Site theme -->
-  <link href="style.css" rel="stylesheet"/>
-  <!-- Page-specific CSS (loader expects this tag) -->
-  <style href="login_page.css" rel="stylesheet">
-  </style>
-  <!-- Also include as a proper stylesheet link to ensure application in browsers -->
-  <link href="login_page.css" rel="stylesheet"/>
- </head>
- <body class="d-flex flex-column min-vh-100 bg-light">
-  <!-- Common Public (Login/Enrollment) Header -->
-  <!-- Icons used: fa-shield-alt (brand mark optional). -->
-  <!-- Interactive elements: Brand link only. -->
-  <style>
-   :root { --primary:#00FFFF; --secondary:#008080; }
-    .navbar-public { background-color: var(--secondary); }
-    .brand-title { color: #fff; font-weight: 600; }
-  </style>
-  <nav class="navbar navbar-expand-lg navbar-dark navbar-public">
-   <div class="container-fluid">
-    <a class="navbar-brand d-flex align-items-center" href="#">
-     <img alt="Institution Logo" class="me-2" onerror="this.onerror=null;this.src='https://picsum.photos/seed/university-logo/64/64';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:32px;width:auto;border-radius:4px;"/>
-     <span class="brand-title">
-      Hybrid QR + GPS Attendance
-     </span>
-    </a>
-   </div>
-  </nav>
-  <main class="flex-grow-1 d-flex align-items-center py-5">
-   <div class="container">
-    <div class="row justify-content-center">
-     <div class="col-12 col-md-10 col-lg-8 col-xl-6">
-      <!-- AuthenticationComponent container -->
-      <section class="app-card login-form-container shadow-2">
-       <!-- PageHeader (brand inside the card for context) -->
-       <header class="mb-3 text-center">
-        <img alt="University Logo" class="auth-logo mx-auto rounded" onerror="this.onerror=null;this.src='https://picsum.photos/seed/edu-logo/96/96';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg"/>
-        <h1 class="h4 mt-3 mb-1 title-text">
-         Attendance Monitoring System
-        </h1>
-        <p class="text-muted mb-0">
-         Please sign in to continue
-        </p>
-       </header>
-       <!-- System feedback area (hidden by default) -->
-       <div aria-live="assertive" class="alert alert-danger d-none" id="authAlert" role="alert">
-       </div>
-       <!-- LoginForm -->
-       <form id="loginForm" novalidate="">
-        <div class="mb-3">
-         <label class="form-label" for="userId">
-          User ID
-         </label>
-         <div class="input-group">
-          <span class="input-group-text" id="uid-addon">
-           <i class="fa-solid fa-id-card">
-           </i>
-          </span>
-          <input aria-describedby="uid-addon" aria-label="User ID" autofocus="" class="form-control" id="userId" name="userId" placeholder="e.g., student001" required="" type="text"/>
-         </div>
-         <div class="invalid-feedback">
-          Please enter your User ID.
-         </div>
-        </div>
-        <div class="mb-3">
-         <label class="form-label" for="password">
-          Password
-         </label>
-         <div class="input-group">
-          <span class="input-group-text" id="pwd-addon">
-           <i class="fa-solid fa-lock">
-           </i>
-          </span>
-          <input aria-describedby="pwd-addon" aria-label="Password" class="form-control password-input-field" id="password" name="password" placeholder="••••••••" required="" type="password"/>
-          <button aria-label="Show or hide password" class="btn btn-light toggle-visibility-icon" data-bs-placement="top" data-bs-toggle="tooltip" id="togglePassword" title="Show/Hide password" type="button">
-           <i class="fa-regular fa-eye" id="togglePasswordIcon">
-           </i>
-          </button>
-         </div>
-         <div class="form-text text-warning d-none" id="capsWarning">
-          <i class="fa-solid fa-triangle-exclamation me-1">
-          </i>
-          Caps Lock is ON
-         </div>
-         <div class="invalid-feedback">
-          Please enter your Password.
-         </div>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mb-3">
-         <div class="form-check">
-          <input class="form-check-input" id="rememberMe" type="checkbox" value="1"/>
-          <label class="form-check-label" for="rememberMe">
-           Remember me
-          </label>
-         </div>
-         <a class="small" href="#" id="forgotPasswordLink">
-          Forgot password?
-         </a>
-        </div>
-        <div class="d-grid gap-2">
-         <button class="btn btn-primary btn-lg" id="loginBtn" type="submit">
-          <span class="btn-text">
-           Login
-          </span>
-          <span class="btn-spinner d-none ms-2">
-           <i class="fa-solid fa-spinner fa-spin">
-           </i>
-          </span>
-         </button>
-        </div>
-        <div class="text-center mt-3">
-         <small class="text-muted">
-          By continuing you agree to our
-          <a class="link-secondary" href="#">
-           Terms
-          </a>
-          and
-          <a class="link-secondary" href="#">
-           Privacy Policy
-          </a>
-          .
-         </small>
-        </div>
-       </form>
-      </section>
-      <!-- Test credentials section (for QA/demo) -->
-      <section class="app-card mt-3">
-       <div class="card-header">
-        <div class="title d-flex align-items-center gap-2">
-         <i class="fa-solid fa-flask text-info">
-         </i>
-         <span class="widget-title">
-          Test Login Accounts
-         </span>
-        </div>
-       </div>
-       <div class="card-body">
-        <p class="text-muted mb-3">
-         Use these demo credentials to test role-based redirects:
-        </p>
-        <ul class="list-unstyled mb-0">
-         <li class="mb-1">
-          <span class="badge bg-info me-2">
-           Student
-          </span>
-          <strong>
-           user:
-          </strong>
-          student1
-          <strong>
-           pass:
-          </strong>
-          password123
-          <span class="text-muted">
-           → Student Dashboard
-          </span>
-         </li>
-         <li class="mb-1">
-          <span class="badge bg-primary me-2">
-           New Student
-          </span>
-          <strong>
-           user:
-          </strong>
-          student_new
-          <strong>
-           pass:
-          </strong>
-          welcome123
-          <span class="text-muted">
-           → Enrollment Page (first-time)
-          </span>
-         </li>
-         <li class="mb-1">
-          <span class="badge bg-success me-2">
-           Faculty
-          </span>
-          <strong>
-           user:
-          </strong>
-          faculty1
-          <strong>
-           pass:
-          </strong>
-          teach123
-          <span class="text-muted">
-           → Faculty Dashboard
-          </span>
-         </li>
-         <li class="mb-1">
-          <span class="badge bg-danger me-2">
-           Admin
-          </span>
-          <strong>
-           user:
-          </strong>
-          admin1
-          <strong>
-           pass:
-          </strong>
-          admin123
-          <span class="text-muted">
-           → Admin Dashboard
-          </span>
-         </li>
-        </ul>
-       </div>
-      </section>
-     </div>
-    </div>
-   </div>
-  </main>
-  <!-- Common Public (Login/Enrollment) Footer -->
-  <!-- Icons used: none. -->
-  <!-- Interactive elements: links to Terms and Privacy. -->
-  <footer class="mt-auto py-3" style="background-color:#f8f9fa;border-top:1px solid #e9ecef;">
-   <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
-    <div class="d-flex align-items-center gap-2">
-     <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/mini-logo/40/40';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg" style="height:20px;width:auto;border-radius:3px;"/>
-     <small class="text-muted">
-      © 2025 Your University
-     </small>
-    </div>
-    <ul class="nav">
-     <li class="nav-item">
-      <a class="nav-link px-2" href="#" style="color:#6c757d;">
-       Terms
-      </a>
-     </li>
-     <li class="nav-item">
-      <a class="nav-link px-2" href="#" style="color:#6c757d;">
-       Privacy
-      </a>
-     </li>
-    </ul>
-   </div>
-  </footer>
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.all.min.js">
-  </script>
-  <!-- Bootstrap 5 JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-  </script>
-  <script>
-   // Initialize Bootstrap tooltips
+// Initialize Bootstrap tooltips
 document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
 
 const loginForm = document.getElementById('loginForm');
@@ -270,61 +13,25 @@ const togglePasswordIcon = document.getElementById('togglePasswordIcon');
 const rememberMeEl = document.getElementById('rememberMe');
 const capsWarning = document.getElementById('capsWarning');
 
-// Demo accounts and redirects
-const ACCOUNT_ROUTES = {
-    'student1:password123': './student_dashboard.html',
-    'student_new:welcome123': './enrollment_page.html',
-    'faculty1:teach123': './faculty_dashboard.html',
-    'admin1:admin123': './admin_dashboard.html'
-};
-// Real API call to your Render Backend
-    const backendUrl = 'https://smart-attendance-dsye.onrender.com/api/auth/login';
+// Prefill User ID if remembered
+document.addEventListener('DOMContentLoaded', () => {
+    const remembered = localStorage.getItem('rememberedUserId');
+    if (remembered) {
+        userIdEl.value = remembered;
+        rememberMeEl.checked = true;
+    }
+    updateButtonState();
+});
 
-    fetch(backendUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            username: uid, // Your backend expects 'username'
-            password: pwd
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Invalid credentials');
-        }
-        return response.json();
-    })
-    .then(data => {
-        // 1. Store the security token
-        localStorage.setItem('token', data.access_token);
-        
-        // 2. Success message
-        Swal.fire({
-            icon: 'success',
-            title: 'Welcome',
-            text: 'Authentication successful. Redirecting...',
-            showConfirmButton: false,
-            timer: 1200
-        });
+function updateButtonState() {
+    const uidTrimmed = userIdEl.value.trim();
+    const pwd = passwordEl.value;
+    loginBtn.disabled = !(uidTrimmed.length > 0 && pwd.length > 0);
+}
 
-        // 3. Redirect based on the role sent by the backend
-        setTimeout(() => {
-            if (data.role === 'admin') {
-                window.location.href = './admin_dashboard.html';
-            } else if (data.role === 'faculty') {
-                window.location.href = './faculty_dashboard.html';
-            } else {
-                window.location.href = './student_dashboard.html';
-            }
-        }, 900);
-    })
-    .catch(error => {
-        setLoading(false);
-        showError('Login failed. Please check your User ID and Password.');
-        passwordEl.focus();
-    });
+userIdEl.addEventListener('input', updateButtonState);
+passwordEl.addEventListener('input', updateButtonState);
+
 togglePasswordBtn.addEventListener('click', () => {
     const isPwd = passwordEl.type === 'password';
     passwordEl.type = isPwd ? 'text' : 'password';
@@ -332,21 +39,9 @@ togglePasswordBtn.addEventListener('click', () => {
     togglePasswordIcon.classList.toggle('fa-eye-slash');
 });
 
-// Caps Lock detection
 passwordEl.addEventListener('keyup', (e) => {
     const caps = e.getModifierState && e.getModifierState('CapsLock');
     capsWarning.classList.toggle('d-none', !caps);
-});
-
-// Forgot password demo
-document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
-    e.preventDefault();
-    Swal.fire({
-        icon: 'info',
-        title: 'Forgot password',
-        text: 'Please contact your institution IT helpdesk to reset your password.',
-        confirmButtonColor: '#00FFFF'
-    });
 });
 
 function setLoading(isLoading) {
@@ -377,25 +72,14 @@ function clearError() {
     alertBox.textContent = '';
 }
 
+// --- LOGIN SUBMISSION ---
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     clearError();
 
-    // Client-side validation rules
-    const uid = userIdEl.value.trim(); // trim for userId
-    const pwd = passwordEl.value; // do not trim password
+    const uid = userIdEl.value.trim();
+    const pwd = passwordEl.value;
 
-    // Mark validity
-    if (!uid) {
-        userIdEl.classList.add('is-invalid');
-    } else {
-        userIdEl.classList.remove('is-invalid');
-    }
-    if (!pwd) {
-        passwordEl.classList.add('is-invalid');
-    } else {
-        passwordEl.classList.remove('is-invalid');
-    }
     if (!uid || !pwd) {
         showError('Please provide both User ID and Password.');
         return;
@@ -403,35 +87,48 @@ loginForm.addEventListener('submit', (e) => {
 
     setLoading(true);
 
-    // Persist remember me choice
     if (rememberMeEl.checked) {
         localStorage.setItem('rememberedUserId', uid);
     } else {
         localStorage.removeItem('rememberedUserId');
     }
 
-    // Simulate API call
-    setTimeout(() => {
-        const key = `${uid}:${pwd}`;
-        const route = ACCOUNT_ROUTES[key];
-        if (route) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Welcome',
-                text: 'Authentication successful. Redirecting to your dashboard...',
-                showConfirmButton: false,
-                timer: 1200
-            });
-            setTimeout(() => {
-                window.location.href = route;
-            }, 900);
-        } else {
-            setLoading(false);
-            showError('Invalid credentials. Please check your User ID or Password.');
-            passwordEl.focus();
-        }
-    }, 900);
+    // REAL API CALL TO YOUR RENDER BACKEND
+    const backendUrl = 'https://smart-attendance-2-qkmd.onrender.com/api/auth/login';
+
+    fetch(backendUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            username: uid, // Backend expects 'username'
+            password: pwd
+        })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Invalid credentials');
+        return response.json();
+    })
+    .then(data => {
+        // Store the token for other pages to use
+        localStorage.setItem('token', data.access_token);
+        
+        Swal.fire({
+            icon: 'success',
+            title: 'Welcome',
+            text: 'Authentication successful!',
+            showConfirmButton: false,
+            timer: 1200
+        });
+
+        // Redirect based on the role received from backend
+        setTimeout(() => {
+            if (data.role === 'admin') window.location.href = './admin_dashboard.html';
+            else if (data.role === 'faculty') window.location.href = './faculty_dashboard.html';
+            else window.location.href = './student_dashboard.html';
+        }, 900);
+    })
+    .catch(error => {
+        setLoading(false);
+        showError('Login failed. Please check your User ID and Password.');
+    });
 });
-  </script>
- </body>
-</html>
