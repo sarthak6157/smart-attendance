@@ -5,3 +5,4 @@ flask-jwt-extended>=4.6.0
 werkzeug>=3.0.1
 qrcode[pil]>=7.4.2
 pillow>=10.2.0
+gunicorn
