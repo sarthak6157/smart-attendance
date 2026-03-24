@@ -160,8 +160,8 @@
                 localStorage.removeItem('rememberedUserId');
             }
 
-            // Points to your new Render live backend
-            const backendUrl = 'https://smart-attendance-pelg.onrender.com/api/auth/login';
+            // Using relative URL since Flask serves both frontend and backend
+            const backendUrl = '/api/auth/login';
 
             fetch(backendUrl, {
                 method: 'POST',
