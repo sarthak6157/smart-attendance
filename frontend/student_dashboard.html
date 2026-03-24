@@ -1,1 +1,189 @@
-<html><body>Error generating page after 3 attempts: Task execution failed after 3 attempts: Insufficient balance for LLM call. Current balance: -60.783390000000004</body></html>
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Student Dashboard
+  </title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.min.css" rel="stylesheet"/>
+  <link href="style.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <aside class="sidebar d-none d-md-flex flex-column" id="sidebar">
+   <div class="brand d-flex align-items-center gap-2 p-3">
+    <img alt="Logo" onerror="this.onerror=null;this.src='https://picsum.photos/seed/brandlogo/60/60';" src="https://dsaishared.blob.core.windows.net/uxcceleratecontainer/projects/68cd9594d2b8dfc3b7394fcb/logos/logo_7de491ba-a443-4183-9bc8-253cf99e13f6.jpg"/>
+    <span class="text-white fw-semibold">
+     Attendance System
+    </span>
+   </div>
+   <div class="profile d-flex align-items-center gap-2 p-3">
+    <div class="rounded-circle bg-light text-dark d-flex align-items-center justify-content-center" id="sidebarInitials" style="width:36px;height:36px;font-weight:600;">
+     JD
+    </div>
+    <div class="text-white small">
+     <div class="fw-semibold" id="sidebarUserName">
+      John Doe
+     </div>
+     <div class="opacity-75">
+      Student
+     </div>
+    </div>
+   </div>
+   <nav class="nav flex-column mt-2">
+    <a class="nav-link active" href="./student_dashboard.html">
+     <i class="fa fa-gauge fa-fw me-2"></i> Dashboard
+    </a>
+    <a class="nav-link" href="#active-sessions">
+     <i class="fa fa-qrcode fa-fw me-2"></i> Scan / Check-In
+    </a>
+    <a class="nav-link" href="#my-courses">
+     <i class="fa fa-book fa-fw me-2"></i> My Courses
+    </a>
+    <a class="nav-link" href="#attendance-history">
+     <i class="fa fa-clock-rotate-left fa-fw me-2"></i> History
+    </a>
+    <a class="nav-link" href="#">
+     <i class="fa fa-circle-question fa-fw me-2"></i> Help
+    </a>
+   </nav>
+  </aside>
+
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-faculty sticky-top" style="margin-left:260px; background-color: var(--color-primary);">
+   <div class="container-fluid">
+    <button aria-label="Toggle sidebar" class="btn btn-outline-dark d-md-none me-2" id="sidebarToggle">
+     <i class="fa fa-bars"></i>
+    </button>
+    <a class="navbar-brand d-flex align-items-center text-dark" href="./student_dashboard.html">
+     <span class="fw-bold">Student Portal</span>
+    </a>
+    
+    <div class="ms-auto d-flex align-items-center gap-2">
+     <button aria-label="Notifications" class="btn btn-sm btn-outline-dark" id="btnNotifications">
+      <i class="fa fa-bell"></i>
+     </button>
+     <div class="dropdown">
+      <button aria-expanded="false" class="btn btn-sm btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa fa-user-circle me-1"></i>
+       <span id="headerUserName">John Doe</span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li><h6 class="dropdown-header">Signed in as Student</h6></li>
+       <li><a class="dropdown-item" href="#profile">Profile</a></li>
+       <li><hr class="dropdown-divider"/></li>
+       <li><a class="dropdown-item" href="#" id="logoutLink">Logout</a></li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+
+  <main class="main-content" id="main" style="margin-left:260px;">
+   <div class="container-fluid py-3 py-lg-4">
+    
+    <div class="page-header mb-4">
+     <div class="d-flex align-items-center gap-2">
+      <h1 class="page-title mb-0">My Dashboard</h1>
+      <span class="badge-soft info">
+       <i class="fa fa-calendar-day me-1"></i> <span id="todayLabel">Today</span>
+      </span>
+     </div>
+     <div class="d-flex align-items-center gap-2">
+      <button class="btn btn-primary btn-sm" id="btnEnrollCourse">
+       <i class="fa fa-plus me-1"></i> Enroll in Course
+      </button>
+     </div>
+    </div>
+
+    <div id="activeSessionsContainer" class="mb-4 d-none">
+     <div class="alert alert-success shadow-sm d-flex align-items-center justify-content-between">
+      <div>
+       <h5 class="mb-1"><i class="fa fa-tower-broadcast me-2"></i>Active Session Available!</h5>
+       <p class="mb-0 text-success-emphasis" id="activeSessionText">A session is currently active. Check in now to record your attendance.</p>
+      </div>
+      <button class="btn btn-success" id="btnCheckIn">
+       <i class="fa fa-qrcode me-1"></i> Check In Now
+      </button>
+     </div>
+    </div>
+
+    <section class="mb-4">
+     <div class="row g-3 g-lg-4">
+      <div class="col-12 col-md-4">
+       <div class="metric-card shadow-sm">
+        <div class="metric-title">Overall Attendance</div>
+        <div class="metric-value text-primary" id="overallPct">--%</div>
+        <div class="progress mt-2" style="height: 6px;">
+         <div class="progress-bar bg-primary" id="overallPctBar" role="progressbar" style="width: 0%;"></div>
+        </div>
+       </div>
+      </div>
+      <div class="col-6 col-md-4">
+       <div class="metric-card shadow-sm">
+        <div class="metric-title">Enrolled Courses</div>
+        <div class="metric-value" id="enrolledCount">--</div>
+        <small class="text-muted">Active Terms</small>
+       </div>
+      </div>
+      <div class="col-6 col-md-4">
+       <div class="metric-card shadow-sm">
+        <div class="metric-title">Upcoming Classes</div>
+        <div class="metric-value" id="upcomingCount">--</div>
+        <small class="text-muted">Scheduled for today</small>
+       </div>
+      </div>
+     </div>
+    </section>
+
+    <div class="row g-4">
+     <section class="col-12 col-lg-8" id="my-courses">
+      <h2 class="h5 mb-3 fw-bold">My Course Attendance</h2>
+      <div class="row g-3" id="courseList">
+       </div>
+     </section>
+
+     <section class="col-12 col-lg-4" id="upcoming-schedule">
+      <h2 class="h5 mb-3 fw-bold">Upcoming Sessions</h2>
+      <div class="card shadow-sm">
+       <div class="list-group list-group-flush" id="upcomingSessionsList">
+        </div>
+       <div class="card-footer text-center bg-white border-top-0 pt-0 mt-2">
+         <a href="#schedule" class="text-decoration-none small">View Full Schedule</a>
+       </div>
+      </div>
+     </section>
+    </div>
+
+   </div>
+  </main>
+
+  <script crossorigin="anonymous" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.all.min.js"></script>
+
+  <script>
+   // Sidebar Toggle
+   document.addEventListener('DOMContentLoaded', function() {
+       const toggle = document.getElementById('sidebarToggle');
+       const sidebar = document.getElementById('sidebar');
+       if (toggle && sidebar) {
+           toggle.addEventListener('click', () => sidebar.classList.toggle('d-none'));
+       }
+   });
+
+   // Today's Date
+   document.getElementById('todayLabel').textContent = new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+
+   // Mock API Data based on backend `routes/student.py`
+   const dashboardData = {
+       student: { id: 1, name: "John Doe", email: "john@university.edu" },
+       overall_pct: 82.5,
+       course_stats: [
+           { course: { id: 101, code: "CS101", name: "Intro to Programming" }, attendance_pct: 85.0, sessions_attended: 17, sessions_total: 20 },
+           { course: { id: 102, code: "EE220", name: "Circuits II" }, attendance_pct: 75.0, sessions_attended: 15, sessions_total: 20 },
+           { course: { id: 103, code: "CS305", name: "Data Structures" }, attendance_pct: 92.5, sessions_attended: 18, sessions_total: 19 }
+       ],
+       upcoming_sessions: [
+           { id: 201, course_id:
