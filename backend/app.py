@@ -1,11 +1,8 @@
 """
 Smart Attendance System - Backend (Flask)
-Requires: flask, flask-sqlalchemy, flask-cors, flask-jwt-extended, qrcode, pillow
-Install:  pip install flask flask-sqlalchemy flask-cors flask-jwt-extended qrcode pillow
-Run:      python app.py
 """
 
-from flask import Flask
+from flask import Flask, jsonify  # Moved jsonify to the top
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from database import db
@@ -50,11 +47,11 @@ def create_app():
 
     @app.route('/api/programs')
     def programs():
-        from flask import jsonify
+        # Removed local import of jsonify as it is now global
         return jsonify(["BSc Computer Science", "BEng Electronics",
                         "BA Business", "BSc Mathematics", "MEng Software"])
 
-    # Create tables and seed data on first run
+    # Create tables and seed data
     with app.app_context():
         db.create_all()
         from seed import seed_database
@@ -68,6 +65,5 @@ if __name__ == '__main__':
     print("\n" + "="*60)
     print("  Smart Attendance System — Backend Running")
     print("  URL : http://localhost:5000")
-    print("  Docs: http://localhost:5000/api/docs  (see README.md)")
     print("="*60 + "\n")
     app.run(debug=True, port=5000)
