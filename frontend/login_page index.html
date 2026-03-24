@@ -114,9 +114,21 @@ loginForm.addEventListener('submit', (e) => {
         localStorage.setItem('user_role', data.role);
         localStorage.setItem('user_name', data.full_name);
         
-        Swal.fire({
+       Swal.fire({
             icon: 'success',
             title: 'Welcome',
             text: 'Authentication successful!',
             showConfirmButton: false,
             timer: 1200
+        }); // <--- You were missing everything from here down
+
+        setTimeout(() => {
+            // Redirect using the backend's path
+            window.location.href = data.redirect || './login_page.html';
+        }, 900);
+    })
+    .catch(error => {
+        setLoading(false);
+        showError('Login failed. Please check your User ID and Password.');
+    });
+});
