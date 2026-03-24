@@ -43,7 +43,7 @@ def create_app():
     # Serve frontend pages at root
     @app.route('/')
     def index():
-        return app.send_static_file('login_page.html')
+        return app.send_static_file('login_page_index.html')
 
     @app.route('/api/programs')
     def programs():
