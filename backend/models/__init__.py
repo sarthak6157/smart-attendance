@@ -44,27 +44,27 @@ enrollment = db.Table(
 
 
 # ─────────────────────────────────────────────────────────────────
-# User
+# User Model
 # ─────────────────────────────────────────────────────────────────
 
 class User(db.Model):
     __tablename__ = 'user'
 
-    id           = db.Column(db.Integer, primary_key=True)
-    user_id      = db.Column(db.String(64),  unique=True, nullable=False)   # login handle
-    password_hash= db.Column(db.String(256), nullable=False)
-    full_name    = db.Column(db.String(128), nullable=False)
-    email        = db.Column(db.String(128), unique=True, nullable=False)
-    role         = db.Column(db.Enum(UserRole), nullable=False)
-    department   = db.Column(db.String(128))
-    program      = db.Column(db.String(128))
-    phone        = db.Column(db.String(32))
-    is_active    = db.Column(db.Boolean, default=True)
-    first_login  = db.Column(db.Boolean, default=True)
-    created_at   = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at   = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    id            = db.Column(db.Integer, primary_key=True)
+    user_id       = db.Column(db.String(64),  unique=True, nullable=False)
+    password_hash = db.Column(db.String(256), nullable=False)
+    full_name     = db.Column(db.String(128), nullable=False)
+    email         = db.Column(db.String(128), unique=True, nullable=False)
+    role          = db.Column(db.Enum(UserRole), nullable=False)
+    department    = db.Column(db.String(128))
+    program       = db.Column(db.String(128))
+    phone         = db.Column(db.String(32))
+    is_active     = db.Column(db.Boolean, default=True)
+    first_login   = db.Column(db.Boolean, default=True)
+    created_at    = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at    = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Relationships
+    # Relationships - lazy='dynamic' is critical for calling .count() in routes
     taught_courses = db.relationship('Course', backref='faculty', lazy='dynamic',
                                      foreign_keys='Course.faculty_id')
     enrolled_courses = db.relationship('Course', secondary=enrollment,
@@ -90,25 +90,25 @@ class User(db.Model):
 
 
 # ─────────────────────────────────────────────────────────────────
-# Course
+# Course Model
 # ─────────────────────────────────────────────────────────────────
 
 class Course(db.Model):
     __tablename__ = 'course'
 
-    id          = db.Column(db.Integer, primary_key=True)
-    code        = db.Column(db.String(32),  unique=True, nullable=False)
-    name        = db.Column(db.String(256), nullable=False)
-    description = db.Column(db.Text)
-    credits     = db.Column(db.Integer, default=3)
-    semester    = db.Column(db.String(32))
+    id            = db.Column(db.Integer, primary_key=True)
+    code          = db.Column(db.String(32),  unique=True, nullable=False)
+    name          = db.Column(db.String(256), nullable=False)
+    description   = db.Column(db.Text)
+    credits       = db.Column(db.Integer, default=3)
+    semester      = db.Column(db.String(32))
     academic_year = db.Column(db.String(16))
-    faculty_id  = db.Column(db.Integer, db.ForeignKey('user.id'))
-    location_id = db.Column(db.Integer, db.ForeignKey('location.id'))
-    is_active   = db.Column(db.Boolean, default=True)
-    created_at  = db.Column(db.DateTime, default=datetime.utcnow)
+    faculty_id    = db.Column(db.Integer, db.ForeignKey('user.id'))
+    location_id   = db.Column(db.Integer, db.ForeignKey('location.id'))
+    is_active     = db.Column(db.Boolean, default=True)
+    created_at    = db.Column(db.DateTime, default=datetime.utcnow)
 
-    sessions    = db.relationship('Session', backref='course', lazy='dynamic')
+    sessions      = db.relationship('Session', backref='course', lazy='dynamic')
 
     def to_dict(self):
         return {
@@ -123,12 +123,12 @@ class Course(db.Model):
             'faculty_name': self.faculty.full_name if self.faculty else None,
             'location_id': self.location_id,
             'is_active': self.is_active,
-            'student_count': self.students.count(),
+            'student_count': self.students.count(), # Works because of lazy='dynamic' on enrollment
         }
 
 
 # ─────────────────────────────────────────────────────────────────
-# Location
+# Location Model
 # ─────────────────────────────────────────────────────────────────
 
 class Location(db.Model):
@@ -140,7 +140,7 @@ class Location(db.Model):
     room_number = db.Column(db.String(32))
     latitude    = db.Column(db.Float, nullable=False)
     longitude   = db.Column(db.Float, nullable=False)
-    radius_m    = db.Column(db.Integer, default=150)   # geofence radius in metres
+    radius_m    = db.Column(db.Integer, default=150)
     is_active   = db.Column(db.Boolean, default=True)
 
     courses     = db.relationship('Course', backref='location', lazy='dynamic')
@@ -159,7 +159,7 @@ class Location(db.Model):
 
 
 # ─────────────────────────────────────────────────────────────────
-# Session (a single class meeting)
+# Session Model
 # ─────────────────────────────────────────────────────────────────
 
 class Session(db.Model):
@@ -179,7 +179,7 @@ class Session(db.Model):
     notes           = db.Column(db.Text)
     created_at      = db.Column(db.DateTime, default=datetime.utcnow)
 
-    faculty          = db.relationship('User', foreign_keys=[faculty_id])
+    faculty            = db.relationship('User', foreign_keys=[faculty_id])
     attendance_records = db.relationship('AttendanceRecord', backref='session', lazy='dynamic')
 
     def to_dict(self):
@@ -204,7 +204,7 @@ class Session(db.Model):
 
 
 # ─────────────────────────────────────────────────────────────────
-# AttendanceRecord
+# AttendanceRecord Model
 # ─────────────────────────────────────────────────────────────────
 
 class AttendanceRecord(db.Model):
@@ -245,7 +245,7 @@ class AttendanceRecord(db.Model):
 
 
 # ─────────────────────────────────────────────────────────────────
-# AuditLog
+# AuditLog Model
 # ─────────────────────────────────────────────────────────────────
 
 class AuditLog(db.Model):
@@ -277,7 +277,7 @@ class AuditLog(db.Model):
 
 
 # ─────────────────────────────────────────────────────────────────
-# SystemSettings
+# SystemSettings Model
 # ─────────────────────────────────────────────────────────────────
 
 class SystemSettings(db.Model):
