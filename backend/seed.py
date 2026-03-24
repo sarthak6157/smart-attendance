@@ -45,12 +45,14 @@ def seed_database():
     for u in users_data:
         pwd = u.pop('password')
         first_login = u.pop('first_login', False)
+        # Standardize: explicitly pass first_login to the User model
         user = User(**u,
                     password_hash=generate_password_hash(pwd),
                     first_login=first_login)
         db.session.add(user)
+        # Store for reference in foreign keys
+        db.session.flush() 
         created_users[u['user_id']] = user
-    db.session.flush()
 
     # ── Locations ────────────────────────────────────────────────
     locs_data = [
@@ -99,18 +101,15 @@ def seed_database():
     db.session.flush()
 
     # ── Enrolments ───────────────────────────────────────────────
-    students = [created_users[f'student{i}'] for i in range(1, 6)]
-    for student in students[:4]:   # CS / MA students
-        db.session.execute(enrollment.insert().values(
-            student_id=student.id, course_id=courses[0].id))
-        db.session.execute(enrollment.insert().values(
-            student_id=student.id, course_id=courses[2].id))
-    for student in students[2:]:   # EE students
-        db.session.execute(enrollment.insert().values(
-            student_id=student.id, course_id=courses[3].id))
-    for student in students[:3]:
-        db.session.execute(enrollment.insert().values(
-            student_id=student.id, course_id=courses[1].id))
+    students_list = [created_users[f'student{i}'] for i in range(1, 6)]
+    # Use standard relationship append logic
+    for student in students_list[:4]:
+        courses[0].students.append(student)
+        courses[2].students.append(student)
+    for student in students_list[2:]:
+        courses[3].students.append(student)
+    for student in students_list[:3]:
+        courses[1].students.append(student)
     db.session.flush()
 
     # ── Sessions ─────────────────────────────────────────────────
@@ -155,11 +154,11 @@ def seed_database():
     db.session.flush()
 
     # ── Attendance Records ───────────────────────────────────────
-    enrolled_students = {
-        courses[0].id: students[:4],
-        courses[1].id: students[:3],
-        courses[2].id: students,
-        courses[3].id: students[2:],
+    enrolled_map = {
+        courses[0].id: students_list[:4],
+        courses[1].id: students_list[:3],
+        courses[2].id: students_list,
+        courses[3].id: students_list[2:],
     }
     statuses = [AttendanceStatus.present, AttendanceStatus.present,
                 AttendanceStatus.present, AttendanceStatus.absent, AttendanceStatus.late]
@@ -167,7 +166,7 @@ def seed_database():
     for sess in sessions_created:
         if sess.status == SessionStatus.scheduled:
             continue
-        enrolled = enrolled_students.get(sess.course_id, students[:4])
+        enrolled = enrolled_map.get(sess.course_id, students_list[:4])
         for student in enrolled:
             pick = random.choice(statuses)
             rec = AttendanceRecord(
@@ -200,10 +199,10 @@ def seed_database():
         db.session.add(SystemSettings(key=key, value=val, group=grp))
 
     # ── Audit Logs ───────────────────────────────────────────────
-    admin = created_users['admin1']
+    admin_user = created_users['admin1']
     for entry in [
-        (admin.id, 'USER_CREATED',  'user',   f1.id,     'Created faculty account faculty1'),
-        (admin.id, 'COURSE_CREATED','course', courses[0].id, 'Created course CS301'),
+        (admin_user.id, 'USER_CREATED',  'user',   f1.id,     'Created faculty account faculty1'),
+        (admin_user.id, 'COURSE_CREATED','course', courses[0].id, 'Created course CS301'),
         (f1.id,   'SESSION_STARTED','session',active.id, 'Started session for CS301'),
     ]:
         db.session.add(AuditLog(actor_id=entry[0], action=entry[1],
