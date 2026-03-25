@@ -24,7 +24,7 @@ def seed_database():
              email='admin@uni.edu', role=UserRole.admin,    department='IT'),
         dict(user_id='faculty1',    password='teach123',    full_name='Dr. Alex Nguyen',
              email='faculty1@uni.edu', role=UserRole.faculty, department='Computer Science'),
-        dict(user_id='faculty2',    password='teach456',    full_name='Prof. Maria Santos',
+        dict(user_id='faculty2',    password='teach456',    full_name='Shubham Vashishtha',
              email='faculty2@uni.edu', role=UserRole.faculty, department='Mathematics'),
         dict(user_id='student1',    password='password123', full_name='Jordan Smith',
              email='s1@uni.edu',  role=UserRole.student, program='BSc Computer Science'),
